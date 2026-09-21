@@ -156,7 +156,25 @@ export function kill(g: GameState, p: PlayerState, killer: number, source: strin
   p.hand = [];
   ev(g, 'death', p.id, killer, source);
   logMsg(g, `☠ ${p.name} выбывает (${source})`);
+  if (g.rules.win.firstDeathEnds && !g.over) {
+    endGame(g, bestByLands(g), 'first-death');
+    return;
+  }
   checkEnd(g);
+}
+
+/** Winner by (lands, power, HP) among living players — all visible on the table. */
+export function bestByLands(g: GameState): number {
+  let best = -1;
+  let key = [-1, -1, -1];
+  for (const q of g.players) {
+    if (!q.alive) continue;
+    let lands = 0;
+    for (const c of g.cells) if (c.land && c.land.owner === q.id) lands++;
+    const k = [lands, power(q), q.tokens.length];
+    if (k[0] > key[0] || (k[0] === key[0] && (k[1] > key[1] || (k[1] === key[1] && k[2] > key[2])))) { best = q.id; key = k; }
+  }
+  return best;
 }
 
 export const CARD_KIND: Record<string, 'artifact' | 'spell'> = {};

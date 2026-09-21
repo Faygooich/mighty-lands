@@ -19,6 +19,8 @@ export interface WinRules {
   powerTarget: number;
   /** Victory points: win when reaching this many VP (0 = off). */
   vpTarget: number;
+  /** The game ends as soon as any player is eliminated; best standing (lands, then power, then HP) wins. */
+  firstDeathEnds: boolean;
 }
 
 export interface RuleSet {
@@ -129,7 +131,7 @@ export const BASE_RULES: RuleSet = {
   deathLands: 'wild',
   catchUpDraw: 0,
   roundCap: 120,
-  win: { lastStanding: true, landsTarget: 0, regionWin: false, powerTarget: 0, vpTarget: 0 },
+  win: { lastStanding: true, landsTarget: 0, regionWin: false, powerTarget: 0, vpTarget: 0, firstDeathEnds: false },
   decks: {
     artifacts: { tribute: 8, bigTribute: 3, trap: 5, pickpocket: 4, shackles: 4, exile: 3, guardian: 3 },
     spells: { fireball: 5, heal: 5, shatter: 4, usurp: 3, teleport: 3, fury: 4, release: 3, drain: 3 },
