@@ -13,6 +13,11 @@
         "gen": 2,
         "severity": "MEDIUM",
         "value": "26.8%"
+      },
+      {
+        "gen": 3,
+        "severity": "LOW",
+        "value": "10.6%"
       }
     ]
   },
@@ -28,6 +33,11 @@
       },
       {
         "gen": 2,
+        "severity": "OK",
+        "value": "0.00"
+      },
+      {
+        "gen": 3,
         "severity": "OK",
         "value": "0.00"
       }
@@ -47,6 +57,11 @@
         "gen": 2,
         "severity": "MEDIUM",
         "value": "×0.46 к раунду 15"
+      },
+      {
+        "gen": 3,
+        "severity": "OK",
+        "value": "×1.45 к раунду 15"
       }
     ]
   },
@@ -64,6 +79,11 @@
         "gen": 2,
         "severity": "LOW",
         "value": "2.91 оп/ход"
+      },
+      {
+        "gen": 3,
+        "severity": "MEDIUM",
+        "value": "4.11 оп/ход"
       }
     ]
   },
@@ -81,6 +101,11 @@
         "gen": 2,
         "severity": "MEDIUM",
         "value": "0.73"
+      },
+      {
+        "gen": 3,
+        "severity": "OK",
+        "value": "1.35"
       }
     ]
   },
@@ -98,6 +123,35 @@
         "gen": 2,
         "severity": "MEDIUM",
         "value": "таймаут 1.2%, медиана 50"
+      },
+      {
+        "gen": 3,
+        "severity": "OK",
+        "value": "таймаут 0.0%, медиана 13"
+      }
+    ]
+  },
+  "seat2": {
+    "id": "BUG-007",
+    "title": "Преимущество первого хода (2 игрока)",
+    "firstGen": 3,
+    "history": [
+      {
+        "gen": 3,
+        "severity": "MEDIUM",
+        "value": "16.4%"
+      }
+    ]
+  },
+  "comeback": {
+    "id": "BUG-008",
+    "title": "Нет возврата после раннего отставания",
+    "firstGen": 3,
+    "history": [
+      {
+        "gen": 3,
+        "severity": "MEDIUM",
+        "value": "лидер старта 67.3%"
       }
     ]
   }

@@ -17,15 +17,22 @@ function buildDeck(spec: Record<string, number>, rng: Rng): string[] {
 
 export function createGame(rules: RuleSet, setups: PlayerSetup[], seed: number, hooks: Hooks | null = null, log = false): GameState {
   const rng = new Rng(seed);
+  const regionIdx = new Map<number, number>();
   const cells: Cell[] = rules.board.map((c, index) => {
     let land: LandState | null = null;
     if (c.type === 'land') {
+      const reg = c.region ?? 0;
+      const k = regionIdx.get(reg) ?? 0;
+      regionIdx.set(reg, k + 1);
+      const m = rules.regionMonsters?.[reg]?.[k] ?? c.monster ?? 0;
+      const reward = rules.regionRewards?.[reg] ?? c.reward ?? 0;
       land = {
         cell: index,
         name: c.name ?? `Земля ${index}`,
         region: c.region ?? 0,
-        baseMonster: c.monster ?? 0,
-        monster: c.monster ?? 0,
+        baseMonster: m,
+        monster: m,
+        reward,
         owner: -1,
         artifact: null,
       };
@@ -45,6 +52,7 @@ export function createGame(rules: RuleSet, setups: PlayerSetup[], seed: number, 
     spellsThisTurn: 0,
     teleportTo: -1,
     shield: 0,
+    fightMod: 0,
     eliminatedRound: -1,
     laps: 0,
   }));

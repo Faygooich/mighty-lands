@@ -15,6 +15,8 @@ export interface ArtifactDef {
 
 export interface SpellDef {
   id: string;
+  /** Played in another player's fight: 'help' adds to the fighter, 'hinder' adds to the monster. */
+  reaction?: 'help' | 'hinder';
   name: string;
   text: (g: GameState) => string;
   phases: Phase[];
@@ -188,6 +190,20 @@ export const SPELLS: Record<string, SpellDef> = {
     apply: (g, p, t) => pay(g, g.players[t], P(g, 'drain'), p.id, 'Вытягивание'),
   },
   // --- candidates introduced by later generations ---
+  aid: {
+    id: 'aid', name: 'Подмога', reaction: 'help',
+    text: (g) => `В ЧУЖОЙ ход, когда игрок встречает монстра: +${P(g, 'aid')} к его мощи в этом бою. Если он победил — возьмите из банка жетон ${P(g, 'aidReward')}.`,
+    phases: [],
+    targets: () => [],
+    *apply() {},
+  },
+  hex: {
+    id: 'hex', name: 'Помеха', reaction: 'hinder',
+    text: (g) => `В ЧУЖОЙ ход, когда игрок встречает монстра: +${P(g, 'hex')} к мощи монстра в этом бою.`,
+    phases: [],
+    targets: () => [],
+    *apply() {},
+  },
   ward: {
     id: 'ward', name: 'Оберег',
     text: () => 'Следующий вредный эффект против вас отменяется.',

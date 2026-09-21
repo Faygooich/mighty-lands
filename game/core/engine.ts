@@ -137,24 +137,61 @@ export function* resolveCell(g: GameState, p: PlayerState): Engine {
   else if (land.owner !== p.id) yield* enemyLand(g, p, land);
 }
 
+/**
+ * Munchkin window: every other player (in seat order) may play ONE reaction card
+ * (Подмога → +X to the fighter, Помеха → +X to the monster). Returns [fighterBonus, monsterBonus, helpers].
+ */
+function* reactionWindow(g: GameState, p: PlayerState, land: LandState): Generator<Decision, [number, number, number[]], number> {
+  let plus = 0;
+  let minus = 0;
+  const helpers: number[] = [];
+  for (let k = 1; k < g.players.length; k++) {
+    const q = g.players[(p.id + k) % g.players.length];
+    if (!q.alive) continue;
+    const opts: Option[] = [{ t: 'pass' }];
+    const seen = new Set<string>();
+    for (const c of q.hand) if (SPELLS[c]?.reaction && !seen.has(c)) { seen.add(c); opts.push({ t: 'react', card: c }); }
+    if (opts.length === 1) continue;
+    p.fightMod = plus - minus;
+    const idx = yield ask(g, { kind: 'react', player: q.id, options: opts, reason: `${p.name} встречает монстра ${land.name} (${land.monster}). Вмешаться?`, amount: p.id });
+    const o = opts[idx];
+    if (o.t !== 'react') continue;
+    q.hand.splice(q.hand.indexOf(o.card), 1);
+    g.spellDiscard.push(o.card);
+    const sp = SPELLS[o.card];
+    if (sp.reaction === 'help') { plus += g.rules.params[o.card] ?? 0; helpers.push(q.id); }
+    else minus += g.rules.params[o.card] ?? 0;
+    ev(g, 'react', q.id, p.id, sp.reaction ?? null);
+    ev(g, 'spell', q.id, p.id, o.card);
+    logMsg(g, `${q.name} играет «${sp.name}» в бою ${p.name}`);
+  }
+  p.fightMod = 0;
+  return [plus, minus, helpers];
+}
+
 function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engine {
   const r = g.rules;
-  const eff = effPower(p);
-  const m = land.monster;
-  ev(g, 'encounter', p.id, m, land.cell);
+  ev(g, 'encounter', p.id, land.monster, land.cell);
+  const [plus, minus, helpers] = yield* reactionWindow(g, p, land);
+  const eff = effPower(p) + plus;
+  const m = land.monster + minus;
   const stronger = eff > m || (r.tieWins && eff === m);
   if (stronger) {
     const cost = Math.ceil((m * r.captureCostFrac) / 100) * 100;
     const canCapture = cost === 0 || power(p) > cost;
     if (!canCapture) { ev(g, 'pass', p.id, 0, land.cell); return; }
     const opts: Option[] = [{ t: 'capture' }, { t: 'pass' }];
+    p.fightMod = plus - minus;
     const idx = yield ask(g, { kind: 'capture', player: p.id, options: opts, reason: `${land.name}: монстр ${m}, ваша мощь ${eff}${cost ? `, цена захвата ${cost}` : ''}`, amount: cost });
+    p.fightMod = 0;
     if (opts[idx].t === 'capture') {
       if (cost > 0) yield* pay(g, p, cost, -1, `Захват ${land.name}`, false);
       if (!p.alive) return;
       setOwner(g, land, p.id);
       ev(g, 'capture', p.id, land.cell, 'monster');
       logMsg(g, `${p.name} захватывает ${land.name} (монстр ${m})`);
+      if (land.reward) gainPower(g, p, land.reward, `Награда: ${land.name}`);
+      for (const h of helpers) gainPower(g, g.players[h], r.params.aidReward ?? 0, 'Подмога');
     } else {
       ev(g, 'pass', p.id, 0, land.cell);
     }
@@ -175,6 +212,7 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
       setOwner(g, land, p.id);
       ev(g, 'capture', p.id, land.cell, 'fight');
       logMsg(g, `${p.name} бросает ${roll} и побеждает монстра ${land.name}`);
+      if (land.reward) gainPower(g, p, land.reward, `Награда: ${land.name}`);
     } else {
       ev(g, 'fightLose', p.id, roll, land.cell);
       logMsg(g, `${p.name} бросает ${roll} и проигрывает бой`);

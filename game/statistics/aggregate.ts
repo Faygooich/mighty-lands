@@ -42,6 +42,8 @@ export interface Agg {
   changeMaking: number;
   trackedEffects: number;
   totalTurns: number;
+  feel: Num;
+  peakHist: number[];
   repeatGames: number;       // games with >= 10 identical round-end states in a row
   anomalies: Array<{ seed: number; reason: string; bots: string[] }>;
 }
@@ -52,7 +54,7 @@ export function newAgg(): Agg {
     seatGames: [], seatWins: [], leaderHalfWins: 0, leaderQ1Wins: 0, leaderQ3Wins: 0, lastHalfWins: 0,
     leadChanges: 0, firstCapturerWins: 0, firstCapturerGames: 0, deadTurns: 0, playerRounds: 0,
     cardDrawn: {}, cardPlayed: {}, cardPlayGames: {}, cardPlayWins: {}, landCaptures: [], landHeldByWinner: [], landHeldAtEnd: [], landMask: [],
-    denom: {}, powerByRound: [], powerByRoundN: [], choice: {}, hpLossBySource: {}, maxRepeat: 0, repeatGames: 0, anomalies: [], tableSec: 0, arithOps: 0, changeMaking: 0, trackedEffects: 0, totalTurns: 0,
+    denom: {}, powerByRound: [], powerByRoundN: [], choice: {}, hpLossBySource: {}, maxRepeat: 0, repeatGames: 0, anomalies: [], tableSec: 0, arithOps: 0, changeMaking: 0, trackedEffects: 0, totalTurns: 0, feel: {}, peakHist: [],
   };
 }
 
@@ -117,6 +119,16 @@ export function addRecord(agg: Agg, r: GameRecord): void {
   agg.changeMaking += r.changeMaking;
   agg.trackedEffects += r.trackedEffects;
   agg.totalTurns += r.turns;
+  const f = r.feel;
+  let maxPeak = 0;
+  f.peakPower.forEach((pk, i) => {
+    inc(agg.feel, 'growthSum', pk / Math.max(1, f.startPower[i]));
+    inc(agg.feel, 'playerGames');
+    if (pk > maxPeak) maxPeak = pk;
+  });
+  incArr(agg.peakHist, Math.min(60, Math.floor(maxPeak / 100)));
+  if (maxPeak >= 2500) inc(agg.feel, 'bigGames');
+  for (const k of ['bigJumps', 'hp1', 'landsTaken', 'takeThat', 'artifactHits', 'revenge', 'kingmaker', 'reactions', 'helps', 'hinders', 'bossSeen'] as const) inc(agg.feel, k, f[k]);
 }
 
 export function mergeAgg(a: Agg, b: Agg): Agg {
@@ -133,6 +145,8 @@ export function mergeAgg(a: Agg, b: Agg): Agg {
   b.seatGames.forEach((v, i) => incArr(a.seatGames, i, v));
   b.seatWins.forEach((v, i) => incArr(a.seatWins, i, v));
   for (const k of ['leaderHalfWins', 'leaderQ1Wins', 'leaderQ3Wins', 'lastHalfWins', 'leadChanges', 'firstCapturerWins', 'firstCapturerGames', 'deadTurns', 'playerRounds', 'repeatGames', 'tableSec', 'arithOps', 'changeMaking', 'trackedEffects', 'totalTurns'] as const) a[k] += b[k];
+  for (const [c, v] of Object.entries(b.feel)) inc(a.feel, c, v);
+  b.peakHist.forEach((v, i) => incArr(a.peakHist, i, v));
   for (const k of ['cardDrawn', 'cardPlayed', 'cardPlayGames', 'cardPlayWins', 'denom', 'choice', 'hpLossBySource'] as const) for (const [c, v] of Object.entries(b[k])) inc(a[k], c, v);
   for (const k of ['landCaptures', 'landHeldByWinner', 'landHeldAtEnd', 'landMask', 'powerByRound', 'powerByRoundN'] as const) b[k].forEach((v, i) => incArr(a[k], i, v));
   a.maxRepeat = Math.max(a.maxRepeat, b.maxRepeat);
@@ -184,6 +198,12 @@ export interface Summary {
   changeMakingPerGame: number;
   trackedEffectsPerGame: number;
   secPerTurn: number;
+  /** GAME FEEL / Munchkin */
+  feel: {
+    growth: number; bigGameShare: number; medianMaxPeak: number; jumpsPerGame: number; hp1Share: number; landsTakenPerGame: number;
+    takeThatPerTurn: number; artifactHitsPerTurn: number; revengeShare: number; kingmakerShare: number; reactionsPerGame: number;
+    helpsPerGame: number; hindersPerGame: number; bossPerGame: number;
+  };
 }
 
 function quantile(hist: number[], q: number): number {
@@ -290,5 +310,21 @@ export function summarize(a: Agg): Summary {
     changeMakingPerGame: a.changeMaking / G,
     trackedEffectsPerGame: a.trackedEffects / G,
     secPerTurn: a.tableSec / Math.max(1, a.totalTurns),
+    feel: {
+      growth: (a.feel.growthSum ?? 0) / Math.max(1, a.feel.playerGames ?? 0),
+      bigGameShare: (a.feel.bigGames ?? 0) / G,
+      medianMaxPeak: quantile(a.peakHist, 0.5) * 100,
+      jumpsPerGame: (a.feel.bigJumps ?? 0) / G,
+      hp1Share: (a.feel.hp1 ?? 0) / Math.max(1, a.feel.playerGames ?? 0),
+      landsTakenPerGame: (a.feel.landsTaken ?? 0) / G,
+      takeThatPerTurn: (a.feel.takeThat ?? 0) / Math.max(1, a.totalTurns),
+      artifactHitsPerTurn: (a.feel.artifactHits ?? 0) / Math.max(1, a.totalTurns),
+      revengeShare: (a.feel.revenge ?? 0) / Math.max(1, a.feel.takeThat ?? 0),
+      kingmakerShare: (a.feel.kingmaker ?? 0) / Math.max(1, a.feel.takeThat ?? 0),
+      reactionsPerGame: (a.feel.reactions ?? 0) / G,
+      helpsPerGame: (a.feel.helps ?? 0) / G,
+      hindersPerGame: (a.feel.hinders ?? 0) / G,
+      bossPerGame: (a.feel.bossSeen ?? 0) / G,
+    },
   };
 }

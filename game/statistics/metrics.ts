@@ -51,6 +51,24 @@ export interface GameRecord {
   arithOps: number;
   changeMaking: number;
   trackedEffects: number;
+  feel: Feel;
+}
+
+/** GAME FEEL / Munchkin interaction counters for one game. */
+export interface Feel {
+  startPower: number[];
+  peakPower: number[];
+  bigJumps: number;       // single gains >= 500 power ("ДАААА, Я СТАЛ СИЛЬНЕЕ")
+  hp1: number;            // players who were alive at 1 HP ("Я НЕ МОГУ ЭТО ПОТЕРЯТЬ")
+  landsTaken: number;     // lands taken/released by another player ("ОН МНЕ ВСЁ СЛОМАЛ")
+  takeThat: number;       // active harmful actions against another player
+  artifactHits: number;   // passive harm (artifact triggers)
+  revenge: number;        // take-that aimed at the player who last harmed the actor
+  kingmaker: number;      // take-that by the player in last place
+  reactions: number;      // cards played outside own turn
+  helps: number;          // help given to another player
+  hinders: number;        // hindrance played on another player's fight
+  bossSeen: number;       // encounters with monsters >= 4000 ("ЧЁРТ, Я ЕЩЁ НЕ ГОТОВ")
 }
 
 /**
@@ -82,6 +100,22 @@ export class Collector implements Hooks {
   arithOps = 0;
   changeMaking = 0;
   trackedEffects = 0;
+  feel!: Feel;
+  lastHarmer: number[] = [];
+
+  harm(actor: number, victim: number): void {
+    if (actor < 0 || victim < 0 || actor === victim) return;
+    const f = this.feel;
+    f.takeThat++;
+    if (this.lastHarmer[actor] === victim) f.revenge++;
+    this.lastHarmer[victim] = actor;
+    // is actor in last place right now?
+    const g = this.g;
+    let low = Infinity;
+    let lowId = -1;
+    for (const q of g.players) if (q.alive) { const s = standing(g, q); if (s < low) { low = s; lowId = q.id; } }
+    if (lowId === actor && g.players.filter((q) => q.alive).length > 2) f.kingmaker++;
+  }
 
   /** ops to sum a player's power (tokens-1 additions, +1 if a temporary bonus is active). */
   sumOps(p: number): number {
@@ -139,12 +173,19 @@ export class Collector implements Hooks {
     this.ps = g.players.map(() => newPlayerStats());
     this.cardPlayed = g.players.map(() => ({}));
     this.landCaptures = g.cells.map(() => 0);
+    this.lastHarmer = g.players.map(() => -1);
+    this.feel = {
+      startPower: g.players.map((p) => power(p)), peakPower: g.players.map((p) => power(p)),
+      bigJumps: 0, hp1: 0, landsTaken: 0, takeThat: 0, artifactHits: 0, revenge: 0, kingmaker: 0, reactions: 0, helps: 0, hinders: 0, bossSeen: 0,
+    };
+    this.hp1Seen = g.players.map(() => false);
     g.hooks = this;
   }
 
   ev(type: EventType, p: number, a: number, b: string | number | null): void {
     const s = p >= 0 ? this.ps[p] : null;
     this.table(type, p, a, b);
+    this.feelEv(type, p, a, b);
     switch (type) {
       case 'round': this.snapshot(); break;
       case 'turn': s!.turns++; break;
@@ -179,6 +220,36 @@ export class Collector implements Hooks {
         if (a >= 2) s!.meaningful++;
         break;
     }
+  }
+
+  hp1Seen: boolean[] = [];
+
+  feelEv(type: EventType, p: number, a: number, b: string | number | null): void {
+    const f = this.feel;
+    const g = this.g;
+    switch (type) {
+      case 'receive': if (a >= 500) f.bigJumps++; this.peak(p); break;
+      case 'upgrade': if (a >= 400) f.bigJumps++; this.peak(p); break;
+      case 'hpLoss': case 'pay':
+        if (p >= 0 && g.players[p].alive && g.players[p].tokens.length === 1 && !this.hp1Seen[p]) { this.hp1Seen[p] = true; f.hp1++; }
+        break;
+      case 'encounter': if (a >= 4000) f.bossSeen++; break;
+      case 'landLost': if (b === 'taken') f.landsTaken++; break;
+      case 'artifactTrigger': f.artifactHits++; this.lastHarmer[a] = p; break;
+      case 'react': f.reactions++; if (b === 'help') f.helps++; else if (b === 'hinder') { f.hinders++; } break;
+      case 'spell': {
+        const card = b as string;
+        if (card === 'fireball' || card === 'drain' || card === 'hex') this.harm(p, a);
+        else if ((card === 'usurp' || card === 'release' || card === 'shatter') && a >= 0) this.harm(p, g.cells[a].land?.owner ?? -1);
+        break;
+      }
+    }
+  }
+
+  peak(p: number): void {
+    if (p < 0) return;
+    const v = power(this.g.players[p]);
+    if (v > this.feel.peakPower[p]) this.feel.peakPower[p] = v;
   }
 
   /** Record which option type was chosen (called by the runner). */
@@ -259,6 +330,7 @@ export class Collector implements Hooks {
       arithOps: this.arithOps,
       changeMaking: this.changeMaking,
       trackedEffects: this.trackedEffects,
+      feel: this.feel,
     };
   }
 }

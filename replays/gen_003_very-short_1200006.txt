@@ -1,0 +1,40 @@
+# Replay: very-short (duel)
+rules: v002
+seed: 1200006
+lineup: random, tactical
+scenario: -
+winner: tactical after 3 rounds (last-standing)
+choices: [0,1,3,1,1,0,1,1,1,1,0,1,1,2]
+
+[р1] TacticalBot#1 бросает 3 → клетка 3
+[р1] TacticalBot#1 захватывает Мельница (монстр 300)
+[р1] TacticalBot#1 получает 100 мощи (100) — Награда: Мельница
+[р1] TacticalBot#1 кладёт «Капкан» на Мельница
+[р1] RandomBot#2 применяет «Телепорт» → Мельница
+[р1] RandomBot#2 телепортируется на клетку 3
+[р1] Срабатывает «Капкан» TacticalBot#1 против RandomBot#2
+[р1] RandomBot#2 теряет жетон 300 — Капкан
+[р2] TacticalBot#1 применяет «Исцеление»
+[р2] TacticalBot#1 получает 100 мощи (100) — Исцеление
+[р2] TacticalBot#1 бросает 4 → клетка 7
+[р2] TacticalBot#1 захватывает Опушка (монстр 600)
+[р2] TacticalBot#1 меняет жетон 100 на 300 (апгрейд)
+[р2] TacticalBot#1 получает 200 мощи (300) — Награда: Опушка
+[р2] TacticalBot#1 кладёт «Страж» на Опушка
+[р2] RandomBot#2 применяет «Ярость»
+[р2] RandomBot#2 бросает 4 → клетка 7
+[р2] Срабатывает «Страж» TacticalBot#1 против RandomBot#2
+[р3] TacticalBot#1 применяет «Огненный шар» → RandomBot#2
+[р3] RandomBot#2 теряет жетон 100 — Огненный шар
+[р3] TacticalBot#1 бросает 3 → клетка 10
+[р3] TacticalBot#1 захватывает Дуб Шептун (монстр 800)
+[р3] TacticalBot#1 меняет жетон 100 на 300 (апгрейд)
+[р3] TacticalBot#1 получает 200 мощи (300) — Награда: Дуб Шептун
+[р3] TacticalBot#1 кладёт «Карманник» на Дуб Шептун
+[р3] RandomBot#2 применяет «Огненный шар» → TacticalBot#1
+[р3] TacticalBot#1 теряет жетон 100 — Огненный шар
+[р3] RandomBot#2 бросает 2 → клетка 9
+[р3] RandomBot#2 бросает 4 — побег не удался
+[р3] RandomBot#2 теряет жетон 500 — Монстр Волчья Тропа
+[р3] ☠ RandomBot#2 выбывает (Монстр Волчья Тропа)
+[р3] 🏆 Победа: TacticalBot#1 (last-standing)

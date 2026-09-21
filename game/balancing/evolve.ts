@@ -41,6 +41,9 @@ export interface Plan {
   next?: string;
   exploitSearch?: boolean;
   scale?: number;
+  /** Designer notes for GAME FEEL / Munchkin sections (after reading the numbers). */
+  gameFeel?: string;
+  munchkin?: string;
 }
 
 interface GenResult {
@@ -274,6 +277,48 @@ function cardTable(e: Evaluation): string {
   return s;
 }
 
+const mark = (ok: boolean, weak: boolean) => (ok ? '✅' : weak ? '⚠️' : '❌');
+
+function gameFeelTable(e: Evaluation, base: Evaluation, ch: string): string {
+  const f = e.summaries.mixed4.feel;
+  const b = base.summaries.mixed4.feel;
+  const m = e.summaries.mixed4;
+  if (!f) return '_нет данных_';
+  const pb = m.perBot.tactical ?? {};
+  const rows: Array<[string, boolean, boolean, string]> = [
+    ['1. Чувствуется ли рост мощности?', f.growth >= 1.8, f.growth >= 1.3, `пик/старт ×${f.growth.toFixed(2)} (было ×${b?.growth.toFixed(2) ?? '—'}); медиана макс. мощи за партию ${f.medianMaxPeak}`],
+    ['2. Чувствуется ли опасность потери HP?', f.hp1Share >= 0.3 && f.hp1Share <= 0.8, f.hp1Share >= 0.15, `${(f.hp1Share * 100).toFixed(0)}% игроков доходят до 1 HP; урон ${(pb.hpLost ?? 0).toFixed(1)} HP/партию у Tactical`],
+    ['3. Чувствуется ли ценность Земель?', (pb.captures ?? 0) >= 3, (pb.captures ?? 0) >= 1.5, `захватов ${(pb.captures ?? 0).toFixed(1)}/игрок, в конце у игрока ${(pb.landsEnd ?? 0).toFixed(1)} Земель`],
+    ['4. Есть ли взаимодействие между игроками?', f.takeThatPerTurn + f.artifactHitsPerTurn >= 0.5, f.takeThatPerTurn + f.artifactHitsPerTurn >= 0.3, `${(f.takeThatPerTurn + f.artifactHitsPerTurn).toFixed(2)} прямых влияний на ход (активных ${f.takeThatPerTurn.toFixed(2)}, Артефакты ${f.artifactHitsPerTurn.toFixed(2)})`],
+    ['5. Есть ли неожиданные моменты?', m.leadChangesPerGame >= 4 && f.reactionsPerGame >= 1, m.leadChangesPerGame >= 3, `смен лидера ${m.leadChangesPerGame.toFixed(1)}/партию, карт в чужой ход ${f.reactionsPerGame.toFixed(1)}/партию`],
+    ['6. Поводы смеяться/злиться/договариваться?', f.helpsPerGame >= 1 && f.hindersPerGame >= 1, f.reactionsPerGame + f.takeThatPerTurn * 20 >= 3, `Подмог ${f.helpsPerGame.toFixed(1)}, Помех ${f.hindersPerGame.toFixed(1)} за партию`],
+    ['7. «Ещё чуть-чуть — и я стану очень сильным»?', f.bossPerGame >= 1 && f.bigGameShare >= 0.5, f.bigGameShare >= 0.3, `встреч с монстрами 4000+ ${f.bossPerGame.toFixed(1)}/партию; партий, где кто-то достиг 2500+: ${(f.bigGameShare * 100).toFixed(0)}%`],
+    ['8. «Я НЕ МОГУ ЭТО ПОТЕРЯТЬ»?', f.hp1Share >= 0.3 && (pb.landsEnd ?? 0) >= 1, f.hp1Share >= 0.15, `1 HP и есть что терять: ${(f.hp1Share * 100).toFixed(0)}% игроков`],
+    ['9. «ДАААА, Я СТАЛ СИЛЬНЕЕ!»?', f.jumpsPerGame >= 3, f.jumpsPerGame >= 1, `рывков мощи ≥500 за раз: ${f.jumpsPerGame.toFixed(1)}/партию`],
+    ['10. «ЧЁРТ, ОН МНЕ ВСЁ СЛОМАЛ»?', f.landsTakenPerGame + f.hindersPerGame >= 2, f.landsTakenPerGame + f.hindersPerGame >= 1, `отнятых Земель ${f.landsTakenPerGame.toFixed(1)}, сорванных Помехой боёв ${f.hindersPerGame.toFixed(1)} за партию`],
+  ];
+  let s = `| Вопрос | ${ch === 'base' ? 'итог' : ch} | Данные симуляции |\n|---|---|---|\n`;
+  for (const [q, ok, weak, txt] of rows) s += `| ${q} | ${mark(ok, weak)} | ${txt} |\n`;
+  return s;
+}
+
+function munchkinTable(e: Evaluation, base: Evaluation, ch: string): string {
+  const f = e.summaries.mixed4.feel;
+  if (!f) return '_нет данных_';
+  const rows: Array<[string, boolean, boolean, string]> = [
+    ['Player Interaction', f.takeThatPerTurn + f.artifactHitsPerTurn >= 0.5, f.takeThatPerTurn + f.artifactHitsPerTurn >= 0.3, `${(f.takeThatPerTurn + f.artifactHitsPerTurn).toFixed(2)} прямых влияний на ход`],
+    ['Take That', f.takeThatPerTurn >= 0.35, f.takeThatPerTurn >= 0.2, `${f.takeThatPerTurn.toFixed(2)} активных вредных действий на ход; отнято Земель ${f.landsTakenPerGame.toFixed(1)}/партию`],
+    ['Temporary Alliances', f.helpsPerGame >= 1, f.helpsPerGame >= 0.3, `Подмог (помощь чужому бою за награду) ${f.helpsPerGame.toFixed(1)}/партию`],
+    ['Negotiation', f.helpsPerGame >= 1, f.helpsPerGame >= 0.3, 'Поводы: «помогу, если отдашь награду / не тронешь мою Землю». Ботами не моделируется, оценивается по числу Подмог'],
+    ['Kingmaking', f.kingmakerShare <= 0.25, f.kingmakerShare <= 0.35, `${(f.kingmakerShare * 100).toFixed(0)}% вредных действий совершает игрок на последнем месте`],
+    ['Revenge', f.revengeShare >= 0.15, f.revengeShare >= 0.08, `${(f.revengeShare * 100).toFixed(0)}% атак направлены на того, кто последним навредил атакующему`],
+    ['Table Talk', f.reactionsPerGame >= 2, f.reactionsPerGame >= 0.5, `карт в чужой ход ${f.reactionsPerGame.toFixed(1)}/партию`],
+  ];
+  let s = `| Критерий | ${ch === 'base' ? 'итог' : ch} | Данные |\n|---|---|---|\n`;
+  for (const [q, ok, weak, txt] of rows) s += `| ${q} | ${mark(ok, weak)} | ${txt} |\n`;
+  return s;
+}
+
 function tabletopTable(plan: Plan): string {
   const cs = plan.candidates.filter((c) => c.tabletop);
   if (!cs.length) return '_Новых механик нет._';
@@ -368,6 +413,18 @@ ${r.newVersion ? `Принят кандидат **${ch}**: ${cand?.title}\n\n\`\
 ## Tabletop Filter (Human Table Test)
 
 ${tabletopTable(plan)}
+
+## GAME FEEL
+
+${gameFeelTable(r.training[ch], r.training.base, ch)}
+
+${plan.gameFeel ?? ''}
+
+## Манчкин-критерий (взаимодействие игроков)
+
+${munchkinTable(r.training[ch], r.training.base, ch)}
+
+${plan.munchkin ?? ''}
 
 ## Почему
 

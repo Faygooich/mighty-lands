@@ -7,6 +7,7 @@ export interface CellDef {
   name?: string;
   region?: number;
   monster?: number;
+  reward?: number;
 }
 
 export interface WinRules {
@@ -75,6 +76,12 @@ export interface RuleSet {
   deathLands: 'wild' | 'killer';
   /** Catch-up: the player with fewest HP draws +N extra cards. */
   catchUpDraw: number;
+  /** Monster power per region (overrides board), e.g. [[200,300,...],...]; null = board as is. */
+  regionMonsters: number[][] | null;
+  /** Reward token value for defeating a monster, per region (printed on the Land). null = none. */
+  regionRewards: number[] | null;
+  /** When a token is gained with no free slot, it replaces your smallest token if larger ("upgrade"). */
+  upgradeWhenFull: boolean;
   /** Max round count before forced end. */
   roundCap: number;
   win: WinRules;
@@ -130,6 +137,9 @@ export const BASE_RULES: RuleSet = {
   ownedDefenceFrac: 1,
   deathLands: 'wild',
   catchUpDraw: 0,
+  regionMonsters: null,
+  regionRewards: null,
+  upgradeWhenFull: false,
   roundCap: 120,
   win: { lastStanding: true, landsTarget: 0, regionWin: false, powerTarget: 0, vpTarget: 0, firstDeathEnds: false },
   decks: {
@@ -144,6 +154,9 @@ export const BASE_RULES: RuleSet = {
     heal: 100,
     trapDamage: 1,
     fireballDamage: 1,
+    aid: 500,
+    aidReward: 300,
+    hex: 500,
   },
 };
 

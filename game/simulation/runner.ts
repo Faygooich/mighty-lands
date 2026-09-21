@@ -27,7 +27,7 @@ export interface RunResult {
 /** Label of a chosen option for decision-diversity statistics. */
 function choiceLabel(g: GameState, d: Decision, o: Decision['options'][number]): string {
   switch (o.t) {
-    case 'spell': case 'artifact': case 'discard': return `${o.t}:${o.card}`;
+    case 'spell': case 'artifact': case 'discard': case 'react': return `${o.t}:${o.card}`;
     case 'token': return o.value === g.players[d.player].tokens[g.players[d.player].tokens.length - 1] ? 'token:min' : 'token:other';
     case 'pay': return `pay:${o.tokens.length}`;
     default: return o.t;

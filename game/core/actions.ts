@@ -11,10 +11,25 @@ export function ev(g: GameState, type: EventType, player: number, a = 0, b: stri
 export function gainPower(g: GameState, p: PlayerState, amount: number, source: string): number {
   if (!p.alive || amount <= 0) return 0;
   const r = g.rules;
-  const add = decompose(amount, r.maxSlots - p.tokens.length, r.denominations);
-  const got = sum(add);
+  const free = r.maxSlots - p.tokens.length;
+  let add = decompose(amount, free, r.denominations);
+  let got = sum(add);
   for (const t of add) p.tokens.push(t);
   sortDesc(p.tokens);
+  if (r.upgradeWhenFull && got < amount) {
+    // no room: the new token replaces your smallest one if it is larger (HP unchanged, power grows)
+    const extra = decompose(amount - got, 1, r.denominations);
+    const t = extra[0];
+    const small = p.tokens[p.tokens.length - 1];
+    if (t !== undefined && small !== undefined && t > small) {
+      p.tokens[p.tokens.length - 1] = t;
+      sortDesc(p.tokens);
+      got += t - small;
+      ev(g, 'upgrade', p.id, t - small, source);
+      logMsg(g, `${p.name} меняет жетон ${small} на ${t} (апгрейд)`);
+      add = add.concat([t]);
+    }
+  }
   if (add.length) ev(g, 'hpGain', p.id, add.length, source);
   if (got < amount) ev(g, 'burn', p.id, amount - got, source);
   ev(g, 'receive', p.id, got, source);

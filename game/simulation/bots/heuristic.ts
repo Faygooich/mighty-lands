@@ -86,7 +86,7 @@ export class HeuristicBot {
   landVal(g: GameState, l: LandState): number {
     const r = g.rules;
     const incomeBonus = r.incomePerLand * 3;
-    let v = 450 + 0.3 * l.baseMonster + incomeBonus;
+    let v = 450 + 0.3 * l.baseMonster + incomeBonus + (l.owner === -1 ? l.reward * this.w.power : 0);
     if (r.win.landsTarget) v += 900;
     if (r.win.vpTarget) v += 700 + (r.params.vpPerRegionTier ?? 0) * l.region * 500;
     if (r.win.regionWin || r.params.vpRegionBonus) {
@@ -189,7 +189,7 @@ export class HeuristicBot {
     const base: Record<string, number> = {
       tribute: P.tribute * 0.6, bigTribute: P.bigTribute * 0.6, trap: 400, pickpocket: 150, shackles: 220, exile: 150, guardian: 120,
       bastion: 180, toll: 300, fireball: 450, heal: 380, shatter: 250, usurp: 520, teleport: 300, fury: 260, release: 350, drain: 320,
-      ward: 280, transmute: 120,
+      ward: 280, transmute: 120, aid: 250, hex: 280,
     };
     let v = (base[card] ?? 100) + pref;
     if (ARTIFACTS[card] && landsOf(g, me.id).length === 0) v *= 0.4; // no outlet yet
@@ -241,6 +241,21 @@ export class HeuristicBot {
         for (const q of g.players) if (q.alive && q.id !== me.id) { enemyHarm += this.artHarm(g, o.card, q, me); n++; }
         enemyHarm /= Math.max(1, n);
         return (40 + enemyHarm * this.traffic(g, me, o.land) * 3 * w.artifact) * (1 + w.attack * 0.2) + pref * 0.3;
+      }
+      case 'react': {
+        const fighter = g.players[d.amount ?? 0];
+        const l = g.cells[fighter.pos].land!;
+        const bonus = r.params[o.card] ?? 0;
+        const eff = effPower(fighter) + fighter.fightMod;
+        const wins = (x: number, m: number) => x > m || (r.tieWins && x === m);
+        const before = wins(eff, l.monster);
+        const sp = o.card === 'aid';
+        const after = sp ? wins(eff + bonus, l.monster) : wins(eff, l.monster + bonus);
+        if (before === after) return -100; // wasted card
+        const theirGain = this.landVal(g, l) * 0.6 + (before ? 0 : (1 - fleeP(g)) * 350);
+        const hurt = theirGain * w.attack * this.threat(g, fighter);
+        if (sp) return (r.params.aidReward ?? 0) * w.power - hurt * 0.5 - 60;
+        return hurt - 60;
       }
       case 'spell': return this.spellValue(g, me, o.card, o.target) + (w.cardPrefs[o.card] ?? 0) * 0.3 - w.spellThreshold;
     }

@@ -52,6 +52,22 @@ export function neverCapturedLands(s: Summary, threshold = 0.1): number {
   return n;
 }
 
+/** Q15 components, each 0..1 (1 = feeling clearly present). Fixed in quality_criteria.md (R3). */
+export function gameFeelComponents(s: Summary): Record<string, number> {
+  const f = s.feel;
+  const hp1 = f.hp1Share;
+  return {
+    growth: clamp01((f.growth - 1) / 1),                 // peak/start power >= 2.0
+    bigMoment: clamp01(f.bigGameShare / 0.6),             // someone reaches 2500+ in 60% of games
+    danger: hp1 < 0.3 ? clamp01(hp1 / 0.3) : hp1 > 0.8 ? clamp01(1 - (hp1 - 0.8) / 0.2) : 1,
+    brokeMyPlans: clamp01(f.landsTakenPerGame / 1.5),     // lands taken away by others
+    interaction: clamp01(f.takeThatPerTurn / 0.35),       // active take-that per turn
+    revenge: clamp01(f.revengeShare / 0.15),
+    outOfTurn: clamp01(f.reactionsPerGame / 2),           // Munchkin: cards played in others' turns
+    noKingmaking: f.kingmakerShare <= 0.25 ? 1 : clamp01(1 - (f.kingmakerShare - 0.25) / 0.25),
+  };
+}
+
 export function score(mixed: Summary, mirror: Summary, denoms: number[], exploit?: Summary, landCount = 20): ScoreBreakdown {
   const pen: Record<string, number> = {};
   const val: Record<string, number> = {};
@@ -107,6 +123,14 @@ export function score(mixed: Summary, mirror: Summary, denoms: number[], exploit
   val.arithPerTurn = mixed.arithPerTurn;
   const md = mins < 30 ? (30 - mins) / 30 : mins > 75 ? (mins - 75) / 75 : 0;
   pen.Q14_table = 4 * clamp01(md * 2) + 4 * clamp01(Math.max(0, mixed.arithPerTurn - 3) / 5);
+  // --- R3: all Q1..Q14 scaled by 0.85, Q15 Game Feel (weight 15)
+  for (const k of Object.keys(pen)) pen[k] *= 0.85;
+  const f = mixed.feel;
+  const comp = gameFeelComponents(mixed);
+  for (const [k, v] of Object.entries(comp)) val[`feel_${k}`] = v;
+  const meanC = Object.values(comp).reduce((a, b) => a + b, 0) / Object.values(comp).length;
+  pen.Q15_gameFeel = 15 * (1 - meanC);
+  val.growth = f.growth;
   const hardFail: string[] = [];
   if (mixed.timeoutRate > 0.05) hardFail.push('timeouts > 5%');
   const total = 100 - Object.values(pen).reduce((a, b) => a + b, 0);
