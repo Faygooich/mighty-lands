@@ -212,7 +212,8 @@ export class HeuristicBot {
       case 'fight': {
         const l = g.cells[me.pos].land!;
         let win = 0;
-        for (let roll = 1; roll <= 6; roll++) if (effPower(me) + roll * r.fightRollStep > l.monster) win++;
+        const wo = r.params.fightWinOn ?? 0;
+        for (let roll = 1; roll <= 6; roll++) if ((wo > 0 && roll >= wo) || effPower(me) + me.fightMod + roll * r.fightRollStep > l.monster) win++;
         const pw = win / 6;
         const loss = hp(me) <= (r.params.fightLossHp || 1) ? w.kill + 1000 : this.hpVal(me, -1) * (r.params.fightLossHp || 1);
         return pw * this.landVal(g, l) - (1 - pw) * loss * w.risk;

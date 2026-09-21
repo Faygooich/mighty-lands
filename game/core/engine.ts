@@ -208,7 +208,8 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
   const roll = g.rng.d6();
   if (fight) {
     const total = eff + roll * r.fightRollStep;
-    if (total > m || (r.tieWins && total === m)) {
+    const sixWins = (r.params.fightWinOn ?? 0) > 0 && roll >= r.params.fightWinOn;
+    if (sixWins || total > m || (r.tieWins && total === m)) {
       ev(g, 'fightWin', p.id, roll, land.cell);
       setOwner(g, land, p.id);
       ev(g, 'capture', p.id, land.cell, 'fight');
