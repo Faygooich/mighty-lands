@@ -6,7 +6,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadRules, rulesPath, RULES_DIR } from '../rules/load.ts';
-import { mergeRules, type RuleSet } from '../rules/ruleset.ts';
+import { mergeRules, rulesComplexity, type RuleSet } from '../rules/ruleset.ts';
 import { Pool, defaultWorkers } from '../simulation/pool.ts';
 import { SEEDS } from '../simulation/experiment.ts';
 import { evaluate, suiteDefs, type Evaluation } from './suite.ts';
@@ -107,7 +107,8 @@ async function runGeneration(n: number): Promise<void> {
   }
   // selection: best training score among non-failing; ties (<0.5) prefer base / fewer overrides
   const ids = Object.keys(rulesets).filter((id) => training[id].score.hardFail.length === 0);
-  const complexity = (id: string) => (id === 'base' ? 0 : JSON.stringify(plan.candidates.find((c) => c.id === id)!.overrides).length);
+  // R3.1: tie-break by complexity of the resulting game; equal complexity → prefer no change
+  const complexity = (id: string) => rulesComplexity(rulesets[id]) + (id === 'base' ? 0 : 0.5);
   ids.sort((a, b) => {
     const d = training[b].score.total - training[a].score.total;
     return Math.abs(d) < 0.5 ? complexity(a) - complexity(b) : d;
@@ -120,7 +121,8 @@ async function runGeneration(n: number): Promise<void> {
     validation[chosen] = await evaluate(pool, rulesets[chosen], SEEDS.validation, { scale, genomes });
     totalGames += validation.base.games + validation[chosen].games;
     const dv = validation[chosen].score.total - validation.base.score.total;
-    if (dv < 0) {
+    // R3.1: same tolerance as the training tie-break (0.5) — smaller differences are noise
+    if (dv < -0.5) {
       decision = `Кандидат ${chosen} лучший на training, но на validation хуже базы (${dv.toFixed(1)}) → изменение отклонено.`;
       chosen = 'base';
     } else {

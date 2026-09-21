@@ -191,6 +191,25 @@ export function mergeRules(base: RuleSet, over: Record<string, unknown>): RuleSe
   return out as unknown as RuleSet;
 }
 
+/**
+ * Rulebook complexity of a ruleset (used only as the tie-break "prefer the simpler game", R3.1):
+ * distinct card types + active mechanics + active win conditions.
+ */
+export function rulesComplexity(r: RuleSet): number {
+  let n = 0;
+  for (const d of [r.decks.artifacts, r.decks.spells]) for (const v of Object.values(d)) if (v > 0) n++;
+  const flags = [
+    r.encounterChoice, r.upgradeWhenFull, r.landChallenge, r.exchange, r.artifactsSingleUse, r.firstTurnNoDraw,
+    r.catchUpDraw > 0, r.seatBonusCards.some((x) => x > 0), r.seatBonusTokens.some((x) => x.length > 0),
+    !!r.regionRewards, r.artifactFlee !== 'never', r.payMode === 'sum' && r.change, r.incomePerLand > 0,
+    r.captureCostFrac > 0, (r.params.crown ?? 0) > 0, r.tieWins, r.handLimit === 'hp',
+  ];
+  n += flags.filter(Boolean).length;
+  const w = r.win;
+  n += [w.lastStanding, w.landsTarget > 0, w.regionWin, w.powerTarget > 0, w.vpTarget > 0, w.firstDeathEnds].filter(Boolean).length;
+  return n;
+}
+
 export function landCount(r: RuleSet): number {
   return r.board.filter((c) => c.type === 'land').length;
 }

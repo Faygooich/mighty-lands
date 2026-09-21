@@ -1,0 +1,32 @@
+{
+  "version": "v008",
+  "parent": "v007",
+  "title": "B + убрать Изгнание (Дань ×13, Капкан ×6)",
+  "generation": 9,
+  "changes": [
+    "B + убрать Изгнание (Дань ×13, Капкан ×6)"
+  ],
+  "rationale": "Минимальный набор Артефактов: 5 типов.",
+  "overrides": {
+    "decks": {
+      "artifacts": {
+        "tribute": 13,
+        "trap": 6,
+        "pickpocket": 4,
+        "shackles": 4,
+        "guardian": 3
+      },
+      "spells": {
+        "fireball": 5,
+        "heal": 5,
+        "shatter": 4,
+        "usurp": 3,
+        "teleport": 3,
+        "release": 3,
+        "drain": 3,
+        "aid": 6,
+        "hex": 6
+      }
+    }
+  }
+}
