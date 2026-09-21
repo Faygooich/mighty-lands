@@ -1,0 +1,52 @@
+# Replay: very-short (mixed4)
+rules: v008
+seed: 1001299
+lineup: tactical, economic, aggressive, random
+scenario: -
+winner: economic after 3 rounds (last-standing)
+choices: [1,1,1,0,1,2,0,0,0,1,1,1,1,2,1,8,1,0,1,1,0,4,1,0,0,1,2,1,1,0,0,0,1,1,0,0,0,0]
+
+[р1] TacticalBot#1 применяет «Огненный шар» → RandomBot#2
+[р1] RandomBot#2 теряет жетон 300 — Огненный шар
+[р1] TacticalBot#1 бросает 5 → клетка 5
+[р1] RandomBot#2 играет «Помеха» в бою TacticalBot#1
+[р1] TacticalBot#1 бросает 3 и проигрывает бой
+[р1] TacticalBot#1 теряет жетон 100 — Монстр Старый Мост
+[р1] RandomBot#2 бросает 6 → клетка 6
+[р1] EconomicBot#3 бросает 3 → клетка 3
+[р1] EconomicBot#3 захватывает Мельница (монстр 300)
+[р1] EconomicBot#3 получает 100 мощи (100) — Награда: Мельница
+[р1] EconomicBot#3 кладёт «Дань» на Мельница
+[р1] AggressiveBot#4 применяет «Разрушение» → Мельница
+[р1] AggressiveBot#4 бросает 5 → клетка 5
+[р1] EconomicBot#3 играет «Помеха» в бою AggressiveBot#4
+[р1] AggressiveBot#4 бросает 2 и проигрывает бой
+[р1] AggressiveBot#4 теряет жетон 100 — Монстр Старый Мост
+[р2] TacticalBot#1 применяет «Телепорт» → Грибная Чаща
+[р2] TacticalBot#1 телепортируется на клетку 8
+[р2] EconomicBot#3 играет «Помеха» в бою TacticalBot#1
+[р2] TacticalBot#1 бросает 1 и проигрывает бой
+[р2] TacticalBot#1 теряет жетон 300 — Монстр Грибная Чаща
+[р2] RandomBot#2 применяет «Огненный шар» → AggressiveBot#4
+[р2] AggressiveBot#4 теряет жетон 300 — Огненный шар
+[р2] RandomBot#2 бросает 1 → клетка 7
+[р2] RandomBot#2 бросает 1 — побег не удался
+[р2] RandomBot#2 теряет жетон 100 — Монстр Опушка
+[р2] EconomicBot#3 кладёт «Оковы» на Мельница
+[р2] EconomicBot#3 бросает 1 → клетка 4
+[р2] EconomicBot#3 захватывает Овечий Холм (монстр 400)
+[р2] EconomicBot#3 получает 100 мощи (100) — Награда: Овечий Холм
+[р2] AggressiveBot#4 бросает 4 → клетка 9
+[р2] AggressiveBot#4 бросает 2 и проигрывает бой
+[р2] AggressiveBot#4 теряет жетон 500 — Монстр Волчья Тропа
+[р2] ☠ AggressiveBot#4 выбывает (Монстр Волчья Тропа)
+[р3] TacticalBot#1 применяет «Разрушение» → Мельница
+[р3] TacticalBot#1 бросает 2 → клетка 10
+[р3] TacticalBot#1 бросает 2 — побег не удался
+[р3] TacticalBot#1 теряет жетон 500 — Монстр Дуб Шептун
+[р3] ☠ TacticalBot#1 выбывает (Монстр Дуб Шептун)
+[р3] RandomBot#2 бросает 2 → клетка 9
+[р3] RandomBot#2 бросает 2 — побег не удался
+[р3] RandomBot#2 теряет жетон 500 — Монстр Волчья Тропа
+[р3] ☠ RandomBot#2 выбывает (Монстр Волчья Тропа)
+[р3] 🏆 Победа: EconomicBot#3 (last-standing)

@@ -109,9 +109,16 @@ async function runGeneration(n: number): Promise<void> {
   const ids = Object.keys(rulesets).filter((id) => training[id].score.hardFail.length === 0);
   // R3.1: tie-break by complexity of the resulting game; equal complexity → prefer no change
   const complexity = (id: string) => rulesComplexity(rulesets[id]) + (id === 'base' ? 0 : 0.5);
+  // R3.2 (from Gen 10): inside the tie zone prefer fewer open problems (HIGH=3, MEDIUM=1), then the simpler game
+  const sevW: Record<string, number> = { CRITICAL: 9, HIGH: 3, MEDIUM: 1 };
+  const openSev = (id: string) => (n >= 10 ? detect(training[id], rulesets[id].denominations).reduce((s, f) => s + (sevW[f.severity] ?? 0), 0) : 0);
+  const best = Math.max(...ids.map((id) => training[id].score.total));
   ids.sort((a, b) => {
-    const d = training[b].score.total - training[a].score.total;
-    return Math.abs(d) < 0.5 ? complexity(a) - complexity(b) : d;
+    const ta = best - training[a].score.total < 0.5;
+    const tb = best - training[b].score.total < 0.5;
+    if (ta !== tb) return ta ? -1 : 1;
+    if (!ta) return training[b].score.total - training[a].score.total;
+    return openSev(a) - openSev(b) || complexity(a) - complexity(b);
   });
   let chosen = ids[0] ?? 'base';
   const validation: Record<string, Evaluation> = {};

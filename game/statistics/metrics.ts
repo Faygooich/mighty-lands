@@ -68,6 +68,7 @@ export interface Feel {
   reactions: number;      // cards played outside own turn
   helps: number;          // help given to another player
   hinders: number;        // hindrance played on another player's fight
+  respawns: number;       // BANG!-style returns to the game
   bossSeen: number;       // encounters with monsters >= 4000 ("ЧЁРТ, Я ЕЩЁ НЕ ГОТОВ")
 }
 
@@ -176,7 +177,7 @@ export class Collector implements Hooks {
     this.lastHarmer = g.players.map(() => -1);
     this.feel = {
       startPower: g.players.map((p) => power(p)), peakPower: g.players.map((p) => power(p)),
-      bigJumps: 0, hp1: 0, landsTaken: 0, takeThat: 0, artifactHits: 0, revenge: 0, kingmaker: 0, reactions: 0, helps: 0, hinders: 0, bossSeen: 0,
+      bigJumps: 0, hp1: 0, landsTaken: 0, takeThat: 0, artifactHits: 0, revenge: 0, kingmaker: 0, reactions: 0, helps: 0, hinders: 0, respawns: 0, bossSeen: 0,
     };
     this.hp1Seen = g.players.map(() => false);
     g.hooks = this;
@@ -234,6 +235,7 @@ export class Collector implements Hooks {
         if (p >= 0 && g.players[p].alive && g.players[p].tokens.length === 1 && !this.hp1Seen[p]) { this.hp1Seen[p] = true; f.hp1++; }
         break;
       case 'encounter': if (a >= 4000) f.bossSeen++; break;
+      case 'respawn': f.respawns++; if (!this.hp1Seen[p]) { this.hp1Seen[p] = true; f.hp1++; } break;
       case 'landLost': if (b === 'taken') f.landsTaken++; break;
       case 'artifactTrigger': f.artifactHits++; this.lastHarmer[a] = p; break;
       case 'react': f.reactions++; if (b === 'help') f.helps++; else if (b === 'hinder') { f.hinders++; } break;

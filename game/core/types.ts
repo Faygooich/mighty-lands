@@ -120,7 +120,7 @@ export type EventType =
   | 'hpLoss' | 'hpGain' | 'death'
   | 'pay' | 'receive' | 'burn' | 'change'
   | 'artifactPlace' | 'artifactTrigger' | 'artifactFleeOk' | 'artifactFleeFail'
-  | 'spell' | 'discard' | 'decision' | 'landLost' | 'round' | 'end' | 'exchange' | 'reshuffle' | 'shieldBlock' | 'upgrade' | 'react';
+  | 'spell' | 'discard' | 'decision' | 'landLost' | 'round' | 'end' | 'exchange' | 'reshuffle' | 'shieldBlock' | 'upgrade' | 'react' | 'respawn';
 
 export interface Hooks {
   ev(type: EventType, player: number, a: number, b: string | number | null): void;

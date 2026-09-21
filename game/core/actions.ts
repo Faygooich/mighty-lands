@@ -152,8 +152,11 @@ function* payToken(g: GameState, payer: PlayerState, amount: number, recipient: 
 
 export function kill(g: GameState, p: PlayerState, killer: number, source: string): void {
   if (!p.alive) return;
-  p.alive = false;
-  p.eliminatedRound = g.round;
+  const respawn = g.rules.respawnTokens.length > 0;
+  if (!respawn) {
+    p.alive = false;
+    p.eliminatedRound = g.round;
+  }
   for (const c of g.cells) {
     const l = c.land;
     if (!l || l.owner !== p.id) continue;
@@ -169,6 +172,14 @@ export function kill(g: GameState, p: PlayerState, killer: number, source: strin
   }
   for (const card of p.hand) discard(g, card);
   p.hand = [];
+  if (respawn) {
+    p.tokens = g.rules.respawnTokens.slice().sort((a, b) => b - a);
+    p.pos = 0;
+    p.skip = 0;
+    ev(g, 'respawn', p.id, killer, source);
+    logMsg(g, `☠ ${p.name} теряет всё и возвращается на Врата (${source})`);
+    return;
+  }
   ev(g, 'death', p.id, killer, source);
   logMsg(g, `☠ ${p.name} выбывает (${source})`);
   if (g.rules.win.firstDeathEnds && !g.over) {

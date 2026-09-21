@@ -128,7 +128,7 @@ export function addRecord(agg: Agg, r: GameRecord): void {
   });
   incArr(agg.peakHist, Math.min(60, Math.floor(maxPeak / 100)));
   if (maxPeak >= 2500) inc(agg.feel, 'bigGames');
-  for (const k of ['bigJumps', 'hp1', 'landsTaken', 'takeThat', 'artifactHits', 'revenge', 'kingmaker', 'reactions', 'helps', 'hinders', 'bossSeen'] as const) inc(agg.feel, k, f[k]);
+  for (const k of ['bigJumps', 'hp1', 'landsTaken', 'takeThat', 'artifactHits', 'revenge', 'kingmaker', 'reactions', 'helps', 'hinders', 'respawns', 'bossSeen'] as const) inc(agg.feel, k, f[k]);
 }
 
 export function mergeAgg(a: Agg, b: Agg): Agg {

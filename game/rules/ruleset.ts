@@ -88,6 +88,8 @@ export interface RuleSet {
   seatBonusTokens: number[][];
   /** The first player does not draw cards on their first turn. */
   firstTurnNoDraw: boolean;
+  /** BANG!-style return: losing the last token does not eliminate — lose Lands and hand, restart at Start with these tokens. [] = eliminated. */
+  respawnTokens: number[];
   /** Max round count before forced end. */
   roundCap: number;
   win: WinRules;
@@ -149,6 +151,7 @@ export const BASE_RULES: RuleSet = {
   seatBonusCards: [],
   seatBonusTokens: [],
   firstTurnNoDraw: false,
+  respawnTokens: [],
   roundCap: 120,
   win: { lastStanding: true, landsTarget: 0, regionWin: false, powerTarget: 0, vpTarget: 0, firstDeathEnds: false },
   decks: {
@@ -202,7 +205,7 @@ export function rulesComplexity(r: RuleSet): number {
     r.encounterChoice, r.upgradeWhenFull, r.landChallenge, r.exchange, r.artifactsSingleUse, r.firstTurnNoDraw,
     r.catchUpDraw > 0, r.seatBonusCards.some((x) => x > 0), r.seatBonusTokens.some((x) => x.length > 0),
     !!r.regionRewards, r.artifactFlee !== 'never', r.payMode === 'sum' && r.change, r.incomePerLand > 0,
-    r.captureCostFrac > 0, (r.params.crown ?? 0) > 0, r.tieWins, r.handLimit === 'hp',
+    r.captureCostFrac > 0, (r.params.crown ?? 0) > 0, r.tieWins, r.handLimit === 'hp', r.respawnTokens.length > 0,
   ];
   n += flags.filter(Boolean).length;
   const w = r.win;
