@@ -74,6 +74,7 @@ export function removeTokens(tokens: number[], values: readonly number[]): void 
 export function afterPayment(tokens: readonly number[], pick: readonly number[], amount: number, rules: RuleSet): number[] {
   const rest = tokens.slice();
   removeTokens(rest, pick);
+  if (rules.payMode !== 'sum') return sortDesc(rest);
   const change = sum(pick) - amount;
   if (rules.change && change > 0) {
     for (const t of decompose(change, rules.maxSlots - rest.length, rules.denominations)) rest.push(t);

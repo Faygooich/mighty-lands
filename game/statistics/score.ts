@@ -57,12 +57,12 @@ export function score(mixed: Summary, mirror: Summary, denoms: number[], exploit
   const val: Record<string, number> = {};
   // Q1
   val.timeoutRate = mixed.timeoutRate;
-  pen.Q1_termination = 15 * clamp01(mixed.timeoutRate / 0.1);
+  pen.Q1_termination = 12 * clamp01(mixed.timeoutRate / 0.1);
   // Q2
   const med = mixed.medianRounds;
   val.medianRounds = med;
   const dist = med < 12 ? (12 - med) / 12 : med > 30 ? (med - 30) / 30 : 0;
-  pen.Q2_length = 8 * clamp01(dist * 2);
+  pen.Q2_length = 6 * clamp01(dist * 2);
   // Q3
   val.seatDeviation = seatDeviation(mirror);
   pen.Q3_seat = 8 * clamp01(Math.max(0, val.seatDeviation - 0.15) / 0.35);
@@ -85,11 +85,11 @@ export function score(mixed: Summary, mirror: Summary, denoms: number[], exploit
   // Q9
   const ch = cardHealth(mixed);
   val.cardUnhealthy = ch.frac;
-  pen.Q9_cards = 5 * clamp01(ch.frac * 2);
+  pen.Q9_cards = 4 * clamp01(ch.frac * 2);
   // Q10
   const weak = weakDenominations(mixed, denoms);
   val.weakDenoms = weak.length;
-  pen.Q10_denoms = 4 * clamp01(weak.length / denoms.length);
+  pen.Q10_denoms = 3 * clamp01(weak.length / denoms.length);
   // Q11 territory
   const never = neverCapturedLands(mixed);
   val.neverCapturedLands = never;
@@ -100,7 +100,13 @@ export function score(mixed: Summary, mirror: Summary, denoms: number[], exploit
   pen.Q12_exploit = 6 * clamp01(Math.max(0, ew - 0.2) / 0.8);
   // Q13 change-healing integrity
   val.changeHeal = mixed.changeHealPerGame;
-  pen.Q13_integrity = 4 * clamp01(Math.max(0, mixed.changeHealPerGame - 0.2) / 1.8);
+  pen.Q13_integrity = 3 * clamp01(Math.max(0, mixed.changeHealPerGame - 0.2) / 1.8);
+  // Q14 Human Table Test: real-table duration and arithmetic load
+  const mins = mixed.tableMinutes;
+  val.tableMinutes = mins;
+  val.arithPerTurn = mixed.arithPerTurn;
+  const md = mins < 30 ? (30 - mins) / 30 : mins > 75 ? (mins - 75) / 75 : 0;
+  pen.Q14_table = 4 * clamp01(md * 2) + 4 * clamp01(Math.max(0, mixed.arithPerTurn - 3) / 5);
   const hardFail: string[] = [];
   if (mixed.timeoutRate > 0.05) hardFail.push('timeouts > 5%');
   const total = 100 - Object.values(pen).reduce((a, b) => a + b, 0);

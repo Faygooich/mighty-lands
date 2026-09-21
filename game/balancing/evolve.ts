@@ -22,7 +22,13 @@ const RES = join(ROOT, 'results');
 const DOCS = join(ROOT, 'docs', 'generations');
 const pad = (n: number) => String(n).padStart(3, '0');
 
-export interface Candidate { id: string; title: string; overrides: Record<string, unknown>; rationale?: string }
+export interface Tabletop {
+  /** The 8 questions of the Tabletop Filter, answered for the NEW mechanic. */
+  explain: string; noCalculator: boolean; noWriting: boolean; tempEffects: number; onComponent: boolean; visible: boolean; notSlow: boolean; decision: string;
+  /** Loads: 'нет' | 'низкая' | 'средняя' | 'высокая' */
+  cognitive: string; arithmetic: string; lookup: string; bookkeeping: string; tableTime: string;
+}
+export interface Candidate { id: string; title: string; overrides: Record<string, unknown>; rationale?: string; tabletop?: Tabletop }
 export interface Plan {
   generation: number;
   base: string;
@@ -219,6 +225,11 @@ function metricsTable(cols: Array<[string, Evaluation]>): string {
     ['Доля времени выбывшим', (e) => pct(e.summaries.mixed4.deadFraction)],
     ['Содержательных решений / ход', (e) => e.summaries.mixed4.meaningfulPerTurn.toFixed(2)],
     ['HP из сдачи за партию', (e) => e.summaries.mixed4.changeHealPerGame.toFixed(2)],
+    ['⏱ Оценка реального времени партии (4p)', (e) => `${e.summaries.mixed4.tableMinutes.toFixed(0)} мин (p90 ≈ ${e.summaries.mixed4.tableMinutesP90.toFixed(0)})`],
+    ['⏱ Секунд на ход за столом', (e) => e.summaries.mixed4.secPerTurn.toFixed(0)],
+    ['🧮 Арифметических операций на ход', (e) => e.summaries.mixed4.arithPerTurn.toFixed(2)],
+    ['🧮 Размен сдачи за партию', (e) => e.summaries.mixed4.changeMakingPerGame.toFixed(1)],
+    ['📌 Временных эффектов для отслеживания за партию', (e) => e.summaries.mixed4.trackedEffectsPerGame.toFixed(1)],
     ['ExploitBot win rate (vs 3 Tactical)', (e) => pct(e.summaries.exploit?.winRate.exploit)],
     ['Low HP: медиана / таймауты', (e) => e.summaries.lowHp ? `${e.summaries.lowHp.medianRounds} / ${pct(e.summaries.lowHp.timeoutRate)}` : '—'],
     ['Extreme economy: медиана / таймауты', (e) => e.summaries.extremeEconomy ? `${e.summaries.extremeEconomy.medianRounds} / ${pct(e.summaries.extremeEconomy.timeoutRate)}` : '—'],
@@ -260,6 +271,30 @@ function cardTable(e: Evaluation): string {
   const cards = Object.keys(m.cardPlayRate).sort();
   let s = '| Карта | Разыграно из полученных | Δ win rate при розыгрыше |\n|---|---|---|\n';
   for (const c of cards) s += `| ${cardName(c)} | ${pct(m.cardPlayRate[c])} | ${(m.cardWinDelta[c] * 100).toFixed(1)} п.п. |\n`;
+  return s;
+}
+
+function tabletopTable(plan: Plan): string {
+  const cs = plan.candidates.filter((c) => c.tabletop);
+  if (!cs.length) return '_Новых механик нет._';
+  const yn = (b: boolean) => (b ? '✅' : '❌');
+  let s = '| Вопрос | ' + cs.map((c) => c.id).join(' | ') + ' |\n|---|' + cs.map(() => '---').join('|') + '|\n';
+  const rows: Array<[string, (t: Tabletop) => string]> = [
+    ['1. Объяснение в 1–2 предложения', (t) => t.explain],
+    ['2. Без калькулятора', (t) => yn(t.noCalculator)],
+    ['3. Ничего не записывать', (t) => yn(t.noWriting)],
+    ['4. Временных эффектов помнить', (t) => String(t.tempEffects)],
+    ['5. Вся информация на карте/компоненте', (t) => yn(t.onComponent)],
+    ['6. Состояние видно на столе', (t) => yn(t.visible)],
+    ['7. Не замедляет игру', (t) => yn(t.notSlow)],
+    ['8. Какое решение создаёт', (t) => t.decision],
+    ['Cognitive load', (t) => t.cognitive],
+    ['Arithmetic load', (t) => t.arithmetic],
+    ['Lookup load', (t) => t.lookup],
+    ['Bookkeeping load', (t) => t.bookkeeping],
+    ['Table time', (t) => t.tableTime],
+  ];
+  for (const [q, f] of rows) s += `| ${q} | ${cs.map((c) => f(c.tabletop!)).join(' | ')} |\n`;
   return s;
 }
 
@@ -329,6 +364,10 @@ ${plan.hypotheses ?? '_—_'}
 ${r.newVersion ? `Принят кандидат **${ch}**: ${cand?.title}\n\n\`\`\`json\n${JSON.stringify(cand?.overrides, null, 2)}\n\`\`\`` : 'Правила не изменены.'}
 
 **Решение:** ${r.decision}
+
+## Tabletop Filter (Human Table Test)
+
+${tabletopTable(plan)}
 
 ## Почему
 

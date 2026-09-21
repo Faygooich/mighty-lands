@@ -1,0 +1,215 @@
+{
+  "version": "v002",
+  "parent": "v001",
+  "title": "Оплата = передать ОДИН жетон на выбор плательщика (сумма на карте не важна)",
+  "denominations": [
+    1000,
+    500,
+    300,
+    100
+  ],
+  "maxSlots": 5,
+  "startTokens": [
+    500,
+    300,
+    100
+  ],
+  "board": [
+    {
+      "type": "start",
+      "name": "Врата"
+    },
+    {
+      "type": "land",
+      "name": "Тихий Луг",
+      "region": 0,
+      "monster": 200
+    },
+    {
+      "type": "land",
+      "name": "Ручьи",
+      "region": 0,
+      "monster": 300
+    },
+    {
+      "type": "land",
+      "name": "Мельница",
+      "region": 0,
+      "monster": 300
+    },
+    {
+      "type": "land",
+      "name": "Овечий Холм",
+      "region": 0,
+      "monster": 400
+    },
+    {
+      "type": "land",
+      "name": "Старый Мост",
+      "region": 0,
+      "monster": 500
+    },
+    {
+      "type": "crossroad",
+      "name": "Перекрёсток"
+    },
+    {
+      "type": "land",
+      "name": "Опушка",
+      "region": 1,
+      "monster": 600
+    },
+    {
+      "type": "land",
+      "name": "Грибная Чаща",
+      "region": 1,
+      "monster": 700
+    },
+    {
+      "type": "land",
+      "name": "Волчья Тропа",
+      "region": 1,
+      "monster": 800
+    },
+    {
+      "type": "land",
+      "name": "Дуб Шептун",
+      "region": 1,
+      "monster": 800
+    },
+    {
+      "type": "land",
+      "name": "Сердце Леса",
+      "region": 1,
+      "monster": 900
+    },
+    {
+      "type": "crossroad",
+      "name": "Перекрёсток"
+    },
+    {
+      "type": "land",
+      "name": "Перевал",
+      "region": 2,
+      "monster": 1000
+    },
+    {
+      "type": "land",
+      "name": "Рудники",
+      "region": 2,
+      "monster": 1200
+    },
+    {
+      "type": "land",
+      "name": "Орлиное Гнездо",
+      "region": 2,
+      "monster": 1300
+    },
+    {
+      "type": "land",
+      "name": "Ледник",
+      "region": 2,
+      "monster": 1500
+    },
+    {
+      "type": "land",
+      "name": "Пик Грома",
+      "region": 2,
+      "monster": 1600
+    },
+    {
+      "type": "crossroad",
+      "name": "Перекрёсток"
+    },
+    {
+      "type": "land",
+      "name": "Пепельный Край",
+      "region": 3,
+      "monster": 1800
+    },
+    {
+      "type": "land",
+      "name": "Чёрный Провал",
+      "region": 3,
+      "monster": 2000
+    },
+    {
+      "type": "land",
+      "name": "Трон Костей",
+      "region": 3,
+      "monster": 2300
+    },
+    {
+      "type": "land",
+      "name": "Кипящее Озеро",
+      "region": 3,
+      "monster": 2600
+    },
+    {
+      "type": "land",
+      "name": "Око Бездны",
+      "region": 3,
+      "monster": 3000
+    }
+  ],
+  "moveDice": 1,
+  "fleeMin": 5,
+  "tieWins": false,
+  "captureCostFrac": 0,
+  "encounterChoice": false,
+  "fightRollStep": 0,
+  "lossChoice": "player",
+  "startIncome": 100,
+  "incomePerLand": 0,
+  "change": true,
+  "payMode": "token",
+  "exchange": false,
+  "artifactFlee": "stronger",
+  "spellsPerTurn": 1,
+  "drawArtifacts": 1,
+  "drawSpells": 1,
+  "handLimit": "hp",
+  "artifactsSingleUse": false,
+  "landChallenge": false,
+  "ownedDefenceFrac": 1,
+  "deathLands": "wild",
+  "catchUpDraw": 0,
+  "roundCap": 120,
+  "win": {
+    "lastStanding": true,
+    "landsTarget": 0,
+    "regionWin": false,
+    "powerTarget": 0,
+    "vpTarget": 0
+  },
+  "decks": {
+    "artifacts": {
+      "tribute": 8,
+      "bigTribute": 3,
+      "trap": 5,
+      "pickpocket": 4,
+      "shackles": 4,
+      "exile": 3,
+      "guardian": 3
+    },
+    "spells": {
+      "fireball": 5,
+      "heal": 5,
+      "shatter": 4,
+      "usurp": 3,
+      "teleport": 3,
+      "fury": 4,
+      "release": 3,
+      "drain": 3
+    }
+  },
+  "params": {
+    "tribute": 300,
+    "bigTribute": 700,
+    "drain": 300,
+    "fury": 1000,
+    "heal": 100,
+    "trapDamage": 1,
+    "fireballDamage": 1
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "elimination": {
+    "id": "BUG-001",
+    "title": "Долгое ожидание выбывших игроков",
+    "firstGen": 1,
+    "history": [
+      {
+        "gen": 1,
+        "severity": "MEDIUM",
+        "value": "26.8%"
+      }
+    ]
+  },
+  "changeHeal": {
+    "id": "BUG-002",
+    "title": "Оплата со сдачей лечит (HP из сдачи)",
+    "firstGen": 1,
+    "history": [
+      {
+        "gen": 1,
+        "severity": "OK",
+        "value": "0.00"
+      }
+    ]
+  },
+  "deflation": {
+    "id": "BUG-003",
+    "title": "Экономика: суммарная мощь",
+    "firstGen": 1,
+    "history": [
+      {
+        "gen": 1,
+        "severity": "MEDIUM",
+        "value": "×0.46 к раунду 15"
+      }
+    ]
+  },
+  "arithmetic": {
+    "id": "BUG-004",
+    "title": "Human Table Test: арифметика за столом",
+    "firstGen": 1,
+    "history": [
+      {
+        "gen": 1,
+        "severity": "LOW",
+        "value": "2.91 оп/ход"
+      }
+    ]
+  },
+  "luck": {
+    "id": "BUG-005",
+    "title": "Результат слабо зависит от решений (удача)",
+    "firstGen": 1,
+    "history": [
+      {
+        "gen": 1,
+        "severity": "MEDIUM",
+        "value": "0.73"
+      }
+    ]
+  },
+  "extremeEconomy": {
+    "id": "BUG-006",
+    "title": "Extreme economy сценарий",
+    "firstGen": 1,
+    "history": [
+      {
+        "gen": 1,
+        "severity": "MEDIUM",
+        "value": "таймаут 1.2%, медиана 50"
+      }
+    ]
+  }
+}

@@ -46,7 +46,21 @@ export interface GameRecord {
   choice: Record<string, number>;
   hpLossBySource: Record<string, number>;
   maxRepeat: number;
+  /** Human Table Test: estimated seconds of real table time, arithmetic operations, change-making events. */
+  tableSec: number;
+  arithOps: number;
+  changeMaking: number;
+  trackedEffects: number;
 }
+
+/**
+ * Table-time model (seconds for a human at a real table). Fixed; documented in docs/quality_criteria.md.
+ * Arithmetic ops: one addition/subtraction/comparison of multi-digit numbers = 1 op.
+ */
+export const TABLE_TIME = {
+  turn: 6, move: 5, encounter: 3, capture: 4, fleeRoll: 4, hpLoss: 2, artifactTrigger: 6, artifactFleeRoll: 4,
+  paySum: 5, payToken: 3, perOp: 3, spell: 10, artifactPlace: 5, discard: 3, decision: 2, skip: 2, income: 2,
+};
 
 export class Collector implements Hooks {
   g!: GameState;
@@ -64,6 +78,61 @@ export class Collector implements Hooks {
   lastState = '';
   repeat = 0;
   maxRepeat = 0;
+  tableSec = 0;
+  arithOps = 0;
+  changeMaking = 0;
+  trackedEffects = 0;
+
+  /** ops to sum a player's power (tokens-1 additions, +1 if a temporary bonus is active). */
+  sumOps(p: number): number {
+    const pl = this.g.players[p];
+    return Math.max(0, pl.tokens.length - 1) + (pl.tempPower ? 1 : 0);
+  }
+
+  op(n: number): void {
+    this.arithOps += n;
+    this.tableSec += n * TABLE_TIME.perOp;
+  }
+
+  table(type: EventType, p: number, a: number, b: string | number | null): void {
+    const T = TABLE_TIME;
+    const R = this.g.rules;
+    switch (type) {
+      case 'turn': this.tableSec += T.turn; break;
+      case 'move': this.tableSec += T.move; break;
+      case 'encounter': this.tableSec += T.encounter; this.op(this.sumOps(p) + 1); break;
+      case 'capture': this.tableSec += T.capture; break;
+      case 'fleeOk': case 'fleeFail': this.tableSec += T.fleeRoll; break;
+      case 'hpLoss': this.tableSec += T.hpLoss; break;
+      case 'artifactTrigger':
+        // p = owner, a = visitor
+        this.tableSec += T.artifactTrigger;
+        if (R.artifactFlee === 'stronger' || R.artifactFlee === 'weaker') this.op(this.sumOps(p) + this.sumOps(a) + 1);
+        break;
+      case 'artifactFleeOk':
+        this.tableSec += T.artifactTrigger + T.artifactFleeRoll;
+        if (R.artifactFlee === 'stronger' || R.artifactFlee === 'weaker') this.op(2 * this.sumOps(p) + 1);
+        break;
+      case 'artifactFleeFail': this.tableSec += T.artifactFleeRoll; break;
+      case 'pay':
+        if (R.payMode === 'sum') { this.tableSec += T.paySum; this.op(1); }
+        else { this.tableSec += T.payToken; if (R.payMode === 'atLeast') this.op(1); }
+        break;
+      case 'change':
+        if (R.payMode === 'sum' && R.change && a > -1) { this.changeMaking++; this.op(2); }
+        break;
+      case 'spell':
+        this.tableSec += T.spell;
+        if (b === 'usurp') this.op(this.sumOps(p) + 2);
+        if (b === 'fury') this.trackedEffects++;
+        break;
+      case 'artifactPlace': this.tableSec += T.artifactPlace; break;
+      case 'discard': this.tableSec += T.discard; break;
+      case 'skip': this.tableSec += T.skip; this.trackedEffects++; break;
+      case 'income': this.tableSec += T.income; break;
+      case 'decision': if (a >= 2) this.tableSec += T.decision; break;
+    }
+  }
 
   attach(g: GameState): void {
     this.g = g;
@@ -75,6 +144,7 @@ export class Collector implements Hooks {
 
   ev(type: EventType, p: number, a: number, b: string | number | null): void {
     const s = p >= 0 ? this.ps[p] : null;
+    this.table(type, p, a, b);
     switch (type) {
       case 'round': this.snapshot(); break;
       case 'turn': s!.turns++; break;
@@ -185,6 +255,10 @@ export class Collector implements Hooks {
       choice: Object.fromEntries(this.choiceMap),
       hpLossBySource: this.hpLossBySource,
       maxRepeat: this.maxRepeat,
+      tableSec: this.tableSec,
+      arithOps: this.arithOps,
+      changeMaking: this.changeMaking,
+      trackedEffects: this.trackedEffects,
     };
   }
 }

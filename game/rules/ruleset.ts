@@ -48,6 +48,13 @@ export interface RuleSet {
   incomePerLand: number;
   /** Payment returns change. */
   change: boolean;
+  /**
+   * How payments work physically:
+   *  'sum'   — hand over tokens worth >= amount (change per `change`)  [v001]
+   *  'token' — hand over ONE token of your choice, amount ignored (no arithmetic)
+   *  'atLeast' — hand over ONE token worth >= amount; if none, your largest token
+   */
+  payMode: 'sum' | 'token' | 'atLeast';
   /** Voluntary exchange with bank during main phase (equal value, slot-limited). */
   exchange: boolean;
   /** When a visitor may try to flee an Artifact. */
@@ -109,6 +116,7 @@ export const BASE_RULES: RuleSet = {
   startIncome: 100,
   incomePerLand: 0,
   change: true,
+  payMode: 'sum',
   exchange: false,
   artifactFlee: 'stronger',
   spellsPerTurn: 1,

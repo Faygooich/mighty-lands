@@ -80,6 +80,8 @@ export function detect(e: Evaluation, denoms: number[]): Finding[] {
   if (S.lowHp) add('lowHp', 'Low-HP сценарий', sev(S.lowHp.timeoutRate, [[0.05, 'HIGH'], [0.01, 'MEDIUM']]), `таймаут ${pct(S.lowHp.timeoutRate)}, медиана ${S.lowHp.medianRounds}`);
   if (S.extremeEconomy) add('extremeEconomy', 'Extreme economy сценарий', sev(S.extremeEconomy.timeoutRate, [[0.05, 'HIGH'], [0.01, 'MEDIUM']]), `таймаут ${pct(S.extremeEconomy.timeoutRate)}, медиана ${S.extremeEconomy.medianRounds}`);
   if (S.lateGame) add('lateGame', 'Late-game сценарий', sev(S.lateGame.timeoutRate, [[0.05, 'HIGH'], [0.01, 'MEDIUM']]), `таймаут ${pct(S.lateGame.timeoutRate)}, медиана ${S.lateGame.medianRounds}`);
+  add('tableTime', 'Human Table Test: реальная длительность партии вне 30–75 мин', m.tableMinutes > 100 || m.tableMinutes < 20 ? 'HIGH' : m.tableMinutes > 75 || m.tableMinutes < 30 ? 'MEDIUM' : 'OK', `${m.tableMinutes.toFixed(0)} мин`, `${m.secPerTurn.toFixed(0)} с на ход, p90 ≈ ${m.tableMinutesP90.toFixed(0)} мин`);
+  add('arithmetic', 'Human Table Test: арифметика за столом', m.arithPerTurn > 6 ? 'HIGH' : m.arithPerTurn > 3 ? 'MEDIUM' : m.arithPerTurn > 2 ? 'LOW' : 'OK', `${m.arithPerTurn.toFixed(2)} оп/ход`, `размен сдачи ${m.changeMakingPerGame.toFixed(1)} раз за партию`);
   if (m.noWinnerRate > 0) add('noWinner', 'Партии без победителя', sev(m.noWinnerRate, [[0.02, 'HIGH'], [0.005, 'MEDIUM'], [0.0001, 'LOW']]), pct(m.noWinnerRate));
   return out;
 }

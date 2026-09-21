@@ -37,6 +37,11 @@ export interface Agg {
   choice: Num;
   hpLossBySource: Num;
   maxRepeat: number;
+  tableSec: number;
+  arithOps: number;
+  changeMaking: number;
+  trackedEffects: number;
+  totalTurns: number;
   repeatGames: number;       // games with >= 10 identical round-end states in a row
   anomalies: Array<{ seed: number; reason: string; bots: string[] }>;
 }
@@ -47,7 +52,7 @@ export function newAgg(): Agg {
     seatGames: [], seatWins: [], leaderHalfWins: 0, leaderQ1Wins: 0, leaderQ3Wins: 0, lastHalfWins: 0,
     leadChanges: 0, firstCapturerWins: 0, firstCapturerGames: 0, deadTurns: 0, playerRounds: 0,
     cardDrawn: {}, cardPlayed: {}, cardPlayGames: {}, cardPlayWins: {}, landCaptures: [], landHeldByWinner: [], landHeldAtEnd: [], landMask: [],
-    denom: {}, powerByRound: [], powerByRoundN: [], choice: {}, hpLossBySource: {}, maxRepeat: 0, repeatGames: 0, anomalies: [],
+    denom: {}, powerByRound: [], powerByRoundN: [], choice: {}, hpLossBySource: {}, maxRepeat: 0, repeatGames: 0, anomalies: [], tableSec: 0, arithOps: 0, changeMaking: 0, trackedEffects: 0, totalTurns: 0,
   };
 }
 
@@ -107,6 +112,11 @@ export function addRecord(agg: Agg, r: GameRecord): void {
   for (const [c, k] of Object.entries(r.hpLossBySource)) inc(agg.hpLossBySource, c, k);
   if (r.maxRepeat > agg.maxRepeat) agg.maxRepeat = r.maxRepeat;
   if (r.maxRepeat >= 10) agg.repeatGames++;
+  agg.tableSec += r.tableSec;
+  agg.arithOps += r.arithOps;
+  agg.changeMaking += r.changeMaking;
+  agg.trackedEffects += r.trackedEffects;
+  agg.totalTurns += r.turns;
 }
 
 export function mergeAgg(a: Agg, b: Agg): Agg {
@@ -122,7 +132,7 @@ export function mergeAgg(a: Agg, b: Agg): Agg {
   }
   b.seatGames.forEach((v, i) => incArr(a.seatGames, i, v));
   b.seatWins.forEach((v, i) => incArr(a.seatWins, i, v));
-  for (const k of ['leaderHalfWins', 'leaderQ1Wins', 'leaderQ3Wins', 'lastHalfWins', 'leadChanges', 'firstCapturerWins', 'firstCapturerGames', 'deadTurns', 'playerRounds', 'repeatGames'] as const) a[k] += b[k];
+  for (const k of ['leaderHalfWins', 'leaderQ1Wins', 'leaderQ3Wins', 'lastHalfWins', 'leadChanges', 'firstCapturerWins', 'firstCapturerGames', 'deadTurns', 'playerRounds', 'repeatGames', 'tableSec', 'arithOps', 'changeMaking', 'trackedEffects', 'totalTurns'] as const) a[k] += b[k];
   for (const k of ['cardDrawn', 'cardPlayed', 'cardPlayGames', 'cardPlayWins', 'denom', 'choice', 'hpLossBySource'] as const) for (const [c, v] of Object.entries(b[k])) inc(a[k], c, v);
   for (const k of ['landCaptures', 'landHeldByWinner', 'landHeldAtEnd', 'landMask', 'powerByRound', 'powerByRoundN'] as const) b[k].forEach((v, i) => incArr(a[k], i, v));
   a.maxRepeat = Math.max(a.maxRepeat, b.maxRepeat);
@@ -167,6 +177,13 @@ export interface Summary {
   changeHealPerGame: number;
   repeatGameRate: number;
   choice: Record<string, number>;
+  /** Human Table Test */
+  tableMinutes: number;
+  tableMinutesP90: number;
+  arithPerTurn: number;
+  changeMakingPerGame: number;
+  trackedEffectsPerGame: number;
+  secPerTurn: number;
 }
 
 function quantile(hist: number[], q: number): number {
@@ -267,5 +284,11 @@ export function summarize(a: Agg): Summary {
     changeHealPerGame: changeHeal / G,
     repeatGameRate: a.repeatGames / G,
     choice: a.choice,
+    tableMinutes: a.tableSec / G / 60,
+    tableMinutesP90: (a.tableSec / G / 60) * (quantile(a.rounds, 0.9) / Math.max(1, totalRounds / G)),
+    arithPerTurn: a.arithOps / Math.max(1, a.totalTurns),
+    changeMakingPerGame: a.changeMaking / G,
+    trackedEffectsPerGame: a.trackedEffects / G,
+    secPerTurn: a.tableSec / Math.max(1, a.totalTurns),
   };
 }
