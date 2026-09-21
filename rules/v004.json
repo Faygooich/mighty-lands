@@ -1,0 +1,29 @@
+{
+  "version": "v004",
+  "parent": "v003",
+  "title": "Как A, но награда за Подмогу 500",
+  "generation": 4,
+  "changes": [
+    "Как A, но награда за Подмогу 500"
+  ],
+  "rationale": "Более сильный стимул помогать → больше союзов.",
+  "overrides": {
+    "decks": {
+      "spells": {
+        "fireball": 5,
+        "heal": 5,
+        "shatter": 4,
+        "usurp": 3,
+        "teleport": 3,
+        "fury": 4,
+        "release": 3,
+        "drain": 3,
+        "aid": 4,
+        "hex": 4
+      }
+    },
+    "params": {
+      "aidReward": 500
+    }
+  }
+}

@@ -1,0 +1,26 @@
+# Replay: very-short (duel)
+rules: v003
+seed: 1200003
+lineup: tactical, random
+scenario: -
+winner: random after 3 rounds (last-standing)
+choices: [0,1,2,0,0,2,1,0,1,2,0,3]
+
+[р1] RandomBot#1 бросает 3 → клетка 3
+[р1] RandomBot#1 захватывает Мельница (монстр 300)
+[р1] RandomBot#1 получает 100 мощи (100) — Награда: Мельница
+[р1] RandomBot#1 кладёт «Капкан» на Мельница
+[р1] TacticalBot#2 бросает 3 → клетка 3
+[р1] Срабатывает «Капкан» RandomBot#1 против TacticalBot#2
+[р1] TacticalBot#2 теряет жетон 100 — Капкан
+[р2] RandomBot#1 бросает 6 → клетка 9
+[р2] RandomBot#1 захватывает Волчья Тропа (монстр 800)
+[р2] RandomBot#1 получает 300 мощи (300) — Награда: Волчья Тропа
+[р2] RandomBot#1 применяет «Огненный шар» → TacticalBot#2
+[р2] TacticalBot#2 теряет жетон 300 — Огненный шар
+[р2] TacticalBot#2 применяет «Ярость»
+[р2] TacticalBot#2 бросает 6 → клетка 9
+[р3] RandomBot#1 применяет «Огненный шар» → TacticalBot#2
+[р3] TacticalBot#2 теряет жетон 500 — Огненный шар
+[р3] ☠ TacticalBot#2 выбывает (Огненный шар)
+[р3] 🏆 Победа: RandomBot#1 (last-standing)

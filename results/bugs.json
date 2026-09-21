@@ -18,6 +18,11 @@
         "gen": 3,
         "severity": "LOW",
         "value": "10.6%"
+      },
+      {
+        "gen": 4,
+        "severity": "LOW",
+        "value": "13.8%"
       }
     ]
   },
@@ -38,6 +43,11 @@
       },
       {
         "gen": 3,
+        "severity": "OK",
+        "value": "0.00"
+      },
+      {
+        "gen": 4,
         "severity": "OK",
         "value": "0.00"
       }
@@ -62,6 +72,11 @@
         "gen": 3,
         "severity": "OK",
         "value": "×1.45 к раунду 15"
+      },
+      {
+        "gen": 4,
+        "severity": "OK",
+        "value": "×1.35 к раунду 15"
       }
     ]
   },
@@ -84,6 +99,11 @@
         "gen": 3,
         "severity": "MEDIUM",
         "value": "4.11 оп/ход"
+      },
+      {
+        "gen": 4,
+        "severity": "MEDIUM",
+        "value": "3.93 оп/ход"
       }
     ]
   },
@@ -106,6 +126,11 @@
         "gen": 3,
         "severity": "OK",
         "value": "1.35"
+      },
+      {
+        "gen": 4,
+        "severity": "OK",
+        "value": "1.32"
       }
     ]
   },
@@ -128,6 +153,11 @@
         "gen": 3,
         "severity": "OK",
         "value": "таймаут 0.0%, медиана 13"
+      },
+      {
+        "gen": 4,
+        "severity": "OK",
+        "value": "таймаут 0.0%, медиана 13"
       }
     ]
   },
@@ -140,6 +170,11 @@
         "gen": 3,
         "severity": "MEDIUM",
         "value": "16.4%"
+      },
+      {
+        "gen": 4,
+        "severity": "MEDIUM",
+        "value": "22.4%"
       }
     ]
   },
@@ -152,6 +187,23 @@
         "gen": 3,
         "severity": "MEDIUM",
         "value": "лидер старта 67.3%"
+      },
+      {
+        "gen": 4,
+        "severity": "MEDIUM",
+        "value": "лидер старта 73.6%"
+      }
+    ]
+  },
+  "seat4": {
+    "id": "BUG-009",
+    "title": "Преимущество места (4 игрока)",
+    "firstGen": 4,
+    "history": [
+      {
+        "gen": 4,
+        "severity": "MEDIUM",
+        "value": "18.0%"
       }
     ]
   }
