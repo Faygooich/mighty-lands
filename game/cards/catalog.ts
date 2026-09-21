@@ -145,9 +145,10 @@ export const SPELLS: Record<string, SpellDef> = {
   },
   usurp: {
     id: 'usurp', name: 'Узурпация',
-    text: () => 'Заберите чужую Землю, если ваша мощь больше мощи её владельца. Артефакт на ней уничтожается.',
+    text: (g) => (g.rules.params.usurpAny ? 'Заберите любую чужую Землю. Артефакт на ней уничтожается.' : 'Заберите чужую Землю, если ваша мощь больше мощи её владельца. Артефакт на ней уничтожается.'),
     phases: ['pre', 'post'],
-    targets: (g, p) => enemyLands(g, p, (l) => effPower(p) > power(g.players[l.owner])),
+    // params.usurpAny = 1: no power comparison (tabletop simplification)
+    targets: (g, p) => enemyLands(g, p, (l) => (g.rules.params.usurpAny ? true : effPower(p) > power(g.players[l.owner]))),
     *apply(g, p, t) {
       const l = g.cells[t].land!;
       if (l.artifact) discard(g, l.artifact);

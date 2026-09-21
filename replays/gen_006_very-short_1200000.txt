@@ -1,0 +1,34 @@
+# Replay: very-short (duel)
+rules: v005
+seed: 1200000
+lineup: random, defensive
+scenario: -
+winner: defensive after 3 rounds (last-standing)
+choices: [1,0,0,1,11,0,1,1,0,1,2,1,9,0,1]
+
+[р1] DefensiveBot#1 применяет «Огненный шар» → RandomBot#2
+[р1] RandomBot#2 теряет жетон 500 — Огненный шар
+[р1] DefensiveBot#1 бросает 5 → клетка 5
+[р1] DefensiveBot#1 захватывает Старый Мост (монстр 500)
+[р1] DefensiveBot#1 получает 100 мощи (100) — Награда: Старый Мост
+[р1] DefensiveBot#1 кладёт «Дань» на Старый Мост
+[р1] RandomBot#2 применяет «Телепорт» → Дуб Шептун
+[р1] RandomBot#2 телепортируется на клетку 10
+[р1] RandomBot#2 бросает 1 — побег не удался
+[р1] RandomBot#2 теряет жетон 300 — Монстр Дуб Шептун
+[р2] DefensiveBot#1 применяет «Ярость»
+[р2] DefensiveBot#1 бросает 1 → клетка 6
+[р2] RandomBot#2 бросает 6 → клетка 16
+[р2] RandomBot#2 бросает 5 и сбегает от монстра Ледник
+[р2] RandomBot#2 применяет «Огненный шар» → DefensiveBot#1
+[р2] DefensiveBot#1 теряет жетон 100 — Огненный шар
+[р3] DefensiveBot#1 применяет «Телепорт» → Волчья Тропа
+[р3] DefensiveBot#1 телепортируется на клетку 9
+[р3] DefensiveBot#1 захватывает Волчья Тропа (монстр 800)
+[р3] DefensiveBot#1 получает 300 мощи (300) — Награда: Волчья Тропа
+[р3] DefensiveBot#1 кладёт «Капкан» на Волчья Тропа
+[р3] RandomBot#2 бросает 3 → клетка 19
+[р3] RandomBot#2 бросает 1 — побег не удался
+[р3] RandomBot#2 теряет жетон 100 — Монстр Пепельный Край
+[р3] ☠ RandomBot#2 выбывает (Монстр Пепельный Край)
+[р3] 🏆 Победа: DefensiveBot#1 (last-standing)

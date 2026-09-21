@@ -157,7 +157,7 @@ export class Collector implements Hooks {
         break;
       case 'spell':
         this.tableSec += T.spell;
-        if (b === 'usurp') this.op(this.sumOps(p) + 2);
+        if (b === 'usurp' && !R.params.usurpAny) this.op(this.sumOps(p) + 2);
         if (b === 'fury') this.trackedEffects++;
         break;
       case 'artifactPlace': this.tableSec += T.artifactPlace; break;
