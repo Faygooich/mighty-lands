@@ -4,6 +4,7 @@ import type { Decision, GameState, LandState, Option, PlayerState } from '../../
 import { effPower, hp, landsOf, power, standing, distance } from '../../core/state.ts';
 import { afterPayment, exchangeOptions, sum } from '../../core/tokens.ts';
 import { ARTIFACTS } from '../../cards/catalog.ts';
+import { isLandLeader } from '../../core/engine.ts';
 import type { Rng } from '../../core/rng.ts';
 
 export interface Weights {
@@ -137,6 +138,7 @@ export class HeuristicBot {
     const l = c.land;
     const r = g.rules;
     if (l.owner === -1) {
+      if (r.params.crown && isLandLeader(g, p)) eff -= r.params.crown;
       if (eff > l.monster || (r.tieWins && eff === l.monster)) return Math.max(0, this.landVal(g, l) - this.captureCost(g, l));
       const lossV = hp(p) <= 1 ? this.w.kill + 1000 : this.hpVal(p, -1);
       return -(1 - fleeP(g)) * lossV * this.w.risk;

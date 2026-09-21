@@ -106,6 +106,14 @@ function isWeakest(g: GameState, p: PlayerState): boolean {
   return g.players.some((q) => q.alive && q.id !== p.id && q.tokens.length > p.tokens.length);
 }
 
+/** Holds strictly more Lands than every other living player (the «Корона» holder). */
+export function isLandLeader(g: GameState, p: PlayerState): boolean {
+  const mine = landsOf(g, p.id).length;
+  if (mine === 0) return false;
+  for (const q of g.players) if (q.alive && q.id !== p.id && landsOf(g, q.id).length >= mine) return false;
+  return true;
+}
+
 export function move(g: GameState, p: PlayerState): void {
   const r = g.rules;
   const n = g.cells.length;
@@ -175,7 +183,9 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
   ev(g, 'encounter', p.id, land.monster, land.cell);
   const [plus, minus, helpers] = yield* reactionWindow(g, p, land);
   const eff = effPower(p) + plus;
-  const m = land.monster + minus;
+  // «Корона»: the strict leader in Lands fights every monster at +crown (params.crown)
+  const crown = r.params.crown && isLandLeader(g, p) ? r.params.crown : 0;
+  const m = land.monster + minus + crown;
   const stronger = eff > m || (r.tieWins && eff === m);
   if (stronger) {
     const cost = Math.ceil((m * r.captureCostFrac) / 100) * 100;
