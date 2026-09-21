@@ -82,6 +82,12 @@ export interface RuleSet {
   regionRewards: number[] | null;
   /** When a token is gained with no free slot, it replaces your smallest token if larger ("upgrade"). */
   upgradeWhenFull: boolean;
+  /** Seat compensation: extra Spell cards dealt at setup, by seat (0 = first player). */
+  seatBonusCards: number[];
+  /** Seat compensation: extra tokens at setup, by seat. */
+  seatBonusTokens: number[][];
+  /** The first player does not draw cards on their first turn. */
+  firstTurnNoDraw: boolean;
   /** Max round count before forced end. */
   roundCap: number;
   win: WinRules;
@@ -140,6 +146,9 @@ export const BASE_RULES: RuleSet = {
   regionMonsters: null,
   regionRewards: null,
   upgradeWhenFull: false,
+  seatBonusCards: [],
+  seatBonusTokens: [],
+  firstTurnNoDraw: false,
   roundCap: 120,
   win: { lastStanding: true, landsTarget: 0, regionWin: false, powerTarget: 0, vpTarget: 0, firstDeathEnds: false },
   decks: {

@@ -75,9 +75,10 @@ function* takeTurn(g: GameState, p: PlayerState): Engine {
     logMsg(g, `${p.name} пропускает ход`);
     return;
   }
-  // 1. Draw
-  for (let i = 0; i < r.drawArtifacts; i++) draw(g, p, 'artifact');
-  for (let i = 0; i < r.drawSpells; i++) draw(g, p, 'spell');
+  // 1. Draw (optionally not on the very first turn of the game)
+  const skipDraw = r.firstTurnNoDraw && g.turn === 1;
+  for (let i = 0; i < r.drawArtifacts && !skipDraw; i++) draw(g, p, 'artifact');
+  for (let i = 0; i < r.drawSpells && !skipDraw; i++) draw(g, p, 'spell');
   if (r.catchUpDraw > 0 && isWeakest(g, p)) for (let i = 0; i < r.catchUpDraw; i++) draw(g, p, 'spell');
   // 2. Main phase before movement
   yield* mainPhase(g, p, 'pre');

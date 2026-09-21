@@ -56,15 +56,23 @@ export function createGame(rules: RuleSet, setups: PlayerSetup[], seed: number, 
     eliminatedRound: -1,
     laps: 0,
   }));
+  const artDeck = buildDeck(rules.decks.artifacts, rng);
+  const spellDeck = buildDeck(rules.decks.spells, rng);
+  // seat compensation (later seats)
+  players.forEach((p, seat) => {
+    for (const t of rules.seatBonusTokens?.[seat] ?? []) if (p.tokens.length < rules.maxSlots) p.tokens.push(t);
+    sortDesc(p.tokens);
+    for (let i = 0; i < (rules.seatBonusCards?.[seat] ?? 0); i++) { const c = spellDeck.pop(); if (c) p.hand.push(c); }
+  });
   return {
     rules,
     rng,
     seed,
     players,
     cells,
-    artDeck: buildDeck(rules.decks.artifacts, rng),
+    artDeck,
     artDiscard: [],
-    spellDeck: buildDeck(rules.decks.spells, rng),
+    spellDeck,
     spellDiscard: [],
     round: 1,
     turn: 0,
