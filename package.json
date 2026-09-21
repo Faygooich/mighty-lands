@@ -1,0 +1,21 @@
+{
+  "name": "moshchnye-zemli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "МОЩНЫЕ ЗЕМЛИ — board game engine, evolutionary playtesting pipeline and web version",
+  "scripts": {
+    "test": "node --test --test-reporter=dot \"game/tests/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "sim": "node game/simulation/cli.ts",
+    "bench": "node game/simulation/benchmark.ts",
+    "evolve": "node game/balancing/evolve.ts"
+  },
+  "engines": {
+    "node": ">=23.6"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.6",
+    "typescript": "^5.9.3"
+  }
+}

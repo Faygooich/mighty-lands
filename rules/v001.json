@@ -1,0 +1,8 @@
+{
+  "version": "v001",
+  "parent": null,
+  "title": "Буквальное прочтение исходных правил",
+  "generation": 0,
+  "changes": ["Исходная версия: исходные правила + допущения A-01…A-27 (docs/assumptions.md)"],
+  "overrides": {}
+}
