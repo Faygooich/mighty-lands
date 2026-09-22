@@ -245,6 +245,213 @@ export const CARD_ART: Record<string, () => ReactElement> = {
       <path d="M46 58 l-8 -2 l6 -6" fill="none" {...Thin} stroke="#fff" />
     </g>
   ),
+  // ── v1.0.1: Артефакты ──
+  envy: () => (
+    <g>
+      <Shadow rx={28} />
+      <circle cx="80" cy="64" r="30" fill="#8bc34a" {...S} />
+      <Eye x={68} y={60} r={7} dx={4} lid={0.35} />
+      <Eye x={92} y={60} r={7} dx={4} lid={0.35} />
+      <Brows x1={68} x2={92} y={49} mood={1.3} w={9} />
+      <path d="M68 80 Q80 74 92 80" fill="none" {...S} />
+      <path d="M112 34 v18 M104 42 h16" {...S} stroke="#fff" />
+      <path d="M126 40 l8 -4 v10 z" fill="#f2c14e" {...Thin} />
+    </g>
+  ),
+  quicksand: () => (
+    <g>
+      <ellipse cx="80" cy="88" rx="58" ry="18" fill="#d9b26a" {...S} />
+      <ellipse cx="80" cy="88" rx="36" ry="10" fill="none" stroke="#a8743a" strokeWidth={2} />
+      <ellipse cx="80" cy="88" rx="16" ry="4" fill="none" stroke="#a8743a" strokeWidth={2} />
+      <path d="M72 88 V58 Q72 50 80 50 Q88 50 88 58 V88" fill="#f0c9a0" {...S} />
+      <path d="M72 66 L56 50 M88 66 L104 50" {...S} />
+      <Eye x={76} y={60} r={3} dy={-1} /><Eye x={84} y={60} r={3} dy={-1} />
+      <path d="M40 40 q8 -8 16 0 M104 32 q8 -8 16 0" fill="none" {...Thin} stroke="#fff" />
+      <path d="M30 70 h14 l-4 -4 M30 70 l4 4" fill="none" {...Thin} />
+    </g>
+  ),
+  mimic: () => (
+    <g>
+      <Shadow rx={36} />
+      <rect x="46" y="66" width="68" height="36" rx="4" fill="#a8743a" {...S} />
+      <path d="M46 66 L52 40 Q80 30 108 40 L114 66" fill="#8d5a2b" {...S} />
+      {[54, 64, 74, 84, 94, 104].map((x) => <path key={x} d={`M${x} 66 l5 -9 l5 9`} fill="#fff" {...Thin} />)}
+      {[56, 66, 76, 86, 96].map((x) => <path key={x} d={`M${x + 4} 66 l5 8 l5 -8`} fill="#fff" {...Thin} />)}
+      <Eye x={68} y={48} r={4} dx={1} /><Eye x={92} y={48} r={4} dx={-1} />
+      <path d="M80 78 q14 10 4 22" fill="none" stroke="#e0525e" strokeWidth={6} strokeLinecap="round" />
+      <Coin x={124} y={96} r={6} />
+    </g>
+  ),
+  spy: () => (
+    <g>
+      <Shadow rx={26} />
+      <path d="M50 104 Q50 64 80 60 Q110 64 110 104Z" fill="#3b3b4f" {...S} />
+      <path d="M52 56 Q80 18 108 56 Q80 64 52 56Z" fill="#2b2b3a" {...S} />
+      <path d="M40 58 H120" {...S} />
+      <path d="M62 74 H98" stroke="#1d1d28" strokeWidth={10} strokeLinecap="round" />
+      <Eye x={70} y={74} r={4} dx={2} fill="#fffbe0" /><Eye x={90} y={74} r={4} dx={2} fill="#fffbe0" />
+      <rect x="108" y="78" width="18" height="24" rx="2" fill="#dff3ff" transform="rotate(12 117 90)" {...Thin} />
+    </g>
+  ),
+  altar: () => (
+    <g>
+      <Shadow rx={40} />
+      <path d="M44 102 V74 H116 V102Z" fill="#9aa4ae" {...S} />
+      <path d="M38 74 H122 V64 H38Z" fill="#7d8793" {...S} />
+      <path d="M62 64 Q60 44 70 36 Q72 48 78 50 Q76 34 86 26 Q86 44 96 46 Q100 56 96 64Z" fill="#ff7a3d" {...S} />
+      <rect x="54" y="80" width="14" height="18" rx="2" fill="#dff3ff" transform="rotate(-10 61 89)" {...Thin} />
+      <path d="M96 90 C92 84 84 88 88 94 L96 100 L104 94 C108 88 100 84 96 90Z" fill="#e0525e" {...Thin} />
+    </g>
+  ),
+  vein: () => (
+    <g>
+      <path d="M20 104 L50 50 L80 70 L110 30 L140 104Z" fill="#78909c" {...S} />
+      <path d="M44 92 Q66 74 80 82 Q96 90 118 64" fill="none" stroke="#f2c14e" strokeWidth={6} strokeLinecap="round" />
+      <path d="M44 92 Q66 74 80 82 Q96 90 118 64" fill="none" {...Thin} />
+      <Coin x={60} y={84} r={5} /><Coin x={98} y={82} r={6} /><Coin x={116} y={68} r={4} />
+      <path d="M118 34 l4 -8 l4 8 l8 4 l-8 4 l-4 8 l-4 -8 l-8 -4z" fill="#fff" {...Thin} />
+    </g>
+  ),
+  // ── v1.0.1: Заклятия ──
+  secondWind: () => (
+    <g>
+      <Shadow rx={24} />
+      <path d="M68 104 V70 Q68 58 80 58 Q92 58 92 70 V104" fill="#f0c9a0" {...S} />
+      <circle cx="80" cy="44" r="14" fill="#f0c9a0" {...S} />
+      <Eye x={75} y={42} r={2.5} /><Eye x={85} y={42} r={2.5} />
+      <path d="M75 50 Q80 53 85 50" fill="none" {...Thin} />
+      <path d="M68 72 L50 52 M92 72 L110 52" {...S} />
+      {[30, 42, 118, 130].map((x, i) => <path key={x} d={`M${x} ${60 + i * 4} q10 -10 0 -20`} fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round" />)}
+    </g>
+  ),
+  revolt: () => (
+    <g>
+      <path d="M40 104 V60 M60 104 V50 M100 104 V50 M120 104 V60" {...S} stroke="#7a5230" strokeWidth={4} />
+      <path d="M34 60 l6 -16 l6 16z M54 50 l6 -18 l6 18z" fill="#9aa4ae" {...Thin} />
+      <path d="M96 30 h8 v20 h-8z M92 36 h16" fill="#7a5230" {...Thin} />
+      <path d="M114 44 l6 -14 l6 14 l-6 4z" fill="#ff7a3d" {...Thin} />
+      <path d="M62 20 L72 34 L80 22 L88 34 L98 20 L96 38 H64Z" fill="#f2c14e" transform="rotate(-24 80 30)" {...S} />
+      <path d="M56 72 h48" {...Thin} stroke="#fff" strokeDasharray="4 4" />
+    </g>
+  ),
+  swap: () => (
+    <g>
+      <Coin x={46} y={62} r={16} />
+      <Coin x={116} y={62} r={8} />
+      <path d="M58 40 Q80 22 104 40" fill="none" {...S} />
+      <path d="M104 40 l-10 -2 l4 -8" fill="none" {...S} />
+      <path d="M104 86 Q80 104 58 86" fill="none" {...S} />
+      <path d="M58 86 l10 2 l-4 8" fill="none" {...S} />
+      <text x="46" y="68" fontSize="12" fontWeight="900" textAnchor="middle" fill="#8a5a1f">1000</text>
+      <text x="116" y="66" fontSize="7" fontWeight="900" textAnchor="middle" fill="#8a5a1f">100</text>
+    </g>
+  ),
+  tailwind: () => (
+    <g>
+      <path d="M20 50 Q70 30 110 50 Q130 60 120 72 Q110 80 100 70" fill="none" stroke="#fff" strokeWidth={5} strokeLinecap="round" />
+      <path d="M30 76 Q80 60 118 84" fill="none" stroke="#fff" strokeWidth={4} strokeLinecap="round" opacity={0.8} />
+      <rect x="50" y="78" width="22" height="22" rx="4" fill="#fffaf0" transform="rotate(-12 61 89)" {...S} />
+      <rect x="86" y="80" width="22" height="22" rx="4" fill="#fffaf0" transform="rotate(14 97 91)" {...S} />
+      <circle cx="61" cy="89" r="2.5" fill={INK} />
+      <circle cx="92" cy="86" r="2.2" fill={INK} /><circle cx="102" cy="96" r="2.2" fill={INK} />
+    </g>
+  ),
+  loot: () => (
+    <g>
+      <Shadow rx={30} />
+      <path d="M48 104 Q40 70 64 60 L60 48 H100 L96 60 Q120 70 112 104Z" fill="#6b4a8e" {...S} />
+      <path d="M60 48 Q80 56 100 48" fill="none" {...S} />
+      <path d="M70 72 L80 62 L90 72 L80 82Z" fill="#f2c14e" {...Thin} />
+      <path d="M100 30 l14 -8 l4 8 l-14 8z" fill="#9aa4ae" {...Thin} />
+      <path d="M124 60 l8 -4 M126 70 h10" {...Thin} stroke="#fff" />
+    </g>
+  ),
+  luxuryTax: () => (
+    <g>
+      <rect x="46" y="30" width="54" height="70" rx="3" fill="#fffaf0" {...S} />
+      {[44, 54, 64, 74].map((y) => <path key={y} d={`M54 ${y} H92`} {...Thin} />)}
+      <circle cx="84" cy="86" r="10" fill="none" stroke="#c0392b" strokeWidth={3} />
+      <text x="84" y="90" fontSize="10" fontWeight="900" textAnchor="middle" fill="#c0392b">%</text>
+      <Coin x={116} y={62} r={9} /><Coin x={124} y={80} r={8} /><Coin x={112} y={96} r={7} />
+      <path d="M100 50 Q112 46 118 52" fill="none" {...Thin} />
+    </g>
+  ),
+  quake: () => (
+    <g>
+      <path d="M10 80 H150 V110 H10Z" fill="#8d6e4a" {...S} />
+      <path d="M70 80 L78 92 L70 100 L82 110" fill="none" {...S} strokeWidth={3} />
+      <path d="M36 80 V56 H56 V80 M104 80 V50 H128 V80" fill="#c8a47a" {...S} />
+      <path d="M32 58 L46 44 L60 58 M100 52 L116 38 L132 52" fill="#a0522d" {...S} />
+      {[24, 136].map((x) => <path key={x} d={`M${x} 40 l-6 6 l6 6 l-6 6`} fill="none" {...Thin} stroke="#fff" />)}
+    </g>
+  ),
+  lure: () => (
+    <g>
+      <path d="M30 20 Q60 40 70 64" fill="none" {...S} stroke="#7a5230" strokeWidth={4} />
+      <path d="M70 64 V80" {...Thin} />
+      <Coin x={70} y={88} r={9} />
+      <path d="M100 104 Q96 70 118 62 Q140 70 136 104Z" fill="#6a1b9a" {...S} />
+      <Eye x={112} y={78} r={4} dx={-3} fill="#fffbe0" /><Eye x={126} y={78} r={4} dx={-3} fill="#fffbe0" />
+      <path d="M110 92 l4 4 l4 -4 l4 4 l4 -4" fill="none" {...Thin} stroke="#fff" />
+    </g>
+  ),
+  forge: () => (
+    <g>
+      <path d="M40 86 H120 L110 100 H50Z" fill="#5f6b76" {...S} />
+      <path d="M56 86 V76 H104 V86" fill="#7d8793" {...S} />
+      <Coin x={80} y={70} r={10} />
+      <path d="M92 26 L122 40 L116 52 L86 38Z" fill="#9aa4ae" {...S} />
+      <path d="M104 44 L90 64" {...S} stroke="#7a5230" strokeWidth={5} />
+      {[[60, 60], [100, 60], [66, 48]].map(([x, y], i) => <path key={i} d={`M${x} ${y} l-6 -6 M${x + 4} ${y - 2} l2 -8`} {...Thin} stroke="#ffd166" />)}
+    </g>
+  ),
+  hunt: () => (
+    <g>
+      <path d="M36 70 Q60 40 110 44 L124 32 L126 64 L110 56 Q70 60 48 84Z" fill="#c8a47a" {...S} />
+      <path d="M40 76 l-8 8" {...S} />
+      <path d="M130 40 q10 8 0 18 M136 34 q16 14 0 30" fill="none" {...Thin} stroke="#fff" />
+      <path d="M60 54 Q80 48 100 50" fill="none" {...Thin} />
+    </g>
+  ),
+  mirror: () => (
+    <g>
+      <ellipse cx="80" cy="60" rx="30" ry="40" fill="#bfe6ff" {...S} />
+      <ellipse cx="80" cy="60" rx="22" ry="32" fill="#e8f7ff" />
+      <path d="M66 40 L78 34 M64 52 L84 40" {...Thin} stroke="#fff" strokeWidth={3} />
+      <path d="M30 30 L56 52" {...S} stroke="#ff7a3d" strokeWidth={4} />
+      <path d="M56 52 L28 80" {...S} stroke="#ff7a3d" strokeWidth={4} strokeDasharray="5 4" />
+      <path d="M28 80 l10 -2 l-4 -8" fill="none" {...Thin} />
+    </g>
+  ),
+  ambush: () => (
+    <g>
+      <path d="M20 104 Q30 60 60 70 Q70 40 100 54 Q124 44 140 70 Q150 90 140 104Z" fill="#3f7a45" {...S} />
+      <Eye x={62} y={82} r={4} dx={2} fill="#fffbe0" /><Eye x={74} y={82} r={4} dx={2} fill="#fffbe0" />
+      <Eye x={104} y={74} r={4} dx={-2} fill="#fffbe0" /><Eye x={116} y={74} r={4} dx={-2} fill="#fffbe0" />
+      <path d="M128 60 L148 28" {...S} stroke="#9aa4ae" strokeWidth={3} />
+      <path d="M144 26 l8 -6 l-2 10z" fill="#9aa4ae" {...Thin} />
+    </g>
+  ),
+  courage: () => (
+    <g>
+      <Shadow rx={26} />
+      <path d="M80 18 L86 76 H74Z" fill="#dfe6ec" {...S} />
+      <path d="M60 76 H100" {...S} stroke="#b07d1c" strokeWidth={5} />
+      <path d="M76 80 H84 V100 H76Z" fill="#7a5230" {...S} />
+      <circle cx="80" cy="104" r="5" fill="#f2c14e" {...Thin} />
+      <path d="M52 40 q-10 -10 0 -20 M108 40 q10 -10 0 -20" fill="none" {...Thin} stroke="#fff" />
+      <text x="120" y="80" fontSize="16" fontWeight="900" fill="#fff" stroke={INK} strokeWidth={0.8}>4+</text>
+    </g>
+  ),
+  intercept: () => (
+    <g>
+      <Coin x={80} y={40} r={14} />
+      <path d="M20 84 Q40 70 60 72 L76 58 Q86 54 84 66 L70 80" fill="#d9a77a" {...S} />
+      <path d="M140 90 Q120 80 104 80 L94 70" fill="none" {...S} />
+      <path d="M100 64 l-6 8 M108 68 l-6 8" {...Thin} />
+      <path d="M40 28 l8 4 M120 26 l-8 6" {...Thin} stroke="#fff" />
+    </g>
+  ),
 };
 
 /** Card backs. */

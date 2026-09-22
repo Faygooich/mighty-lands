@@ -1,0 +1,33 @@
+{
+  "version": "v019",
+  "parent": "v018",
+  "title": "Артефакты 33: все девять типов (Дань 11, Капкан 5, Оковы 3, Пески 3, Мимик 2, Зависть 3, Алтарь 2, Соглядатай 2, Жила 2)",
+  "generation": 28,
+  "changes": [
+    "Артефакты 33: все девять типов (Дань 11, Капкан 5, Оковы 3, Пески 3, Мимик 2, Зависть 3, Алтарь 2, Соглядатай 2, Жила 2)"
+  ],
+  "rationale": "Максимум типов при том же размере.",
+  "overrides": {
+    "decks": {
+      "artifacts": {
+        "tribute": 11,
+        "trap": 5,
+        "shackles": 3,
+        "quicksand": 3,
+        "mimic": 2,
+        "envy": 3,
+        "altar": 2,
+        "spy": 2,
+        "vein": 2
+      }
+    },
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    }
+  }
+}

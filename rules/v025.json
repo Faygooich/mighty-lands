@@ -1,0 +1,20 @@
+{
+  "version": "v025",
+  "parent": "v024",
+  "title": "Пески на 2 клетки",
+  "generation": 35,
+  "changes": [
+    "Пески на 2 клетки"
+  ],
+  "rationale": "Повторная проверка.",
+  "overrides": {
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 2,
+      "courageWinOn": 4
+    }
+  }
+}

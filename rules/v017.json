@@ -1,0 +1,34 @@
+{
+  "version": "v017",
+  "parent": "v016",
+  "title": "Подмена 3, Налог на Роскошь 2",
+  "generation": 24,
+  "changes": [
+    "Подмена 3, Налог на Роскошь 2"
+  ],
+  "rationale": "Две самые «разговорные» карты.",
+  "overrides": {
+    "decks": {
+      "spells": {
+        "fireball": 5,
+        "heal": 6,
+        "shatter": 5,
+        "usurp": 3,
+        "teleport": 3,
+        "drain": 3,
+        "aid": 6,
+        "hex": 7,
+        "swap": 3,
+        "luxuryTax": 2
+      }
+    },
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    }
+  }
+}

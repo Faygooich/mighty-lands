@@ -1,0 +1,252 @@
+{
+  "base": "v020",
+  "focus": "Качели и длительность: камбэк 52.8% (цель 25–50%), партия на 7 игроков 94–99 мин (MEDIUM).",
+  "observations": "Gen 29: принята Отвага 2 вместо части Исцеления и Помехи (v020). Interest 73.1 → 73.9 (validation 73.8 против 72.8), доминирование стиля 31% → 23%, партия 4p 55 → 50 мин. Всего 12 новых типов карт.\n\nОфициальный скор медленно опускается: 100 → 99.9 → 99.5 → 99.3. Причина одна — Q6 камбэк: победитель не был лидером в середине в 52.8% партий (цель ≤ 50%). Преимущество стало значить чуть меньше, чем нужно. Бунт и Налог на Роскошь забирают у лидера много. Отдельная проблема — 7 игроков: 94–99 мин (MEDIUM), потому что Земли чаще переходят из рук в руки.",
+  "hypotheses": "H1. Бунт ×1 вместо ×2 вернёт камбэк в коридор, почти не потеряв интереса.\nH2. Цель 5 Земель на 6–7 игроков укоротит большие партии. Проверить, не вернутся ли спринты ≤ 4 раундов (Gen 22).",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Бунт 2 → 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Меньше оборота Земель.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Налог на Роскошь 2 → 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Меньше перетока жетонов к отстающим.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Цель 5 Земель на 6–7 игроков",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "win": {
+          "landsTargetBy": {
+            "2": 9,
+            "3": 8,
+            "5": 6,
+            "6": 5,
+            "7": 5
+          }
+        }
+      },
+      "rationale": "Партии на 6–7 игроков короче.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Бунт 1 + цель 5 на 6–7 игроков",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "win": {
+          "landsTargetBy": {
+            "2": 9,
+            "3": 8,
+            "5": 6,
+            "6": 5,
+            "7": 5
+          }
+        }
+      },
+      "rationale": "Оба рычага.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Подмена 3 → 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 2,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Меньше перетока мощи.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "Анти-лидерских карт становится меньше — может вернуться проблема последнего места.",
+  "next": "Gen 31: оставшиеся карты (Зеркало, Трофей, Приманка, Кузня, Ветер, Рог, Землетрясение, Второе Дыхание).",
+  "generation": 30,
+  "verdict": "**Правила не изменены.** Бунт ×1 гасит качели, но стоит 2.7 пункта Interest. Цель 5 Земель на 6–7 игроков (C) решает проблему 7p, но проиграла тай-брейк случайному кандидату. Причина: Interest Index считается по 4p и 6–7p не видит. Проблема 7p вынесена в отдельное поколение, где выбор решают детекторы."
+}

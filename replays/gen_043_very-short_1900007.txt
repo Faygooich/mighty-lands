@@ -1,0 +1,30 @@
+# Replay: very-short (lateGame)
+rules: v027
+seed: 1900007
+lineup: aggressive, survival, random, defensive
+scenario: lateGame
+winner: survival after 2 rounds (lands-target)
+choices: [2,5,1,8,6,1,2,6,5]
+
+[р1] AggressiveBot#1 бросает 2 → клетка 2
+[р1] Срабатывает «Зыбучие Пески» SurvivalBot#2 против AggressiveBot#1
+[р1] AggressiveBot#1 тонет в Зыбучих Песках и отступает на клетку 23
+[р1] Срабатывает «Дань» RandomBot#4 против AggressiveBot#1
+[р1] AggressiveBot#1 отдаёт жетон 100 — Дань
+[р1] SurvivalBot#2 применяет «Узурпация» → Чёрный Провал
+[р1] SurvivalBot#2 кладёт «Капкан» на Чёрный Провал
+[р1] SurvivalBot#2 бросает 2 → клетка 2
+[р1] DefensiveBot#3 применяет «Разрушение» → Опушка
+[р1] DefensiveBot#3 бросает 3 → клетка 3
+[р1] RandomBot#4 применяет «Подмена» → DefensiveBot#3
+[р1] RandomBot#4 подменяет жетоны: берёт 500 у DefensiveBot#3, отдаёт 100
+[р1] RandomBot#4 бросает 1 → клетка 1
+[р1] Срабатывает «Оковы» AggressiveBot#1 против RandomBot#4
+[р1] RandomBot#4 скован и пропустит ход
+[р1] AggressiveBot#1 устраивает Засаду на Тихий Луг!
+[р1] RandomBot#4 теряет жетон 100 — Засада
+[р2] AggressiveBot#1 применяет «Разрушение» → Сердце Леса
+[р2] AggressiveBot#1 бросает 2 → клетка 1
+[р2] AggressiveBot#1 получает 100 мощи (100) — Врата
+[р2] SurvivalBot#2 применяет «Узурпация» → Кипящее Озеро
+[р2] 🏆 Победа: SurvivalBot#2 (lands-target)

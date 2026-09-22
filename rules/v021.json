@@ -1,0 +1,29 @@
+{
+  "version": "v021",
+  "parent": "v020",
+  "title": "Цель 5 Земель на 7 игроков (9/8/7/6/6/5)",
+  "generation": 31,
+  "changes": [
+    "Цель 5 Земель на 7 игроков (9/8/7/6/6/5)"
+  ],
+  "rationale": "Только 7p.",
+  "overrides": {
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    },
+    "win": {
+      "landsTargetBy": {
+        "2": 9,
+        "3": 8,
+        "5": 6,
+        "6": 6,
+        "7": 5
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+# Replay: very-short (lateGame)
+rules: v021
+seed: 1900001
+lineup: random, tactical, defensive, survival
+scenario: lateGame
+winner: survival after 3 rounds (lands-target)
+choices: [2,3,0,0,1,3,1,2,2,2,0,0,5,1,1,0,0,1,2,3,0,0,0,4,0,4]
+
+[р1] DefensiveBot#1 бросает 5 → клетка 5
+[р1] TacticalBot#2 применяет «Телепорт» → Ручьи
+[р1] TacticalBot#2 телепортируется на клетку 2
+[р1] RandomBot#3 применяет «Подмена» → SurvivalBot#4
+[р1] RandomBot#3 подменяет жетоны: берёт 500 у SurvivalBot#4, отдаёт 100
+[р1] RandomBot#3 бросает 5 → клетка 5
+[р1] Срабатывает «Алтарь» DefensiveBot#1 против RandomBot#3
+[р1] RandomBot#3 теряет жетон 500 — Алтарь
+[р1] SurvivalBot#4 бросает 6 → клетка 6
+[р2] DefensiveBot#1 применяет «Огненный шар» → SurvivalBot#4
+[р2] SurvivalBot#4 теряет жетон 100 — Огненный шар
+[р2] DefensiveBot#1 бросает 4 → клетка 9
+[р2] Срабатывает «Сундук-Мимик» SurvivalBot#4 против DefensiveBot#1
+[р2] Сундук-Мимик кусает DefensiveBot#1 (бросок 1)
+[р2] DefensiveBot#1 теряет жетон 100 — Сундук-Мимик
+[р2] TacticalBot#2 бросает 2 → клетка 4
+[р2] Срабатывает «Дань» SurvivalBot#4 против TacticalBot#2
+[р2] TacticalBot#2 отдаёт жетон 100 — Дань
+[р2] RandomBot#3 бросает 4 → клетка 9
+[р2] Срабатывает «Сундук-Мимик» SurvivalBot#4 против RandomBot#3
+[р2] Сундук-Мимик кусает RandomBot#3 (бросок 3)
+[р2] RandomBot#3 теряет жетон 500 — Сундук-Мимик
+[р2] SurvivalBot#4 применяет «Узурпация» → Кипящее Озеро
+[р2] SurvivalBot#4 кладёт «Зависть» на Кипящее Озеро
+[р2] SurvivalBot#4 бросает 5 → клетка 11
+[р2] Срабатывает «Дань» TacticalBot#2 против SurvivalBot#4
+[р2] SurvivalBot#4 отдаёт жетон 100 — Дань
+[р3] DefensiveBot#1 бросает 6 → клетка 15
+[р3] TacticalBot#2 бросает 4 → клетка 8
+[р3] Срабатывает «Капкан» RandomBot#3 против TacticalBot#2
+[р3] TacticalBot#2 теряет жетон 100 — Капкан
+[р3] RandomBot#3 бросает 3 → клетка 12
+[р3] SurvivalBot#4 применяет «Узурпация» → Пик Грома
+[р3] 🏆 Победа: SurvivalBot#4 (lands-target)

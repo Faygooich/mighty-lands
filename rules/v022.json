@@ -1,0 +1,39 @@
+{
+  "version": "v022",
+  "parent": "v021",
+  "title": "Второе Дыхание 2 вместо 2 Исцелений (Исцеление 1)",
+  "generation": 32,
+  "changes": [
+    "Второе Дыхание 2 вместо 2 Исцелений (Исцеление 1)"
+  ],
+  "rationale": "Лечение только для отстающих, зато крупное.",
+  "overrides": {
+    "decks": {
+      "spells": {
+        "fireball": 4,
+        "heal": 1,
+        "shatter": 3,
+        "usurp": 3,
+        "teleport": 2,
+        "drain": 3,
+        "aid": 5,
+        "hex": 4,
+        "swap": 3,
+        "luxuryTax": 2,
+        "revolt": 2,
+        "ambush": 2,
+        "intercept": 2,
+        "courage": 2,
+        "secondWind": 2
+      }
+    },
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    }
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "base": "v025",
+  "focus": "Правило «Отстающий» без перекоса: догоняющие карты теперь сами приходят к отстающему, поэтому держать их в колоде по 2–3 копии больше не нужно.",
+  "observations": "Gen 35: принят кандидат E — Пески на 2 клетки (v025, в пределах шума). Главная находка поколения — правило «Отстающий» (меньше всех Земель → +1 Заклятие в начале хода). Interest 75.9 → 82.6 (A) и 84.5 (B, с Бунтом ×1). Последний в середине побеждает 7.4% → 13.3%, лидер comeback-теста 41% → 34%, решений на ход 1.62 → 1.86, карт в чужой ход 11.7 → 16.9. Но оба кандидата провалили ворота: камбэк лидера ≈ 60% (Q6, скор 97.4–97.9), партия 58–67 мин.\n\nИнтерпретация: правило работает как задумано, но вместе с полным набором анти-лидерских карт лидер слишком легко теряет преимущество. Ворота R4 не ослабляю — ищу состав колоды, при котором правило укладывается в коридор.",
+  "hypotheses": "H1. «Отстающий» + по одной копии Бунта и Налога — камбэк вернётся к 50%, помощь последнему останется.\nH2. «Отстающий» без Бунта: Бунт больше всего перекидывает Земли и затягивает партию.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "«Отстающий» + Бунт 1, Налог 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "revolt": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpLands": 1
+        }
+      },
+      "rationale": "«Отстающий» + меньше копий догоняющих карт.",
+      "tabletop": {
+        "explain": "«Если у вас меньше всех Земель (а у кого-то больше), в начале хода возьмите ещё 1 Заклятие.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с на добор"
+      }
+    },
+    {
+      "id": "B",
+      "title": "«Отстающий» без Бунта",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpLands": 1
+        }
+      },
+      "rationale": "«Отстающий» + меньше копий догоняющих карт.",
+      "tabletop": {
+        "explain": "«Если у вас меньше всех Земель (а у кого-то больше), в начале хода возьмите ещё 1 Заклятие.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с на добор"
+      }
+    },
+    {
+      "id": "C",
+      "title": "«Отстающий» + Бунт 1, Налог 1, Второе Дыхание 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "revolt": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 1
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpLands": 1
+        }
+      },
+      "rationale": "«Отстающий» + меньше копий догоняющих карт.",
+      "tabletop": {
+        "explain": "«Если у вас меньше всех Земель (а у кого-то больше), в начале хода возьмите ещё 1 Заклятие.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с на добор"
+      }
+    },
+    {
+      "id": "D",
+      "title": "«Отстающий» + Подмена 2, Налог 1, Бунт 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 2,
+            "luxuryTax": 1,
+            "revolt": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpLands": 1
+        }
+      },
+      "rationale": "«Отстающий» + меньше копий догоняющих карт.",
+      "tabletop": {
+        "explain": "«Если у вас меньше всех Земель (а у кого-то больше), в начале хода возьмите ещё 1 Заклятие.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с на добор"
+      }
+    },
+    {
+      "id": "E",
+      "title": "«Отстающий» без Бунта, Налог 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpLands": 1
+        }
+      },
+      "rationale": "«Отстающий» + меньше копий догоняющих карт.",
+      "tabletop": {
+        "explain": "«Если у вас меньше всех Земель (а у кого-то больше), в начале хода возьмите ещё 1 Заклятие.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с на добор"
+      }
+    }
+  ],
+  "sideEffects": "Если убрать Бунт, в игре станет на один новый тип карт меньше (13 → 12).",
+  "next": "Gen 37: поиск эксплойтов на итоговой колоде.",
+  "generation": 36,
+  "verdict": "**Принят E (v026): «Отстающий» + Налог на Роскошь ×1, Бунт убран из игры.** Interest 76.7 → 79.9 (validation 79.1 против 75.3). Решений на ход 1.62 → 1.92, последний в середине 7.4% → 9.1%, партия 50 → 46 мин. Кандидаты с Бунтом давали Interest 83, но все провалили ворота по Q6.\n\nБунт — единственная карта, которая после отбора прошла путь «принят (Gen 27) → убран (Gen 36)». С правилом «Отстающий» он лишний: лидер теряет слишком много. В игре 12 новых типов карт."
+}

@@ -25,7 +25,7 @@ export function isArtifact(id: string): boolean {
 
 function targetLabel(g: GameState, card: string, t: number): string {
   if (t < 0) return '';
-  if (card === 'fireball' || card === 'drain') return g.players[t].name;
+  if (card === 'fireball' || card === 'drain' || card === 'swap' || card === 'lure') return g.players[t].name;
   if (card === 'transmute') return `вариант ${t + 1}`;
   const c = g.cells[t];
   if (c.land) return `${c.land.name}${c.land.owner >= 0 ? ` (${g.players[c.land.owner].name})` : ''}`;
@@ -36,8 +36,8 @@ export function optionLabel(g: GameState, d: Decision, o: Option): string {
   switch (o.t) {
     case 'done': return d.kind === 'main' ? (g.phase === 'pre' ? 'Бросить кубик' : 'Закончить ход') : 'Готово';
     case 'capture': return 'Захватить Землю';
-    case 'pass': return d.kind === 'react' ? 'Не вмешиваться' : 'Пройти мимо';
-    case 'flee': return 'Бежать (5–6)';
+    case 'pass': return d.kind === 'react' ? 'Не вмешиваться' : d.kind === 'trigger' ? 'Не играть' : 'Пройти мимо';
+    case 'flee': return `Бежать (${g.rules.fleeMin}–6)`;
     case 'fight': return 'Драться (6 — победа)';
     case 'token': return `Потерять жетон ${o.value}`;
     case 'pay': return `Отдать жетон ${o.tokens.join('+')}`;
@@ -47,8 +47,11 @@ export function optionLabel(g: GameState, d: Decision, o: Option): string {
       const t = targetLabel(g, o.card, o.target);
       return `${cardName(o.card)}${t ? ` → ${t}` : ''}`;
     }
-    case 'react': return `Сыграть «${cardName(o.card)}»`;
-    case 'choose': return o.key === 'skip' ? 'Пропустить следующий ход' : 'Отдать 1 жетон';
+    case 'react': return o.card === 'courage' ? `Драться с «Отвагой» (${g.rules.params.courageWinOn || 4}–6 — победа)` : `Сыграть «${cardName(o.card)}»`;
+    case 'choose':
+      if (o.key.startsWith('roll:')) return `Идти на ${o.key.slice(5)}`;
+      if (o.key === 'hand') return 'Сбросить все карты';
+      return o.key === 'skip' ? 'Пропустить следующий ход' : d.reason.startsWith('Алтарь') ? 'Потерять 1 жетон' : 'Отдать 1 жетон';
     case 'exchange': return `Размен ${o.give}`;
   }
   return '?';
@@ -59,16 +62,20 @@ export function decisionHint(g: GameState, d: Decision): string {
   const p = g.players[d.player];
   switch (d.kind) {
     case 'capture': return `Ваша мощь больше — Земля ваша, если захотите. Награда: жетон ${g.cells[p.pos].land?.reward ?? 0}.`;
-    case 'encounter': return 'Бежать: 2 из 6 без потерь. Драться: 1 из 6 — победа и Земля, иначе −1 жетон. С последним жетоном рискуете всеми Землями!';
+    case 'encounter': return `Бежать: ${d6Chance(g.rules.fleeMin)} без потерь. Драться: ${d6Chance(g.rules.params.fightWinOn ?? 6)} — победа и Земля, иначе −1 жетон${p.hand.includes('courage') ? `; с Отвагой — ${d6Chance(g.rules.params.courageWinOn || 4)}` : ''}. С последним жетоном рискуете всеми Землями!`;
     case 'lose': return 'Жетон = жизнь. Обычно отдают самый мелкий, чтобы сохранить мощь.';
     case 'pay': return 'Отдайте один жетон. Мелкий — сохраните мощь, но соперник всё равно получит жетон.';
-    case 'discard': return 'В конце хода на руке не больше 3 карт.';
+    case 'discard': return `В конце хода на руке не больше ${g.rules.handLimit === 'hp' ? 'числа жетонов' : g.rules.handLimit} карт.`;
     case 'react': {
       const f = g.players[d.amount ?? 0];
       const l = g.cells[f.pos].land;
       return `${f.name}: мощь ${effPower(f) + f.fightMod} против монстра ${l?.monster ?? '?'}. Подмога +500 ему (и вам 500 при его победе), Помеха +500 монстру.`;
     }
-    case 'dilemma': return 'Жетон уйдёт владельцу Заставы; пропуск хода — потеря темпа.';
+    case 'dilemma':
+      if (d.reason.startsWith('Попутный')) return 'Выберите, на сколько клеток идти.';
+      if (d.reason.startsWith('Алтарь')) return 'Жетон — это жизнь и мощь; карты — ваши будущие ходы.';
+      return 'Жетон уйдёт владельцу Заставы; пропуск хода — потеря темпа.';
+    case 'trigger': return 'Карта-ответ: играется только в такой момент. Можно приберечь.';
     case 'main': {
       const target = g.rules.win.landsTargetBy?.[String(g.players.length)] ?? g.rules.win.landsTarget;
       return `У вас ${landsOf(g, p.id).length} из ${target} Земель. Мощь ${power(p)}. ${g.phase === 'pre' ? 'До броска: положите Артефакты, сыграйте ≤1 Заклятие или бросьте кубик.' : 'После хода: Артефакты и Заклятие (если ещё не играли).'}`;
@@ -85,6 +92,9 @@ export type CardFrame = 'artifact' | 'spell' | 'help' | 'hinder';
 export function cardFrame(id: string): CardFrame {
   if (ARTIFACTS[id]) return 'artifact';
   const r = SPELLS[id]?.reaction;
+  const t = SPELLS[id]?.trigger;
+  if (t === 'counter' || t === 'courage') return 'help';
+  if (t === 'ambush' || t === 'intercept') return 'hinder';
   return r === 'help' ? 'help' : r === 'hinder' ? 'hinder' : 'spell';
 }
 
@@ -92,6 +102,9 @@ export function cardFrame(id: string): CardFrame {
 export function cardTypeLine(id: string): string {
   const f = cardFrame(id);
   if (f === 'artifact') return 'Артефакт · на свою Землю';
+  const trig = SPELLS[id]?.trigger;
+  if (trig === 'courage') return 'Ответ · в свой бой';
+  if (trig) return 'Ответ · в чужой ход';
   if (f === 'help' || f === 'hinder') return 'Реакция · в чужой бой';
   const ph = SPELLS[id]?.phases ?? [];
   return ph.length === 1 && ph[0] === 'pre' ? 'Заклятие · до броска' : 'Заклятие · в свой ход';
@@ -101,17 +114,24 @@ export function cardTypeLine(id: string): string {
 export function cardBadge(g: GameState, id: string): string | null {
   const P = (k: string) => g.rules.params[k] ?? 0;
   switch (id) {
-    case 'tribute': return String(P('tribute'));
+    case 'tribute': return g.rules.payMode === 'sum' ? String(P('tribute')) : '1♥';
     case 'bigTribute': return String(P('bigTribute'));
     case 'toll': return String(P('toll'));
     case 'trap': return `−${P('trapDamage') || 1}♥`;
     case 'fireball': return `−${P('fireballDamage') || 1}♥`;
     case 'heal': return `+${P('heal')}`;
-    case 'drain': return String(P('drain'));
+    case 'drain': return g.rules.payMode === 'sum' ? String(P('drain')) : '1♥';
     case 'fury': return `+${P('fury')}`;
     case 'aid': return `+${P('aid')}`;
     case 'hex': return `+${P('hex')}`;
     case 'bastion': return `+${P('bastion')}`;
+    case 'vein': return String(P('veinIncome') || 300);
+    case 'mimic': return `+${P('mimicGift') || 300}`;
+    case 'quicksand': return `−${P('quicksand') || 3}`;
+    case 'secondWind': return `+${P('secondWind') || 500}`;
+    case 'ambush': case 'quake': return '−1♥';
+    case 'courage': return `${P('courageWinOn') || 4}–6`;
+    case 'forge': return '↑';
   }
   return null;
 }

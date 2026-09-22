@@ -3,7 +3,7 @@
 import type { Decision, GameState, LandState, Option, PlayerState } from '../../core/types.ts';
 import { effPower, hp, landsOf, power, standing, distance } from '../../core/state.ts';
 import { afterPayment, exchangeOptions, sum } from '../../core/tokens.ts';
-import { ARTIFACTS } from '../../cards/catalog.ts';
+import { ARTIFACTS, NEXT_DENOM, landLeader, nextWildLand } from '../../cards/catalog.ts';
 import { isLandLeader } from '../../core/engine.ts';
 import type { Rng } from '../../core/rng.ts';
 
@@ -105,10 +105,31 @@ export class HeuristicBot {
   }
 
   /** Expected cost (power units) to `v` of artifact `art` owned by `o`. */
-  artHarm(g: GameState, art: string, v: PlayerState, o: PlayerState): number {
+  artHarm(g: GameState, art: string, v: PlayerState, o: PlayerState, land?: LandState): number {
     const P = g.rules.params;
     let harm: number;
+    const small = v.tokens[v.tokens.length - 1] ?? 0;
+    const tokenLoss = hp(v) <= 1 ? this.w.kill + 800 : this.hpVal(v, -1);
     switch (art) {
+      case 'envy': harm = landsOf(g, v.id).length > landsOf(g, o.id).length ? tokenLoss * 0.8 + small * this.w.power * 0.8 : 0; break;
+      case 'quicksand': {
+        if (!land) { harm = 120; break; }
+        const back = (land.cell - (P.quicksand || 3) + g.cells.length) % g.cells.length;
+        harm = 60 - this.cellValue(g, v, back, effPower(v), 1);
+        break;
+      }
+      case 'mimic': {
+        const bite = (P.mimicBite || 4) / 6;
+        harm = bite * tokenLoss - (1 - bite) * ((P.mimicGift || 300) * this.w.power + (hp(v) < g.rules.maxSlots ? this.hpVal(v) * 0.5 : 0));
+        break;
+      }
+      case 'spy': harm = v.hand.length ? 220 : 0; break;
+      case 'altar': {
+        let handV = 0;
+        for (const c of v.hand) handV += this.cardValue(g, v, c);
+        harm = v.hand.length ? Math.min(tokenLoss, handV * 0.8) : tokenLoss;
+        break;
+      }
       case 'tribute': harm = Math.min(P.tribute, power(v)) * this.w.power + (P.tribute >= power(v) ? this.w.kill : 0); break;
       case 'bigTribute': harm = Math.min(P.bigTribute, power(v)) * this.w.power + (P.bigTribute >= power(v) ? this.w.kill : 0); break;
       case 'toll': harm = (P.toll ?? 0) * 2 * this.w.power; break;
@@ -138,7 +159,7 @@ export class HeuristicBot {
   }
 
   /** Value for `p` of landing on `cell` with effective power `eff`. */
-  cellValue(g: GameState, p: PlayerState, cell: number, eff: number): number {
+  cellValue(g: GameState, p: PlayerState, cell: number, eff: number, depth = 0): number {
     const c = g.cells[cell];
     if (!c.land) return 0;
     const l = c.land;
@@ -153,12 +174,14 @@ export class HeuristicBot {
     const o = g.players[l.owner];
     let v = 0;
     if (r.landChallenge && eff > l.baseMonster * r.ownedDefenceFrac) v += this.landVal(g, l) * 0.8;
-    else if (l.artifact) v -= this.artHarm(g, l.artifact, p, o) * this.w.risk;
+    else if (l.artifact && (l.artifact !== 'quicksand' || depth < 1)) v -= this.artHarm(g, l.artifact, p, o, l) * this.w.risk;
     else if (r.params.setTribute && r.params.setSize) {
       let n = 0;
       for (const c of g.cells) if (c.land && c.land.owner === o.id && c.land.region === l.region) n++;
       if (n >= r.params.setSize) v -= this.artHarm(g, 'tribute', p, o) * this.w.risk;
     }
+    // «Засада» is hidden in hand: a Land whose owner holds cards is a little dangerous
+    if (o.hand.length >= 2 && r.decks.spells.ambush) v -= 0.15 * this.hpVal(p, -1) * this.w.risk;
     return v;
   }
 
@@ -203,6 +226,9 @@ export class HeuristicBot {
       outpost: 250, tribute: P.tribute * 0.6, bigTribute: P.bigTribute * 0.6, trap: 400, pickpocket: 150, shackles: 220, exile: 150, guardian: 120,
       bastion: 180, toll: 300, fireball: 450, heal: 380, shatter: 250, usurp: 520, teleport: 300, fury: 260, release: 350, drain: 320,
       ward: 280, transmute: 120, aid: 250, hex: 280,
+      envy: 260, quicksand: 220, mimic: 200, spy: 220, altar: 260, vein: 280,
+      secondWind: 380, revolt: 420, swap: 380, tailwind: 250, loot: 320, luxuryTax: 420, quake: 260, lure: 340, forge: 380, hunt: 300,
+      mirror: 300, ambush: 320, courage: 300, intercept: 300,
     };
     let v = (base[card] ?? 100) + pref;
     if (ARTIFACTS[card] && landsOf(g, me.id).length === 0) v *= 0.4; // no outlet yet
@@ -255,19 +281,44 @@ export class HeuristicBot {
         const l = g.cells[o.land].land!;
         const pref = w.cardPrefs[o.card] ?? 0;
         if (ARTIFACTS[o.card].protects) return 80 + pref + this.landVal(g, l) * 0.05;
+        if (o.card === 'vein') {
+          if (landsOf(g, me.id).some((x) => x.artifact === 'vein')) return -50;
+          return 60 + ((r.params.veinIncome || 300) - r.startIncome) * w.power * 1.2 * (1 + (me.hand.filter((c) => ARTIFACTS[c]).length > 1 ? 0.3 : 0)) + pref * 0.3;
+        }
         let enemyHarm = 0;
         let n = 0;
-        for (const q of g.players) if (q.alive && q.id !== me.id) { enemyHarm += this.artHarm(g, o.card, q, me); n++; }
+        for (const q of g.players) if (q.alive && q.id !== me.id) { enemyHarm += this.artHarm(g, o.card, q, me, l); n++; }
         enemyHarm /= Math.max(1, n);
         return (40 + enemyHarm * this.traffic(g, me, o.land) * 3 * w.artifact) * (1 + w.attack * 0.2) + pref * 0.3;
       }
       case 'choose': {
+        if (o.key.startsWith('roll:')) {
+          // Попутный Ветер: value of the cell reached with this roll
+          const steps = Number(o.key.slice(5));
+          const n = g.cells.length;
+          let v = this.cellValue(g, me, (me.pos + steps) % n, effPower(me));
+          if (me.pos + steps >= n && hp(me) < r.maxSlots) v += r.startIncome * w.power + this.hpVal(me) * 0.5;
+          return v;
+        }
+        if (o.key === 'hand') {
+          let handV = 0;
+          for (const c of me.hand) handV += this.cardValue(g, me, c);
+          return -handV * 0.8;
+        }
         // Застава dilemma: lose a token (HP+power, and it goes to the owner) vs lose a turn
         if (o.key === 'skip') return -this.turnValue(me);
         const small = me.tokens[me.tokens.length - 1] ?? 0;
         return -(me.tokens.length <= 1 ? w.kill + 1000 : this.hpVal(me, -1) * 0.7 + small * w.power * 0.8);
       }
       case 'react': {
+        if (d.kind === 'encounter') {
+          // Отвага: fight winning on courageWinOn–6
+          const l = g.cells[me.pos].land!;
+          const pw = (7 - (r.params.courageWinOn || 4)) / 6;
+          const loss = hp(me) <= 1 ? w.kill + 1000 : this.hpVal(me, -1);
+          return pw * this.landVal(g, l) - (1 - pw) * loss * w.risk - this.cardValue(g, me, o.card) * 0.3;
+        }
+        if (d.kind === 'trigger') return this.triggerValue(g, me, d, o.card);
         const fighter = g.players[d.amount ?? 0];
         const l = g.cells[fighter.pos].land!;
         const bonus = r.params[o.card] ?? 0;
@@ -285,6 +336,29 @@ export class HeuristicBot {
       case 'spell': return this.spellValue(g, me, o.card, o.target) + (w.cardPrefs[o.card] ?? 0) * 0.3 - w.spellThreshold;
     }
     return 0;
+  }
+
+  /** Value of playing an answer card now (Зеркало / Засада / Перехват) versus keeping it (≈ 0). */
+  triggerValue(g: GameState, me: PlayerState, d: Decision, card: string): number {
+    const w = this.w;
+    const other = g.players[d.amount ?? 0];
+    const keep = this.cardValue(g, me, card) * 0.35;
+    switch (card) {
+      case 'mirror': {
+        const spell = d.card ?? '';
+        const heavy: Record<string, number> = { usurp: 900, revolt: 700, swap: 500, lure: 450, fireball: 400, drain: 350, loot: 300, shatter: 250, release: 600 };
+        const big = spell === 'fireball' && hp(me) <= 1 ? w.kill : 0;
+        return (heavy[spell] ?? 200) + big - keep;
+      }
+      case 'ambush': return this.harmPlayer(g, other, 1, 150) + 100 - keep;
+      case 'intercept': {
+        const l = g.cells[other.pos].land;
+        const rew = l?.reward ?? 0;
+        const gain = hp(me) < g.rules.maxSlots ? rew * w.power + this.hpVal(me) * 0.8 : Math.max(0, rew - (me.tokens[me.tokens.length - 1] ?? 0)) * w.power;
+        return gain + this.harmPlayer(g, other, 0, rew) - keep;
+      }
+    }
+    return -1;
   }
 
   spellValue(g: GameState, me: PlayerState, card: string, t: number): number {
@@ -321,6 +395,74 @@ export class HeuristicBot {
       case 'fury': {
         if (!w.lookahead) return 90;
         return this.expectedMove(g, me, effPower(me) + (P.fury ?? 0)) - this.expectedMove(g, me, effPower(me));
+      }
+      case 'secondWind': {
+        const amt = P.secondWind || 500;
+        if (hp(me) < g.rules.maxSlots) return this.hpVal(me) + amt * w.power;
+        return Math.max(0, amt - (me.tokens[me.tokens.length - 1] ?? 0)) * w.power;
+      }
+      case 'revolt': {
+        const l = g.cells[t].land!;
+        if (landLeader(g)?.id !== l.owner) return -1;
+        return this.harmPlayer(g, g.players[l.owner], 0, 0.6 * this.landVal(g, l) + (l.artifact ? 250 : 0)) + 150;
+      }
+      case 'swap': {
+        const q = g.players[t];
+        const delta = q.tokens[0] - (me.tokens[me.tokens.length - 1] ?? 0);
+        return delta * w.power + this.harmPlayer(g, q, 0, delta);
+      }
+      case 'tailwind': {
+        if (!w.lookahead) return 100;
+        const n = g.cells.length;
+        const val = (s: number) => {
+          let v = this.cellValue(g, me, (me.pos + s) % n, effPower(me));
+          if (me.pos + s >= n && hp(me) < g.rules.maxSlots) v += g.rules.startIncome * w.power + this.hpVal(me) * 0.5;
+          return v;
+        };
+        let two = 0;
+        let one = 0;
+        for (let a = 1; a <= 6; a++) { one += val(a) / 6; for (let b = 1; b <= 6; b++) two += Math.max(val(a), val(b)) / 36; }
+        return two - one;
+      }
+      case 'loot': {
+        const l = g.cells[t].land!;
+        const o = g.players[l.owner];
+        const mine = this.artHarm(g, l.artifact!, me, o, l) * (w.lookahead ? moveDist(g.rules.moveDice)[distance(g, me.pos, t)] ?? 0 : 0.15) * 3;
+        return 120 + mine + 120 * w.attack * this.threat(g, o) + (landsOf(g, me.id).some((x) => !x.artifact) ? this.cardValue(g, me, l.artifact!) * 0.6 : 50);
+      }
+      case 'luxuryTax': {
+        const mine = landsOf(g, me.id).length;
+        let v = 0;
+        let slots = g.rules.maxSlots - hp(me);
+        for (const q of g.players) {
+          if (!q.alive || q.id === me.id || landsOf(g, q.id).length <= mine) continue;
+          const tok = q.tokens[q.tokens.length - 1] ?? 0;
+          v += tok * w.power * 0.8 + (slots-- > 0 ? this.hpVal(me) * 0.8 : 0) + this.harmPlayer(g, q, 1, tok);
+        }
+        return v;
+      }
+      case 'quake': {
+        let v = 0;
+        for (const q of g.players) if (q.alive && q.id !== me.id && hp(q) >= 4) v += this.harmPlayer(g, q, 1, 100);
+        if (hp(me) >= 4) v -= this.hpVal(me, -1) + 100 * w.power;
+        return v;
+      }
+      case 'lure': {
+        const q = g.players[t];
+        const cell = nextWildLand(g, q.pos);
+        if (cell < 0) return -1;
+        const l = g.cells[cell].land!;
+        if (effPower(q) > l.monster) return -this.landVal(g, l) * 0.8 * w.attack * this.threat(g, q);
+        return this.harmPlayer(g, q, 1, 0) * (4 / 6) * (hp(q) <= 1 ? 0.8 : 1) - this.landVal(g, l) * (1 / 6) * 0.3;
+      }
+      case 'forge': {
+        const small = me.tokens[me.tokens.length - 1] ?? 0;
+        return (NEXT_DENOM(g, small) - small) * w.power;
+      }
+      case 'hunt': {
+        const base = w.lookahead ? this.expectedMove(g, me, effPower(me)) : 0;
+        const v = this.cellValue(g, me, t, effPower(me));
+        return (w.lookahead ? v - base : v * 0.5) - 60;
       }
       case 'transmute': {
         const opt = exchangeOptions(me.tokens, g.rules)[t];

@@ -1,0 +1,225 @@
+{
+  "base": "v026",
+  "focus": "Качели после «Отстающего»: камбэк лидера ≈ 55% (цель ≤ 50%), официальный скор 98.8. Нужна версия правила, которая помогает последнему, но не отнимает у лидера смысл лидерства.",
+  "observations": "Gen 36: принят E — «Отстающий» (меньше всех Земель → +1 Заклятие) + Налог на Роскошь ×1, Бунт убран (v026). Interest 76.7 → 79.9 (validation 79.1 против 75.3). Решений на ход 1.62 → 1.92, последний в середине 7.4% → 9.1%, партия 50 → 46 мин. Варианты с Бунтом давали Interest 83, но проваливали ворота (Q6). В игре 12 новых типов карт.\n\nС Gen 24 официальный скор накопленно опустился со 100 до 98.8, и почти вся потеря — Q6 (победитель не лидер середины в 53–55% партий).",
+  "hypotheses": "H1. «Отстающий» только при отставании на 2+ Земли — правило включается реже, когда разрыв небольшой.\nH2. «Отстающий у Врат» (+1 Заклятие при проходе Врат вместо каждого хода) — в 3–4 раза реже.\nH3. С мягким правилом можно вернуть Бунт ×1.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "«Отстающий» только при отставании на 2+ Земли",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpGap": 2
+        }
+      },
+      "rationale": "«Отстающий» только при отставании на 2+ Земли",
+      "tabletop": {
+        "explain": "«Если у вас меньше всех Земель и кто-то впереди на 2+, возьмите ещё 1 Заклятие.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с"
+      }
+    },
+    {
+      "id": "B",
+      "title": "«Отстающий у Врат» вместо каждого хода",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpLands": 0,
+          "catchUpGate": 1
+        }
+      },
+      "rationale": "«Отстающий у Врат» вместо каждого хода",
+      "tabletop": {
+        "explain": "«Проходя Врата с наименьшим числом Земель, возьмите 1 Заклятие.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с"
+      }
+    },
+    {
+      "id": "C",
+      "title": "«Отстающий» (2+) + Бунт 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2,
+            "revolt": 1
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpGap": 2
+        }
+      },
+      "rationale": "«Отстающий» (2+) + Бунт 1",
+      "tabletop": {
+        "explain": "«Отстающий» при разрыве 2+ и Бунт ×1",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с"
+      }
+    },
+    {
+      "id": "D",
+      "title": "«Отстающий у Врат» + Бунт 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2,
+            "revolt": 1
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpLands": 0,
+          "catchUpGate": 1
+        }
+      },
+      "rationale": "«Отстающий у Врат» + Бунт 1",
+      "tabletop": {
+        "explain": "«Отстающий у Врат» и Бунт ×1",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с"
+      }
+    },
+    {
+      "id": "E",
+      "title": "«Отстающий» (2+), Налог 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4,
+          "catchUpGap": 2
+        }
+      },
+      "rationale": "«Отстающий» (2+), Налог 2",
+      "tabletop": {
+        "explain": "«Отстающий» при разрыве 2+ и Налог ×2",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "как потратить лишнюю карту",
+        "cognitive": "низкая",
+        "arithmetic": "нет (сравнить флажки)",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "+3 с"
+      }
+    }
+  ],
+  "sideEffects": "Разрыв «на 2+» — ещё одно условие для проверки (флажки видны на поле).",
+  "next": "Gen 38: поиск эксплойтов на новых картах.",
+  "generation": 37,
+  "verdict": "**Правила не изменены.** Мягкие версии «Отстающего» (у Врат — B/D, при разрыве 2+ — A) возвращают официальный скор к 99.7–100, но Interest падает до 71–79: правило почти перестаёт действовать. Кандидаты с Бунтом (C) снова провалили ворота. E (разрыв 2+, Налог ×2) лучший на training (82.0), но на validation скор опустился на 0.5 → отклонён.\n\n**Вывод:** граница «интерес против качелей» выяснена с обеих сторон, v026 стоит на ней. Лучшей точки, которая проходит ворота, нет."
+}

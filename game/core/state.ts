@@ -55,6 +55,7 @@ export function createGame(rules: RuleSet, setups: PlayerSetup[], seed: number, 
     fightMod: 0,
     eliminatedRound: -1,
     laps: 0,
+    rollTwice: false,
   }));
   const artDeck = buildDeck(rules.decks.artifacts, rng);
   const spellDeck = buildDeck(rules.decks.spells, rng);

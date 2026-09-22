@@ -1,0 +1,241 @@
+{
+  "base": "v017",
+  "focus": "Разбавление колоды: почему новые карты проигрывают. Пересборка колоды Заклятий — меньше дублей старых карт, место для новых.",
+  "observations": "Gen 26: карты-ответы отклонены (E лучший на training 64.8, на validation 63.8 против 65.2). Общая картина Gen 25–26: **любой** новый тип Заклятий поднимает разнообразие (13.9 → 15–17), но снижает показатели камбэка. Последний в середине 5.0% → 3.4–4.2%, лидер comeback-теста 60% → 63–66%. Механизм — разбавление: в колоде 46 Заклятий, из них догоняющих всего 5, а каждая новая карта делает Подмену и Налог ещё реже. Кандидат D в Gen 26 пробовал убрать 4 карты, но этого мало.\n\nВ колоде v1.0.0 много дублей: Помеха ×7, Исцеление ×6, Подмога ×6, Огненный шар ×5, Разрушение ×5.",
+  "hypotheses": "H1. Если сократить дубли старых карт (38–40 Заклятий, как в v1.0.0), новые типы поместятся без разбавления догоняющих.\nH2. Бунт и Второе Дыхание по одному (без третьего и четвёртого догоняющего) не доведут камбэк до хаоса (> 50%).",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Колода 38: старые дубли сокращены, +Засада 2, +Перехват 1, Налог 3",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 4,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 5,
+            "swap": 3,
+            "luxuryTax": 3,
+            "ambush": 2,
+            "intercept": 1
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Размер колоды как в v1.0.0; догоняющих 6 из 38.",
+      "tabletop": {
+        "explain": "«Засада: в чужой ход соперник, вставший на вашу Землю, теряет 1 жетон.» «Перехват: в чужой ход заберите жетон-награду за побеждённого монстра.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "кого наказать; чью награду перехватить",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+4 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Колода 38: старые дубли сокращены, +Засада 2, +Отвага 2, Налог 3",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 5,
+            "swap": 3,
+            "luxuryTax": 3,
+            "ambush": 2,
+            "courage": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Отвага вместо Перехвата: риск в своём бою.",
+      "tabletop": {
+        "explain": "«Засада: в чужой ход соперник, вставший на вашу Землю, теряет 1 жетон.» «Отвага: в свой бой деритесь и побеждайте на 4–6.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "кого наказать; рискнуть Бездной",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+4 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "v017 + Бунт 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 5,
+            "heal": 6,
+            "shatter": 5,
+            "usurp": 3,
+            "teleport": 3,
+            "drain": 3,
+            "aid": 6,
+            "hex": 7,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Одиночная проверка Бунта.",
+      "tabletop": {
+        "explain": "«Бунт: у единоличного лидера по Землям одна Земля (на ваш выбор) становится дикой.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "какую Землю лидера освободить",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (сравнить флажки)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "v017 + Второе Дыхание 3",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 5,
+            "heal": 6,
+            "shatter": 5,
+            "usurp": 3,
+            "teleport": 3,
+            "drain": 3,
+            "aid": 6,
+            "hex": 7,
+            "swap": 3,
+            "luxuryTax": 2,
+            "secondWind": 3
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Одиночная проверка Второго Дыхания.",
+      "tabletop": {
+        "explain": "«Второе Дыхание: если ни у кого нет меньше Земель, чем у вас, возьмите жетон 500.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "когда тратить догоняющую карту",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (сравнить флажки)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Колода 40: дубли сокращены, +Бунт 2, +Засада 2, +Перехват 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 4,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 5,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Три новых типа при размере колоды 40.",
+      "tabletop": {
+        "explain": "«Бунт: у единоличного лидера по Землям одна Земля (на ваш выбор) становится дикой.» «Засада: в чужой ход соперник, вставший на вашу Землю, теряет 1 жетон.» «Перехват: в чужой ход заберите жетон-награду за побеждённого монстра.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "какую Землю лидера освободить; кого наказать; чью награду перехватить",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (сравнить флажки)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+6 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "Реже Помеха и Подмога — меньше Манчкин-реакций в бою; их место занимают Засада и Перехват.",
+  "next": "По итогам: либо продолжать пересборку, либо искать другой механизм.",
+  "generation": 27,
+  "verdict": "**Принят E (v018): колода Заклятий 40 карт — срезаны дубли старых карт, добавлены Бунт 2, Засада 2, Перехват 2.** Interest 63.8 → 70.8 (validation 72.1 против 65.2), лидер comeback-теста 60% → 46.5%, карт в чужой ход 8.9 → 12.7. Гипотеза о разбавлении подтверждена: те же карты, которые в Gen 25–26 проигрывали, в худой колоде выигрывают.\n\nЦена — партия 44 → 53 мин. C (Бунт без пересборки) не прошёл ворота: доминирование стиля 37%."
+}

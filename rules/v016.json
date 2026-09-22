@@ -1,0 +1,30 @@
+{
+  "version": "v016",
+  "parent": "v015",
+  "title": "Хаос-Артефакты: Пески, Мимик, Зависть ×3",
+  "generation": 23,
+  "changes": [
+    "Хаос-Артефакты: Пески, Мимик, Зависть ×3"
+  ],
+  "rationale": "Только неожиданные моменты.",
+  "overrides": {
+    "decks": {
+      "artifacts": {
+        "tribute": 15,
+        "trap": 7,
+        "shackles": 5,
+        "quicksand": 3,
+        "mimic": 3,
+        "envy": 3
+      }
+    },
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    }
+  }
+}

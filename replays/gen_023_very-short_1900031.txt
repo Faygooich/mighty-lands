@@ -1,0 +1,48 @@
+# Replay: very-short (lateGame)
+rules: v015
+seed: 1900031
+lineup: survival, economic, tactical, defensive
+scenario: lateGame
+winner: economic after 3 rounds (lands-target)
+choices: [2,5,1,2,3,2,2,1,0,0,2,1,1,8,1,1,11,2,1,2,0,1]
+
+[р1] DefensiveBot#1 бросает 2 → клетка 2
+[р1] Срабатывает «Капкан» EconomicBot#2 против DefensiveBot#1
+[р1] DefensiveBot#1 теряет жетон 100 — Капкан
+[р1] EconomicBot#2 применяет «Узурпация» → Чёрный Провал
+[р1] EconomicBot#2 кладёт «Капкан» на Чёрный Провал
+[р1] EconomicBot#2 бросает 5 → клетка 5
+[р1] Срабатывает «Дань» DefensiveBot#1 против EconomicBot#2
+[р1] EconomicBot#2 отдаёт жетон 100 — Дань
+[р1] SurvivalBot#3 применяет «Огненный шар» → TacticalBot#4
+[р1] TacticalBot#4 теряет жетон 100 — Огненный шар
+[р1] SurvivalBot#3 бросает 1 → клетка 1
+[р1] Срабатывает «Сундук-Мимик» DefensiveBot#1 против SurvivalBot#3
+[р1] Сундук-Мимик кусает SurvivalBot#3 (бросок 4)
+[р1] SurvivalBot#3 теряет жетон 100 — Сундук-Мимик
+[р1] TacticalBot#4 бросает 5 → клетка 5
+[р1] Срабатывает «Дань» DefensiveBot#1 против TacticalBot#4
+[р1] TacticalBot#4 отдаёт жетон 300 — Дань
+[р2] DefensiveBot#1 бросает 4 → клетка 6
+[р2] EconomicBot#2 применяет «Вытягивание» → SurvivalBot#3
+[р2] SurvivalBot#3 отдаёт жетон 300 — Вытягивание
+[р2] EconomicBot#2 бросает 2 → клетка 7
+[р2] SurvivalBot#3 применяет «Исцеление»
+[р2] SurvivalBot#3 получает 100 мощи (100) — Исцеление
+[р2] SurvivalBot#3 бросает 5 → клетка 6
+[р2] TacticalBot#4 применяет «Разрушение» → Сердце Леса
+[р2] TacticalBot#4 бросает 3 → клетка 8
+[р2] Срабатывает «Дань» SurvivalBot#3 против TacticalBot#4
+[р2] TacticalBot#4 отдаёт жетон 500 — Дань
+[р2] ☠ TacticalBot#4 теряет всё и возвращается на Врата (Дань)
+[р3] DefensiveBot#1 бросает 6 → клетка 12
+[р3] EconomicBot#2 применяет «Телепорт» → Волчья Тропа
+[р3] EconomicBot#2 кладёт «Сундук-Мимик» на Сердце Леса
+[р3] EconomicBot#2 телепортируется на клетку 9
+[р3] SurvivalBot#3 играет «Помеха» в бою EconomicBot#2
+[р3] DefensiveBot#1 играет «Подмога» в бою EconomicBot#2
+[р3] EconomicBot#2 захватывает Волчья Тропа (монстр 1300)
+[р3] EconomicBot#2 получает 300 мощи (300) — Награда: Волчья Тропа
+[р3] DefensiveBot#1 получает 500 мощи (500) — Подмога
+[р3] EconomicBot#2 кладёт «Оковы» на Волчья Тропа
+[р3] 🏆 Победа: EconomicBot#2 (lands-target)

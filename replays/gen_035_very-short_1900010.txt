@@ -1,0 +1,56 @@
+# Replay: very-short (lateGame)
+rules: v024
+seed: 1900010
+lineup: defensive, economic, survival, random
+scenario: lateGame
+winner: defensive after 3 rounds (lands-target)
+choices: [0,0,3,2,3,1,2,5,2,5,1,1,1,1,15,1,0,0,1,1,2,3,1,0,2,1,1,1]
+
+[р1] RandomBot#1 бросает 2 → клетка 2
+[р1] Срабатывает «Дань» DefensiveBot#2 против RandomBot#1
+[р1] RandomBot#1 отдаёт жетон 500 — Дань
+[р1] RandomBot#1 применяет «Огненный шар» → EconomicBot#4
+[р1] EconomicBot#4 теряет жетон 100 — Огненный шар
+[р1] DefensiveBot#2 применяет «Огненный шар» → EconomicBot#4
+[р1] EconomicBot#4 теряет жетон 300 — Огненный шар
+[р1] DefensiveBot#2 бросает 4 → клетка 4
+[р1] Срабатывает «Дань» EconomicBot#4 против DefensiveBot#2
+[р1] DefensiveBot#2 отдаёт жетон 100 — Дань
+[р1] SurvivalBot#3 применяет «Разрушение» → Опушка
+[р1] SurvivalBot#3 бросает 1 → клетка 1
+[р1] Срабатывает «Капкан» RandomBot#1 против SurvivalBot#3
+[р1] SurvivalBot#3 теряет жетон 100 — Капкан
+[р1] EconomicBot#4 применяет «Узурпация» → Чёрный Провал
+[р1] EconomicBot#4 кладёт «Дань» на Чёрный Провал
+[р1] EconomicBot#4 бросает 3 → клетка 3
+[р1] Срабатывает «Дань» SurvivalBot#3 против EconomicBot#4
+[р1] EconomicBot#4 отдаёт жетон 100 — Дань
+[р1] SurvivalBot#3 устраивает Засаду на Мельница!
+[р1] EconomicBot#4 теряет жетон 500 — Засада
+[р1] ☠ EconomicBot#4 теряет всё и возвращается на Врата (Засада)
+[р2] RandomBot#1 бросает 5 → клетка 7
+[р2] DefensiveBot#2 применяет «Телепорт» → Рудники
+[р2] DefensiveBot#2 кладёт «Зависть» на Опушка
+[р2] DefensiveBot#2 телепортируется на клетку 14
+[р2] DefensiveBot#2 захватывает Рудники (монстр 1200)
+[р2] DefensiveBot#2 получает 500 мощи (500) — Награда: Рудники
+[р2] DefensiveBot#2 кладёт «Зависть» на Рудники
+[р2] SurvivalBot#3 применяет «Разрушение» → Тихий Луг
+[р2] SurvivalBot#3 бросает 4 → клетка 5
+[р2] Срабатывает «Зависть» RandomBot#1 против SurvivalBot#3
+[р2] SurvivalBot#3 отдаёт жетон 100 — Зависть
+[р2] EconomicBot#4 бросает 1 → клетка 1
+[р3] RandomBot#1 кладёт «Капкан» на Тихий Луг
+[р3] RandomBot#1 бросает 2 → клетка 9
+[р3] DefensiveBot#2 играет «Подмога» в бою RandomBot#1
+[р3] RandomBot#1 захватывает Волчья Тропа (монстр 800)
+[р3] RandomBot#1 получает 300 мощи (300) — Награда: Волчья Тропа
+[р3] DefensiveBot#2 получает 500 мощи (500) — Подмога
+[р3] RandomBot#1 кладёт «Оковы» на Волчья Тропа
+[р3] DefensiveBot#2 бросает 6 → клетка 20
+[р3] RandomBot#1 играет «Помеха» в бою DefensiveBot#2
+[р3] DefensiveBot#2 бросает 6 и побеждает монстра Чёрный Провал
+[р3] DefensiveBot#2 меняет жетон 300 на 1000 (апгрейд)
+[р3] DefensiveBot#2 получает 700 мощи (1000) — Награда: Чёрный Провал
+[р3] DefensiveBot#2 кладёт «Оковы» на Чёрный Провал
+[р3] 🏆 Победа: DefensiveBot#2 (lands-target)

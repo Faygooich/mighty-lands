@@ -1,0 +1,56 @@
+# Replay: very-short (lateGame)
+rules: v017
+seed: 1900043
+lineup: aggressive, economic, tactical, random
+scenario: lateGame
+winner: economic after 3 rounds (lands-target)
+choices: [3,1,2,2,2,18,1,17,25,5,0,1,14,1,1,3,3,2,9,0,1]
+
+[р1] TacticalBot#1 применяет «Вытягивание» → RandomBot#4
+[р1] RandomBot#4 отдаёт жетон 300 — Вытягивание
+[р1] TacticalBot#1 бросает 4 → клетка 4
+[р1] Срабатывает «Оковы» RandomBot#4 против TacticalBot#1
+[р1] TacticalBot#1 скован и пропустит ход
+[р1] EconomicBot#2 применяет «Огненный шар» → AggressiveBot#3
+[р1] AggressiveBot#3 теряет жетон 100 — Огненный шар
+[р1] EconomicBot#2 бросает 5 → клетка 5
+[р1] Срабатывает «Капкан» TacticalBot#1 против EconomicBot#2
+[р1] EconomicBot#2 теряет жетон 100 — Капкан
+[р1] AggressiveBot#3 применяет «Огненный шар» → RandomBot#4
+[р1] RandomBot#4 теряет жетон 100 — Огненный шар
+[р1] AggressiveBot#3 бросает 1 → клетка 1
+[р1] Срабатывает «Зыбучие Пески» TacticalBot#1 против AggressiveBot#3
+[р1] AggressiveBot#3 тонет в Зыбучих Песках и отступает на клетку 22
+[р1] RandomBot#4 применяет «Разрушение» → Трон Костей
+[р1] RandomBot#4 бросает 3 → клетка 3
+[р1] Срабатывает «Дань» AggressiveBot#3 против RandomBot#4
+[р1] RandomBot#4 отдаёт жетон 500 — Дань
+[р1] ☠ RandomBot#4 теряет всё и возвращается на Врата (Дань)
+[р2] TacticalBot#1 пропускает ход
+[р2] EconomicBot#2 кладёт «Дань» на Трон Костей
+[р2] EconomicBot#2 применяет «Телепорт» → Овечий Холм
+[р2] EconomicBot#2 телепортируется на клетку 4
+[р2] EconomicBot#2 захватывает Овечий Холм (монстр 400)
+[р2] EconomicBot#2 получает 100 мощи (100) — Награда: Овечий Холм
+[р2] EconomicBot#2 кладёт «Оковы» на Овечий Холм
+[р2] AggressiveBot#3 применяет «Огненный шар» → RandomBot#4
+[р2] RandomBot#4 теряет жетон 300 — Огненный шар
+[р2] ☠ RandomBot#4 теряет всё и возвращается на Врата (Огненный шар)
+[р2] AggressiveBot#3 бросает 1 → клетка 23
+[р2] AggressiveBot#3 бросает 4 и проигрывает бой
+[р2] AggressiveBot#3 теряет жетон 300 — Монстр Око Бездны
+[р2] RandomBot#4 применяет «Подмена» → AggressiveBot#3
+[р2] RandomBot#4 подменяет жетоны: берёт 500 у AggressiveBot#3, отдаёт 300
+[р2] RandomBot#4 бросает 6 → клетка 6
+[р3] TacticalBot#1 применяет «Огненный шар» → RandomBot#4
+[р3] RandomBot#4 теряет жетон 500 — Огненный шар
+[р3] ☠ RandomBot#4 теряет всё и возвращается на Врата (Огненный шар)
+[р3] TacticalBot#1 бросает 4 → клетка 8
+[р3] Срабатывает «Капкан» AggressiveBot#3 против TacticalBot#1
+[р3] TacticalBot#1 теряет жетон 100 — Капкан
+[р3] EconomicBot#2 применяет «Телепорт» → Волчья Тропа
+[р3] EconomicBot#2 телепортируется на клетку 9
+[р3] EconomicBot#2 захватывает Волчья Тропа (монстр 800)
+[р3] EconomicBot#2 получает 300 мощи (300) — Награда: Волчья Тропа
+[р3] EconomicBot#2 кладёт «Дань» на Волчья Тропа
+[р3] 🏆 Победа: EconomicBot#2 (lands-target)

@@ -1,0 +1,38 @@
+{
+  "version": "v020",
+  "parent": "v019",
+  "title": "Отвага 2 (Исцеление 4 → 3, Помеха 5 → 4)",
+  "generation": 29,
+  "changes": [
+    "Отвага 2 (Исцеление 4 → 3, Помеха 5 → 4)"
+  ],
+  "rationale": "Риск в своём бою вместо лечения.",
+  "overrides": {
+    "decks": {
+      "spells": {
+        "fireball": 4,
+        "heal": 3,
+        "shatter": 3,
+        "usurp": 3,
+        "teleport": 2,
+        "drain": 3,
+        "aid": 5,
+        "hex": 4,
+        "swap": 3,
+        "luxuryTax": 2,
+        "revolt": 2,
+        "ambush": 2,
+        "intercept": 2,
+        "courage": 2
+      }
+    },
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    }
+  }
+}

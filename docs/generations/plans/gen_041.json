@@ -1,0 +1,253 @@
+{
+  "base": "v026",
+  "focus": "Старые карты v1.0.0 в новой колоде. После пересборки Исцеление осталось в одном экземпляре, а Оковы (самый пассивный эффект — пропуск хода) и Телепорт никто не перепроверял.",
+  "observations": "Gen 40: все шесть новых Заклятий остаются. Без Подмены −3.3, без Второго Дыхания −2.3, без Налога −2.0, без Перехвата −1.6, без Отваги +0.3 (в зоне равенства — тай-брейк оставил карту). Без Засады Interest 81.8, но вариант не прошёл ворота (скор 98.0): Засада сдерживает качели, наказывая того, кто бежит по чужим Землям.\n\nИтоговый набор новых карт определён: 12 типов. Осталось проверить старые карты.",
+  "hypotheses": "H1. Исцеление ×1 — лишний тип карты (правило «удаляй, если можно»).\nH2. Оковы можно убрать: их роль «наказание гостя» теперь выполняют шесть новых Артефактов.\nH3. Телепорт без Бунта и Узурпации-цепочек стал слабее — проверить удаление.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Убрать Исцеление (копия → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 6,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Одинокая копия.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Убрать Оковы (копии → Дань)",
+      "overrides": {
+        "decks": {
+          "artifacts": {
+            "tribute": 14,
+            "trap": 5,
+            "quicksand": 3,
+            "mimic": 2,
+            "envy": 3,
+            "altar": 2,
+            "spy": 2,
+            "vein": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Пропуск хода — самый скучный эффект.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Убрать Телепорт (копии → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "drain": 3,
+            "aid": 7,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Проверка Телепорта.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Убрать Исцеление и Оковы",
+      "overrides": {
+        "decks": {
+          "artifacts": {
+            "tribute": 14,
+            "trap": 5,
+            "quicksand": 3,
+            "mimic": 2,
+            "envy": 3,
+            "altar": 2,
+            "spy": 2,
+            "vein": 2
+          },
+          "spells": {
+            "fireball": 4,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 6,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Оба упрощения.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Исцеление ×2 (Огненный шар 4 → 3)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 3,
+            "heal": 2,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Вернуть Исцелению смысл отдельной карты.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "Удаление старых карт уменьшает число типов, но упрощает правила.",
+  "next": "Gen 42: финальное поколение и сравнение v1.0.0 с v1.0.1.",
+  "generation": 41,
+  "verdict": "**Правила не изменены.** Оковы нужны (без них −3.2): пропуск хода — единственное наказание, которое бьёт по темпу, а не по жетонам. Исцеление ×1 можно убрать без потери (−0.1, зона равенства), но тай-брейк R4 по разнообразию его оставил. Кто хочет колоду проще, может убрать эту единственную копию. Без Телепорта (C) Interest 80.0, но вариант не прошёл ворота: качели выходят за коридор (лидер comeback-теста 41.7%, скор 98.1)."
+}

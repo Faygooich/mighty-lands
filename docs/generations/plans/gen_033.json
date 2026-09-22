@@ -1,0 +1,184 @@
+{
+  "base": "v022",
+  "focus": "Правила вокруг карт. В игре теперь 13 новых типов карт, но базовые правила обращения с картами остались от v1.0.0: рука 3, одно Заклятие за ход.",
+  "observations": "Gen 32: принято Второе Дыхание 2 вместо 2 Исцелений (v022). Interest 73.9 → 75.4 (validation 74.2 против 73.8), последний в середине 6.2% → 7.5%. Зеркало, Трофей, Кузня, Ветер и Землетрясение по одному в пределах шума или хуже базы.\n\nСодержательных решений на ход 1.56–1.60 — меньше, чем в v1.0.0 (1.66). Карт стало больше, а с лимитом руки 3 и одним Заклятием за ход выбирать особо не из чего: часто играется единственная подходящая карта.",
+  "hypotheses": "H1. Лимит руки 4: больше выбора, какую карту держать и какую играть.\nH2. Два Заклятия за ход: комбо (Приманка + Помеха), больше решений, но риск взрывных ходов.\nH3. Все игроки начинают с 1 Заклятием (плюс компенсация места): первые ходы содержательнее.\nH4. Побег на 4–6 вместо 5–6: слабее штраф за неудачную встречу, решение «бежать или драться с Отвагой» становится тоньше.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Лимит руки 4",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "handLimit": 4
+      },
+      "rationale": "Больше выбора.",
+      "tabletop": {
+        "explain": "«В конце хода на руке не больше 4 карт.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "что держать до нужного момента",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    },
+    {
+      "id": "B",
+      "title": "2 Заклятия за ход",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "spellsPerTurn": 2
+      },
+      "rationale": "Комбо и темп.",
+      "tabletop": {
+        "explain": "«За ход можно сыграть до 2 Заклятий.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "комбинации карт",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Стартовая рука +1 Заклятие каждому (1/2/2/3/3/4/4)",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "seatBonusCards": [
+          1,
+          2,
+          2,
+          3,
+          3,
+          4,
+          4
+        ]
+      },
+      "rationale": "Содержательный старт.",
+      "tabletop": {
+        "explain": "«На старте каждый берёт на 1 Заклятие больше.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "первый ход с выбором",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Побег на 4–6",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "fleeMin": 4
+      },
+      "rationale": "Мягче наказание.",
+      "tabletop": {
+        "explain": "«Бежать: 4–6 — ушли.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "бежать или рискнуть Отвагой",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Лимит руки 4 + стартовая рука +1",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "handLimit": 4,
+        "seatBonusCards": [
+          1,
+          2,
+          2,
+          3,
+          3,
+          4,
+          4
+        ]
+      },
+      "rationale": "Оба рычага руки.",
+      "tabletop": {
+        "explain": "«Рука до 4 карт; на старте на 1 Заклятие больше.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "что держать",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    }
+  ],
+  "sideEffects": "Больше карт на руках — больше реакций в чужой ход, дольше решения.",
+  "next": "Gen 34: чистка и настройка параметров новых карт.",
+  "generation": 33,
+  "verdict": "**Принят C (v023): стартовая рука +1 Заклятие каждому (1/2/2/3/3/4/4).** Interest 75.4 → 75.9 (validation 75.3 против 74.2), решений на ход 1.56 → 1.62. Лимит руки 4 хуже базы: больше карт — меньше решений на карту. 2 Заклятия за ход в зоне равенства, но риск взрывных ходов, и по правилу равенства изменение не нужно."
+}

@@ -27,6 +27,8 @@ export interface PlayerState {
   eliminatedRound: number;
   /** Consecutive failed flees / generic per-player counter used by some rules. */
   laps: number;
+  /** «Попутный Ветер»: roll two dice this turn and pick one. */
+  rollTwice: boolean;
 }
 
 export interface LandState {
@@ -100,7 +102,9 @@ export type DecisionKind =
   | 'pay'
   | 'discard'
   | 'react'
-  | 'dilemma';
+  | 'dilemma'
+  /** A card that answers another player's action (Зеркало, Засада, Перехват). */
+  | 'trigger';
 
 export interface Decision {
   kind: DecisionKind;
@@ -110,6 +114,8 @@ export interface Decision {
   reason: string;
   /** Extra info (e.g. amount to pay). */
   amount?: number;
+  /** Context for 'trigger' decisions: the card/effect being answered. */
+  card?: string;
 }
 
 export type Engine = Generator<Decision, void, number>;

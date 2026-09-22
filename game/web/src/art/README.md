@@ -67,6 +67,26 @@
 | `card-hex` | Помеха |
 | `card-ward` | Оберег |
 | `card-transmute` | Алхимия |
+| `card-envy` | Зависть |
+| `card-quicksand` | Зыбучие Пески |
+| `card-mimic` | Сундук-Мимик |
+| `card-spy` | Соглядатай |
+| `card-altar` | Алтарь |
+| `card-vein` | Золотая Жила |
+| `card-secondWind` | Второе Дыхание |
+| `card-revolt` | Бунт |
+| `card-swap` | Подмена |
+| `card-tailwind` | Попутный Ветер |
+| `card-loot` | Трофей |
+| `card-luxuryTax` | Налог на Роскошь |
+| `card-quake` | Землетрясение |
+| `card-lure` | Приманка |
+| `card-forge` | Кузня |
+| `card-hunt` | Охотничий Рог |
+| `card-mirror` | Зеркало |
+| `card-ambush` | Засада |
+| `card-courage` | Отвага |
+| `card-intercept` | Перехват |
 
 ## Рубашки колод
 

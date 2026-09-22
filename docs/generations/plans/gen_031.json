@@ -1,0 +1,90 @@
+{
+  "base": "v020",
+  "focus": "Партия на 7 игроков идёт 94 мин (MEDIUM, BUG-015): новые догоняющие карты чаще перекидывают Земли, и до цели дольше.",
+  "observations": "Gen 30: изменений нет. Бунт ×1 (A) убирает качели и укорачивает 7p до 75 мин, но Interest −2.7: последний в середине 6.2% → 5.5%, смен лидера 6.4 → 5.8. Цель 5 Земель на 6–7 игроков (C) даёт 7p 55 мин при неизменном Interest. Она проиграла только на тай-брейке: Interest Index считается по партиям на 4 игроков и 6–7p не видит. Побочный эффект C — партий ≤ 4 раундов на 7p 2.5%, на 6p 3.9% (LOW; в v015 было 0.6%).\n\nВ этом поколении меняется только цель для 6–7 игроков, поэтому выбор решают детекторы 6p/7p (тай-брейк R4 по открытым проблемам).",
+  "hypotheses": "H1. Цель 5 только на 7 игроков закроет MEDIUM len7p, а 6p (68 мин) оставит как есть.\nH2. Цель 5 на 6 и 7 игроков — лишнее: 6p и так в норме.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Цель 5 Земель на 7 игроков (9/8/7/6/6/5)",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "win": {
+          "landsTargetBy": {
+            "2": 9,
+            "3": 8,
+            "5": 6,
+            "6": 6,
+            "7": 5
+          }
+        }
+      },
+      "rationale": "Только 7p.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Цель 5 Земель на 6–7 игроков (9/8/7/6/5/5)",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "win": {
+          "landsTargetBy": {
+            "2": 9,
+            "3": 8,
+            "5": 6,
+            "6": 5,
+            "7": 5
+          }
+        }
+      },
+      "rationale": "6p и 7p.",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "Возможен возврат коротких партий на 7 игроков (Gen 22).",
+  "next": "Gen 32: оставшиеся карты в худой колоде.",
+  "generation": 31,
+  "verdict": "**Принят A (v021): цель 5 Земель на 7 игроков.** Партия 7p 94 → 55 мин (MEDIUM закрыт), на 4p ничего не изменилось. Цена — 2.5% партий на 7 игроков короче 4 раундов (LOW). Цель 5 и для 6p не нужна: 6p уже 68 мин."
+}

@@ -1,0 +1,15 @@
+{
+  "version": "v028",
+  "parent": "v027",
+  "title": "Золотая Жила: жетон 500 (восстановить Gen 34)",
+  "generation": 43,
+  "changes": [
+    "Золотая Жила: жетон 500 (восстановить Gen 34)"
+  ],
+  "rationale": "Errata Gen 34.",
+  "overrides": {
+    "params": {
+      "veinIncome": 500
+    }
+  }
+}

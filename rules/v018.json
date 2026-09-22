@@ -1,0 +1,37 @@
+{
+  "version": "v018",
+  "parent": "v017",
+  "title": "Колода 40: дубли сокращены, +Бунт 2, +Засада 2, +Перехват 2",
+  "generation": 27,
+  "changes": [
+    "Колода 40: дубли сокращены, +Бунт 2, +Засада 2, +Перехват 2"
+  ],
+  "rationale": "Три новых типа при размере колоды 40.",
+  "overrides": {
+    "decks": {
+      "spells": {
+        "fireball": 4,
+        "heal": 4,
+        "shatter": 3,
+        "usurp": 3,
+        "teleport": 2,
+        "drain": 3,
+        "aid": 5,
+        "hex": 5,
+        "swap": 3,
+        "luxuryTax": 2,
+        "revolt": 2,
+        "ambush": 2,
+        "intercept": 2
+      }
+    },
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    }
+  }
+}

@@ -1,0 +1,304 @@
+{
+  "base": "v021",
+  "focus": "Оставшиеся карты — замена «один к одному»: новая карта встаёт на место старой с похожей ролью.",
+  "observations": "Gen 31: цель 5 Земель на 7 игроков (v021). Партия 7p 94 → 55 мин, MEDIUM len7p закрыт. Партий ≤ 4 раундов на 7p 2.5% (LOW). На 4p ничего не изменилось.\n\nНе вошли в игру: Зеркало, Трофей, Приманка, Кузня, Попутный Ветер, Охотничий Рог, Землетрясение, Второе Дыхание. В Gen 29 Зеркало (73.2) и Приманка + Кузня (72.7) были рядом с базой (73.1) — в пределах шума.",
+  "hypotheses": "H1. Карта, которая делает то же, что старая, но с выбором, лучше старой: Трофей вместо Разрушения, Попутный Ветер или Зеркало вместо Телепорта, Кузня или Второе Дыхание вместо Исцеления.\nH2. Землетрясение вместо части Огненных шаров — take-that по богатым вместо адресного.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Зеркало 2 вместо Телепорта 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "mirror": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Защитный ответ вместо движения.",
+      "tabletop": {
+        "explain": "«Зеркало: в чужой ход отмените Заклятие против вас или вашей Земли.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "на что тратить защиту",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Трофей 2 вместо 2 Разрушений (Разрушение 1)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 1,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "loot": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Снять Артефакт и забрать себе.",
+      "tabletop": {
+        "explain": "«Трофей: заберите Артефакт с чужой Земли себе в руку.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "разрушить или присвоить",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Кузня 2 вместо 2 Исцелений (Исцеление 1)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "forge": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Рост мощи вместо HP.",
+      "tabletop": {
+        "explain": "«Кузня: самый мелкий жетон замените на следующий номинал.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "когда перековать",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Попутный Ветер 2 вместо Телепорта 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "tailwind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Выбор из двух бросков вместо любой клетки.",
+      "tabletop": {
+        "explain": "«Попутный Ветер: бросьте кубик дважды и выберите результат.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 1,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "какую клетку выбрать",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Второе Дыхание 2 вместо 2 Исцелений (Исцеление 1)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Лечение только для отстающих, зато крупное.",
+      "tabletop": {
+        "explain": "«Второе Дыхание: если ни у кого нет меньше Земель, чем у вас, возьмите жетон 500.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "когда тратить догоняющую карту",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (сравнить флажки)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "F",
+      "title": "Землетрясение 2 вместо 2 Огненных шаров (Шар 2)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 2,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "quake": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Урон по богатым вместо адресного.",
+      "tabletop": {
+        "explain": "«Землетрясение: каждый с 4–5 жетонами (и вы) теряет 1 жетон.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "бить по богатым, теряя своё",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (посчитать жетоны)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "Если убрать Телепорт, пропадёт карта-«ход конём» из v1.0.0.",
+  "next": "Gen 33: правила — лимит руки, Заклятий за ход.",
+  "generation": 32,
+  "verdict": "**Принят E (v022): Второе Дыхание 2 вместо 2 Исцелений.** Interest 73.9 → 75.4 (validation 74.2 против 73.8), последний в середине 6.2% → 7.5%. Лечение, которое получает только отстающий, полезнее лечения для всех. Зеркало, Трофей, Кузня, Ветер и Землетрясение — в пределах шума или хуже."
+}

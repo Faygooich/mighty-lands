@@ -1,0 +1,48 @@
+# Replay: very-short (lateGame)
+rules: v020
+seed: 1900015
+lineup: random, economic, tactical, defensive
+scenario: lateGame
+winner: defensive after 3 rounds (lands-target)
+choices: [3,2,2,8,1,1,1,1,1,1,6,2,0,0,3,2,0,3,3,0,0,2]
+
+[р1] EconomicBot#1 бросает 1 → клетка 1
+[р1] DefensiveBot#2 применяет «Огненный шар» → TacticalBot#4
+[р1] TacticalBot#4 теряет жетон 100 — Огненный шар
+[р1] DefensiveBot#2 бросает 4 → клетка 4
+[р1] Срабатывает «Сундук-Мимик» TacticalBot#4 против DefensiveBot#2
+[р1] Сундук-Мимик кусает DefensiveBot#2 (бросок 1)
+[р1] DefensiveBot#2 теряет жетон 100 — Сундук-Мимик
+[р1] RandomBot#3 применяет «Узурпация» → Пепельный Край
+[р1] RandomBot#3 кладёт «Дань» на Пепельный Край
+[р1] RandomBot#3 бросает 1 → клетка 1
+[р1] Срабатывает «Дань» EconomicBot#1 против RandomBot#3
+[р1] RandomBot#3 отдаёт жетон 300 — Дань
+[р1] TacticalBot#4 применяет «Исцеление»
+[р1] TacticalBot#4 получает 100 мощи (100) — Исцеление
+[р1] TacticalBot#4 бросает 4 → клетка 4
+[р2] EconomicBot#1 применяет «Налог на Роскошь»
+[р2] RandomBot#3 отдаёт жетон 100 — Налог на Роскошь
+[р2] EconomicBot#1 бросает 1 → клетка 2
+[р2] Срабатывает «Соглядатай» DefensiveBot#2 против EconomicBot#1
+[р2] EconomicBot#1 отдаёт карту DefensiveBot#2 (Соглядатай)
+[р2] DefensiveBot#2 применяет «Узурпация» → Кипящее Озеро
+[р2] DefensiveBot#2 кладёт «Оковы» на Кипящее Озеро
+[р2] DefensiveBot#2 бросает 1 → клетка 5
+[р2] Срабатывает «Зыбучие Пески» EconomicBot#1 против DefensiveBot#2
+[р2] DefensiveBot#2 тонет в Зыбучих Песках и отступает на клетку 2
+[р2] RandomBot#3 бросает 5 → клетка 6
+[р2] TacticalBot#4 применяет «Огненный шар» → RandomBot#3
+[р2] RandomBot#3 теряет жетон 500 — Огненный шар
+[р2] ☠ RandomBot#3 теряет всё и возвращается на Врата (Огненный шар)
+[р2] TacticalBot#4 бросает 6 → клетка 10
+[р2] Срабатывает «Капкан» EconomicBot#1 против TacticalBot#4
+[р2] TacticalBot#4 теряет жетон 100 — Капкан
+[р3] EconomicBot#1 применяет «Разрушение» → Опушка
+[р3] EconomicBot#1 бросает 3 → клетка 5
+[р3] DefensiveBot#2 кладёт «Дань» на Опушка
+[р3] DefensiveBot#2 бросает 6 → клетка 8
+[р3] DefensiveBot#2 захватывает Грибная Чаща (монстр 700)
+[р3] DefensiveBot#2 получает 300 мощи (300) — Награда: Грибная Чаща
+[р3] DefensiveBot#2 кладёт «Золотая Жила» на Грибная Чаща
+[р3] 🏆 Победа: DefensiveBot#2 (lands-target)

@@ -1,0 +1,57 @@
+# Replay: very-short (lateGame)
+rules: v018
+seed: 1900055
+lineup: economic, survival, tactical, defensive
+scenario: lateGame
+winner: economic after 3 rounds (lands-target)
+choices: [2,17,2,4,3,2,2,1,1,1,3,3,0,0,1,1,1,2,3,3,0,0,1]
+
+[р1] SurvivalBot#1 бросает 2 → клетка 2
+[р1] Срабатывает «Дань» EconomicBot#2 против SurvivalBot#1
+[р1] SurvivalBot#1 отдаёт жетон 100 — Дань
+[р1] EconomicBot#2 применяет «Разрушение» → Кипящее Озеро
+[р1] EconomicBot#2 бросает 5 → клетка 5
+[р1] Срабатывает «Дань» SurvivalBot#1 против EconomicBot#2
+[р1] EconomicBot#2 отдаёт жетон 100 — Дань
+[р1] DefensiveBot#3 кладёт «Зыбучие Пески» на Кипящее Озеро
+[р1] DefensiveBot#3 применяет «Огненный шар» → TacticalBot#4
+[р1] TacticalBot#4 теряет жетон 100 — Огненный шар
+[р1] DefensiveBot#3 бросает 4 → клетка 4
+[р1] Срабатывает «Сундук-Мимик» TacticalBot#4 против DefensiveBot#3
+[р1] Сундук-Мимик кусает DefensiveBot#3 (бросок 4)
+[р1] DefensiveBot#3 теряет жетон 100 — Сундук-Мимик
+[р1] TacticalBot#4 устраивает Засаду на Овечий Холм!
+[р1] DefensiveBot#3 теряет жетон 300 — Засада
+[р1] TacticalBot#4 бросает 5 → клетка 5
+[р1] Срабатывает «Дань» SurvivalBot#1 против TacticalBot#4
+[р1] TacticalBot#4 отдаёт жетон 300 — Дань
+[р2] SurvivalBot#1 применяет «Подмена» → TacticalBot#4
+[р2] SurvivalBot#1 подменяет жетоны: берёт 500 у TacticalBot#4, отдаёт 100
+[р2] SurvivalBot#1 бросает 4 → клетка 6
+[р2] EconomicBot#2 применяет «Огненный шар» → TacticalBot#4
+[р2] TacticalBot#4 теряет жетон 100 — Огненный шар
+[р2] ☠ TacticalBot#4 теряет всё и возвращается на Врата (Огненный шар)
+[р2] EconomicBot#2 бросает 4 → клетка 9
+[р2] EconomicBot#2 захватывает Волчья Тропа (монстр 800)
+[р2] EconomicBot#2 получает 300 мощи (300) — Награда: Волчья Тропа
+[р2] EconomicBot#2 кладёт «Капкан» на Волчья Тропа
+[р2] DefensiveBot#3 применяет «Исцеление»
+[р2] DefensiveBot#3 получает 100 мощи (100) — Исцеление
+[р2] DefensiveBot#3 бросает 5 → клетка 9
+[р2] Срабатывает «Капкан» EconomicBot#2 против DefensiveBot#3
+[р2] DefensiveBot#3 теряет жетон 100 — Капкан
+[р2] TacticalBot#4 бросает 2 → клетка 2
+[р2] Срабатывает «Дань» EconomicBot#2 против TacticalBot#4
+[р2] TacticalBot#4 отдаёт жетон 300 — Дань
+[р2] ☠ TacticalBot#4 теряет всё и возвращается на Врата (Дань)
+[р3] SurvivalBot#1 применяет «Огненный шар» → DefensiveBot#3
+[р3] DefensiveBot#3 теряет жетон 500 — Огненный шар
+[р3] ☠ DefensiveBot#3 теряет всё и возвращается на Врата (Огненный шар)
+[р3] SurvivalBot#1 бросает 6 → клетка 12
+[р3] EconomicBot#2 применяет «Разрушение» → Дуб Шептун
+[р3] EconomicBot#2 бросает 4 → клетка 13
+[р3] EconomicBot#2 захватывает Перевал (монстр 1000)
+[р3] EconomicBot#2 меняет жетон 100 на 500 (апгрейд)
+[р3] EconomicBot#2 получает 400 мощи (500) — Награда: Перевал
+[р3] EconomicBot#2 кладёт «Дань» на Перевал
+[р3] 🏆 Победа: EconomicBot#2 (lands-target)

@@ -241,8 +241,8 @@ export class Collector implements Hooks {
       case 'react': f.reactions++; if (b === 'help') f.helps++; else if (b === 'hinder') { f.hinders++; } break;
       case 'spell': {
         const card = b as string;
-        if (card === 'fireball' || card === 'drain' || card === 'hex') this.harm(p, a);
-        else if ((card === 'usurp' || card === 'release' || card === 'shatter') && a >= 0) this.harm(p, g.cells[a].land?.owner ?? -1);
+        if (card === 'fireball' || card === 'drain' || card === 'hex' || card === 'swap' || card === 'lure' || card === 'ambush' || card === 'intercept') this.harm(p, a);
+        else if ((card === 'usurp' || card === 'release' || card === 'shatter' || card === 'loot' || card === 'revolt') && a >= 0) this.harm(p, g.cells[a].land?.owner ?? -1);
         break;
       }
     }

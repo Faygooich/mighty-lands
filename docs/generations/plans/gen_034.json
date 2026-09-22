@@ -1,0 +1,162 @@
+{
+  "base": "v023",
+  "focus": "Числа на новых картах. До сих пор все они стояли на значениях из первой разведки (Отвага 4–6, Мимик 1–4 / 300, Жила 300, Пески 3, Второе Дыхание 500).",
+  "observations": "Gen 33: принята стартовая рука +1 Заклятие каждому (v023). Interest 75.4 → 75.9 (validation 75.3 против 74.2), решений на ход 1.56 → 1.62, лидер comeback-теста 46% → 42%. Лимит руки 4 (A) хуже базы, а побег 4–6 (D) и «рука 4 + старт» (E) в зоне равенства.\n\nВсе открытые проблемы v023 — LOW; в v1.0.0 их было три уровня MEDIUM. Разыгрывается каждая новая карта: от 30% (Соглядатай) до 103% (Подмена). Самая большая прибавка к win rate у Жилы (+11.5 п.п.), Засады (+10.5 п.п.) и Соглядатая (+9.8 п.п.), но до порога +20 п.п. далеко.",
+  "hypotheses": "H1. Отвага 5–6 — слабее, но всё ещё ставка; вопрос, не станет ли она мёртвой.\nH2. Мимик 50/50 (1–3 укус, 4–6 жетон 500) — азартнее.\nH3. Жила 500 — сильнее экономический путь. Риск snowball.\nH4. Пески на 2 клетки — реже отбрасывают назад, на монстра Долины.\nH5. Второе Дыхание 300 — слабее догоняющая карта.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Отвага: победа на 5–6",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 5
+        }
+      },
+      "rationale": "Слабее.",
+      "tabletop": {
+        "explain": "«Отвага: в свой бой деритесь и побеждайте на 4–6.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "рискнуть Бездной",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Мимик: 1–3 укус, 4–6 жетон 500",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 3,
+          "mimicGift": 500,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Азарт.",
+      "tabletop": {
+        "explain": "«Сундук-Мимик: гость бросает кубик — 1–4 теряет жетон, 5–6 берёт жетон 300.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "азарт; жертва иногда выигрывает",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Золотая Жила: жетон 500 на Вратах",
+      "overrides": {
+        "params": {
+          "veinIncome": 500,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Сильнее экономика.",
+      "tabletop": {
+        "explain": "«Золотая Жила: пока она на вашей Земле, на Вратах вы берёте 300 вместо 100.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "экономика против ловушки на Земле",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Зыбучие Пески: назад на 2 клетки",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 2,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Мягче.",
+      "tabletop": {
+        "explain": "«Зыбучие Пески: гость отступает на 3 клетки и выполняет новую клетку.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "где положить: позади Песков — сильный монстр или своя Засада",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Второе Дыхание: жетон 300",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 300,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Слабее догоняющая карта.",
+      "tabletop": {
+        "explain": "«Второе Дыхание: если ни у кого нет меньше Земель, чем у вас, возьмите жетон 500.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "когда тратить догоняющую карту",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (сравнить флажки)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "—",
+  "next": "Gen 35: отложенные кандидаты правил (побег 4–6) и карта-ротация (Зеркало, Трофей).",
+  "generation": 34,
+  "verdict": "**Принят C (v024): Золотая Жила даёт 500 на Вратах.** Все правки чисел в пределах шума (±0.8), выбор сделал тай-брейк. Изменение безопасное: Жила разыгрывается ≈ 35%, прибавка к win rate +11 п.п. (порог 20)."
+}

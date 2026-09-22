@@ -10,7 +10,7 @@ export type TargetKind = 'cell' | 'player' | 'variant' | 'none';
 export function targetKind(o: Option): TargetKind {
   if (o.t === 'artifact') return 'cell';
   if (o.t !== 'spell') return 'none';
-  if (o.card === 'fireball' || o.card === 'drain') return 'player';
+  if (o.card === 'fireball' || o.card === 'drain' || o.card === 'swap' || o.card === 'lure') return 'player';
   if (o.card === 'transmute') return 'variant';
   return o.target >= 0 ? 'cell' : 'none';
 }
@@ -36,6 +36,14 @@ export function whyNot(g: GameState, p: PlayerState, card: string, d: Decision |
   if (d && d.player === p.id && cardOptions(d, card).length) return null;
   const sp = SPELLS[card];
   const isReaction = !!sp?.reaction;
+  const trig = sp?.trigger;
+  const TRIG: Record<string, string> = {
+    counter: 'Играется, когда соперник сыграет Заклятие против вас',
+    ambush: 'Играется, когда соперник встанет на вашу Землю',
+    courage: 'Играется в вашем бою, когда вы не сильнее монстра',
+    intercept: 'Играется, когда соперник победит монстра',
+  };
+  if (trig) return TRIG[trig];
   if (!d || d.player !== p.id) {
     return isReaction ? 'Играется, когда соперник встретит монстра' : 'Дождитесь своего хода';
   }
@@ -53,6 +61,14 @@ export function whyNot(g: GameState, p: PlayerState, card: string, d: Decision |
     case 'release': return 'У соперников нет Земель';
     case 'ward': return 'Оберег уже действует';
     case 'transmute': return 'Нечего разменять';
+    case 'secondWind': return 'Только если ни у кого нет меньше Земель, чем у вас';
+    case 'revolt': return 'Нет единоличного лидера по Землям (или это вы)';
+    case 'swap': return 'Ни у кого нет жетона крупнее вашего самого мелкого';
+    case 'loot': return 'У соперников нет Артефактов';
+    case 'luxuryTax': return 'Ни у кого нет больше Земель, чем у вас';
+    case 'quake': return 'Ни у кого из соперников нет 4–5 жетонов';
+    case 'forge': return 'Все ваши жетоны уже максимального номинала';
+    case 'tailwind': case 'hunt': return 'Движение в этот ход уже выбрано';
   }
   return 'Нет подходящей цели';
 }

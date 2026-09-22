@@ -1,0 +1,253 @@
+{
+  "base": "v019",
+  "focus": "Худая колода Заклятий: какие из оставшихся карт встают на место дублей (Отвага, Зеркало, Трофей, Приманка, Кузня).",
+  "observations": "Gen 28: принят D — все девять типов Артефактов в колоде из 33 карт (v019). Interest 70.8 → 73.1 (validation 72.8 против 72.1), 11 новых типов карт относительно v1.0.0 — требование «минимум 10» выполнено. Мёртвых новых карт нет. Тревожный сигнал: доминирование стиля растёт (27% → 31%, порог Q4 — 30%), и официальный скор опустился до 99.5.\n\nНе проверены в худой колоде: Отвага, Зеркало, Трофей, Приманка, Кузня, Попутный Ветер, Охотничий Рог, Землетрясение, Второе Дыхание.",
+  "hypotheses": "H1. Трофей — надмножество Разрушения (уничтожить + взять себе): заменит Разрушение без роста колоды.\nH2. Отвага на месте части Исцеления и Помехи вернёт решения «драться или бежать» с реальной ставкой.\nH3. Зеркало — защита от Бунта и Подмены, снизит хаос.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Отвага 2 (Исцеление 4 → 3, Помеха 5 → 4)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Риск в своём бою вместо лечения.",
+      "tabletop": {
+        "explain": "«Отвага: в свой бой деритесь и побеждайте на 4–6.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "рискнуть Бездной",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Зеркало 2 (Огненный шар 4 → 3, Разрушение 3 → 2)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 3,
+            "heal": 4,
+            "shatter": 2,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 5,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "mirror": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Ответ на take-that.",
+      "tabletop": {
+        "explain": "«Зеркало: в чужой ход отмените Заклятие против вас или вашей Земли.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "на что тратить защиту",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Трофей 3 вместо Разрушения 3",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 4,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 5,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "loot": 3
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Та же цель, больше решений (взять себе или просто снять).",
+      "tabletop": {
+        "explain": "«Трофей: заберите Артефакт с чужой Земли себе в руку.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "разрушить или присвоить",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Приманка 2 + Кузня 2 (Исцеление 4 → 3, Подмога 5 → 4, Телепорт 2 → 1)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 3,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 1,
+            "drain": 3,
+            "aid": 4,
+            "hex": 5,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "lure": 2,
+            "forge": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Темп без раздувания колоды.",
+      "tabletop": {
+        "explain": "«Приманка: соперник переносится на ближайшую дикую Землю впереди и встречает монстра.» «Кузня: самый мелкий жетон замените на следующий номинал.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "кого и когда заманить (и добить Помехой); когда перековать",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (сравнить мощь с монстром)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+4 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Отвага 2 + Зеркало 2 (Помеха 4, Исцеление 3, Огненный шар 3, Разрушение 2)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 3,
+            "heal": 3,
+            "shatter": 2,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 2,
+            "revolt": 2,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "mirror": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Обе карты-ответа.",
+      "tabletop": {
+        "explain": "«Отвага: в свой бой деритесь и побеждайте на 4–6.» «Зеркало: в чужой ход отмените Заклятие против вас или вашей Земли.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "рискнуть Бездной; на что тратить защиту",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+4 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "Чем меньше дублей, тем больше разных текстов на столе (нагрузка на чтение).",
+  "next": "Gen 30: проблема доминирования стиля (31%) и длительности (55 мин).",
+  "generation": 29,
+  "verdict": "**Принят A (v020): Отвага 2 вместо Исцеления и Помехи.** Interest 73.1 → 73.9 (validation 73.8 против 72.8). Доминирование стиля упало с 31% до 23%: Отвага даёт осторожным стилям шанс на Земли Бездны. Остальные кандидаты в пределах шума."
+}

@@ -32,14 +32,14 @@ export function artKey(r: ArtRef): string {
 }
 
 export function hasCustomArt(r: ArtRef): boolean {
-  return artKey(r) in CUSTOM;
+  return artKey(r).toLowerCase() in CUSTOM;
 }
 
 /** Renders the illustration for a Land, special cell, card or card back. Fills its container. */
 export function Art({ of, className = '' }: { of: ArtRef; className?: string }) {
   const uid = useId().replace(/[^a-zA-Z0-9]/g, '');
   const key = artKey(of);
-  const url = CUSTOM[key];
+  const url = CUSTOM[key.toLowerCase()];
   if (url) return <img className={`art-img ${className}`} src={url} alt="" draggable={false} />;
   let scene: Scene = 'road';
   let body = null;

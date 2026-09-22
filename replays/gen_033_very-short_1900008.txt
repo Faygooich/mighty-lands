@@ -1,0 +1,61 @@
+# Replay: very-short (lateGame)
+rules: v022
+seed: 1900008
+lineup: tactical, aggressive, random, economic
+scenario: lateGame
+winner: tactical after 3 rounds (lands-target)
+choices: [1,2,3,2,2,9,1,2,0,1,0,2,1,10,1,11,9,1,4,1,0,3,2,3,1,0,1]
+
+[р1] RandomBot#1 бросает 3 → клетка 3
+[р1] Срабатывает «Зыбучие Пески» TacticalBot#3 против RandomBot#1
+[р1] RandomBot#1 тонет в Зыбучих Песках и отступает на клетку 0
+[р1] EconomicBot#2 применяет «Исцеление»
+[р1] EconomicBot#2 получает 100 мощи (100) — Исцеление
+[р1] EconomicBot#2 бросает 1 → клетка 1
+[р1] Срабатывает «Сундук-Мимик» RandomBot#1 против EconomicBot#2
+[р1] Сундук-Мимик кусает EconomicBot#2 (бросок 3)
+[р1] EconomicBot#2 теряет жетон 100 — Сундук-Мимик
+[р1] TacticalBot#3 применяет «Вытягивание» → AggressiveBot#4
+[р1] AggressiveBot#4 отдаёт жетон 100 — Вытягивание
+[р1] TacticalBot#3 бросает 1 → клетка 1
+[р1] Срабатывает «Сундук-Мимик» RandomBot#1 против TacticalBot#3
+[р1] Сундук-Мимик кусает TacticalBot#3 (бросок 2)
+[р1] TacticalBot#3 теряет жетон 100 — Сундук-Мимик
+[р1] AggressiveBot#4 применяет «Разрушение» → Перевал
+[р1] AggressiveBot#4 бросает 5 → клетка 5
+[р1] Срабатывает «Дань» RandomBot#1 против AggressiveBot#4
+[р1] AggressiveBot#4 отдаёт жетон 300 — Дань
+[р2] RandomBot#1 бросает 2 → клетка 2
+[р2] Срабатывает «Капкан» EconomicBot#2 против RandomBot#1
+[р2] RandomBot#1 теряет жетон 500 — Капкан
+[р2] EconomicBot#2 устраивает Засаду на Ручьи!
+[р2] RandomBot#1 теряет жетон 300 — Засада
+[р2] EconomicBot#2 применяет «Узурпация» → Око Бездны
+[р2] EconomicBot#2 кладёт «Соглядатай» на Око Бездны
+[р2] EconomicBot#2 бросает 2 → клетка 3
+[р2] Срабатывает «Зыбучие Пески» TacticalBot#3 против EconomicBot#2
+[р2] EconomicBot#2 тонет в Зыбучих Песках и отступает на клетку 0
+[р2] TacticalBot#3 кладёт «Капкан» на Перевал
+[р2] TacticalBot#3 применяет «Узурпация» → Чёрный Провал
+[р2] TacticalBot#3 кладёт «Дань» на Чёрный Провал
+[р2] TacticalBot#3 бросает 3 → клетка 4
+[р2] Срабатывает «Золотая Жила» AggressiveBot#4 против TacticalBot#3
+[р2] AggressiveBot#4 применяет «Узурпация» → Орлиное Гнездо
+[р2] AggressiveBot#4 кладёт «Соглядатай» на Орлиное Гнездо
+[р2] AggressiveBot#4 бросает 4 → клетка 9
+[р3] RandomBot#1 бросает 3 → клетка 5
+[р3] RandomBot#1 применяет «Подмена» → AggressiveBot#4
+[р3] RandomBot#1 подменяет жетоны: берёт 500 у AggressiveBot#4, отдаёт 100
+[р3] EconomicBot#2 применяет «Вытягивание» → AggressiveBot#4
+[р3] AggressiveBot#4 отдаёт жетон 100 — Вытягивание
+[р3] ☠ AggressiveBot#4 теряет всё и возвращается на Врата (Вытягивание)
+[р3] EconomicBot#2 бросает 3 → клетка 3
+[р3] Срабатывает «Зыбучие Пески» TacticalBot#3 против EconomicBot#2
+[р3] EconomicBot#2 тонет в Зыбучих Песках и отступает на клетку 0
+[р3] TacticalBot#3 бросает 5 → клетка 9
+[р3] RandomBot#1 играет «Подмога» в бою TacticalBot#3
+[р3] TacticalBot#3 захватывает Волчья Тропа (монстр 800)
+[р3] TacticalBot#3 получает 300 мощи (300) — Награда: Волчья Тропа
+[р3] RandomBot#1 получает 500 мощи (500) — Подмога
+[р3] TacticalBot#3 кладёт «Дань» на Волчья Тропа
+[р3] 🏆 Победа: TacticalBot#3 (lands-target)

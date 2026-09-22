@@ -1,0 +1,137 @@
+{
+  "base": "v026",
+  "focus": "Финальное поколение v1.0.1: правила, которые раньше были в зоне равенства, на итоговой колоде (с «Отстающим» и 12 новыми картами).",
+  "observations": "Gen 41: изменений нет. Без Оков −3.2: пропуск хода остаётся нужным наказанием. Без Исцеления ×1 −0.1 (равенство, тай-брейк оставил карту). Без Телепорта Interest 80.0, но вариант не прошёл ворота: скор 98.1, качели сильнее. Исцеление ×2 в зоне равенства.\n\nВ Gen 33 «2 Заклятия за ход», «побег 4–6» и «рука 4» проверялись на колоде без «Отстающего». С тех пор рука отстающего стала больше, и ответ мог измениться.",
+  "hypotheses": "H1. С «Отстающим» у отстающего больше карт, и 2 Заклятия за ход помогут ему их реализовать.\nH2. Побег 4–6 смягчит потери слабых стилей.\nH3. Рука 4 теперь полезнее, потому что карт больше.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "2 Заклятия за ход",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "spellsPerTurn": 2
+      },
+      "rationale": "2 Заклятия за ход",
+      "tabletop": {
+        "explain": "«За ход можно сыграть до 2 Заклятий.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "комбинации карт",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Побег на 4–6",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "fleeMin": 4
+      },
+      "rationale": "Побег на 4–6",
+      "tabletop": {
+        "explain": "«Бежать: 4–6 — ушли.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "бежать или рискнуть Отвагой",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Лимит руки 4",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "handLimit": 4
+      },
+      "rationale": "Лимит руки 4",
+      "tabletop": {
+        "explain": "«В конце хода на руке не больше 4 карт.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "что держать",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Побег 4–6 + рука 4",
+      "overrides": {
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        },
+        "fleeMin": 4,
+        "handLimit": 4
+      },
+      "rationale": "Побег 4–6 + рука 4",
+      "tabletop": {
+        "explain": "«Бежать 4–6; рука до 4 карт.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "оба",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "памятка",
+        "bookkeeping": "нет",
+        "tableTime": "нет"
+      }
+    }
+  ],
+  "sideEffects": "—",
+  "next": "Финал: holdout на свежих seeds, сравнение v1.0.0 и v1.0.1, документы и web-версия.",
+  "generation": 42,
+  "verdict": "**Принят D (v027): побег на 4–6 и лимит руки 4.** Interest 79.9 → 80.1 (validation 80.1 против 79.1). B, C, D и база — в зоне равенства, D выбран тай-брейком R4 (меньше открытых проблем). Смысл изменения: с «Отстающим» у отстающего больше карт, и рука 4 позволяет их копить. Побег 4–6 делает неудачную встречу с монстром не такой болезненной: решение «бежать (3 из 6) или драться с Отвагой (3 из 6, но с Землёй)» становится настоящим выбором.\n\n2 Заклятия за ход (A) дают самый высокий Interest за весь цикл (84.7), но скор 97.5 и 54 мин: взрывные ходы добивают лидера слишком легко. Ворота не пропустили."
+}

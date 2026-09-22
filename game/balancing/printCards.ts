@@ -8,7 +8,7 @@ import { ARTIFACTS, SPELLS } from '../cards/catalog.ts';
 import { CARD_FLAVOR, CELL_FLAVOR, LAND_FLAVOR, REGION_FLAVOR } from '../cards/flavor.ts';
 import { REGION_NAMES } from '../rules/ruleset.ts';
 
-const version = process.argv[2] ?? 'v015';
+const version = process.argv[2] ?? 'v029';
 const rules = loadRules(version);
 const g = createGame(rules, [{ name: 'A', bot: '-' }, { name: 'B', bot: '-' }], 1);
 const out: string[] = [];

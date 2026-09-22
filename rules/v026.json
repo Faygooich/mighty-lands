@@ -1,0 +1,39 @@
+{
+  "version": "v026",
+  "parent": "v025",
+  "title": "«Отстающий» без Бунта, Налог 1",
+  "generation": 36,
+  "changes": [
+    "«Отстающий» без Бунта, Налог 1"
+  ],
+  "rationale": "«Отстающий» + меньше копий догоняющих карт.",
+  "overrides": {
+    "decks": {
+      "spells": {
+        "fireball": 4,
+        "heal": 1,
+        "shatter": 3,
+        "usurp": 3,
+        "teleport": 2,
+        "drain": 3,
+        "aid": 5,
+        "hex": 4,
+        "swap": 3,
+        "luxuryTax": 1,
+        "ambush": 2,
+        "intercept": 2,
+        "courage": 2,
+        "secondWind": 2
+      }
+    },
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4,
+      "catchUpLands": 1
+    }
+  }
+}

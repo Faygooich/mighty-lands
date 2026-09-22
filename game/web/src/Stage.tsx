@@ -78,6 +78,7 @@ export function Stage(props: StageProps) {
   if (d.kind === 'lose' || d.kind === 'pay') return <TokenChoice {...props} />;
   if (d.kind === 'discard') return <Discard {...props} />;
   if (d.kind === 'dilemma') return <Dilemma {...props} />;
+  if (d.kind === 'trigger') return <Trigger {...props} />;
   return (
     <div className="stage">
       <StageHead g={g} id={who.id} text={d.reason} />
@@ -94,7 +95,8 @@ function thinkingText(d: Decision): string {
     case 'lose': return 'выбирает, какой жетон потерять';
     case 'pay': return 'выбирает, каким жетоном заплатить';
     case 'discard': return 'сбрасывает лишнюю карту';
-    case 'dilemma': return 'выбирает на Заставе';
+    case 'dilemma': return d.reason.startsWith('Попутный') ? 'выбирает бросок' : d.reason.startsWith('Алтарь') ? 'выбирает у Алтаря' : 'выбирает на Заставе';
+    case 'trigger': return 'решает, сыграть ли карту-ответ';
     default: return 'думает';
   }
 }
@@ -274,6 +276,9 @@ function Battle({ g, d, mine, choose }: StageProps) {
           <div className="stage-actions">
             <Btn icon="run" onClick={() => choose(idx('flee'))} sub={<>нужно {fleeMin}–6 · шанс {d6Chance(fleeMin)} · иначе −1 жетон</>}>Бежать</Btn>
             <Btn kind="danger" icon="sword" onClick={() => choose(idx('fight'))} sub={<>нужно {winOn} · шанс {d6Chance(winOn)} · победа: Земля и +{l.reward}</>}>Драться</Btn>
+            {idx('react') >= 0 && (
+              <Btn kind="primary" icon="sword" onClick={() => choose(idx('react'))} sub={<>карта «Отвага» · нужно {g.rules.params.courageWinOn || 4}–6 · шанс {d6Chance(g.rules.params.courageWinOn || 4)}</>}>Драться с Отвагой</Btn>
+            )}
           </div>
         </>
       )}
@@ -340,6 +345,17 @@ function Discard({ g, d, choose }: StageProps) {
 function Dilemma({ g, d, choose }: StageProps) {
   const p = g.players[d!.player];
   const owner = d!.amount !== undefined ? g.players[d!.amount] : null;
+  if (!d!.reason.startsWith('Застава')) {
+    const title = d!.reason.startsWith('Попутный') ? 'Попутный Ветер' : 'Алтарь';
+    return (
+      <div className="stage stage-dilemma">
+        <StageHead g={g} id={p.id} big={title} text={d!.reason} />
+        <div className="stage-actions">
+          {d!.options.map((o, i) => <Btn key={i} kind="secondary" onClick={() => choose(i)}>{optionLabel(g, d!, o)}</Btn>)}
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="stage stage-dilemma">
       <StageHead g={g} id={p.id} big="Застава" text={d!.reason} />
@@ -355,13 +371,29 @@ function Dilemma({ g, d, choose }: StageProps) {
   );
 }
 
+function Trigger({ g, d, choose }: StageProps) {
+  const p = g.players[d!.player];
+  const i = d!.options.findIndex((o) => o.t === 'react');
+  const card = i >= 0 ? (d!.options[i] as { card: string }).card : '';
+  return (
+    <div className="stage stage-dilemma">
+      <StageHead g={g} id={p.id} big={cardName(card)} text={d!.reason} />
+      <div className="react-row">
+        {card && <GameCard g={g} id={card} size="mini" state={{ playable: true }} onClick={() => choose(i)} />}
+        <Btn kind="ghost" onClick={() => choose(d!.options.findIndex((o) => o.t === 'pass'))}>Не играть</Btn>
+      </div>
+      <div className="stage-note small">{cardText(g, card)}</div>
+    </div>
+  );
+}
+
 // ---- Hot-seat curtain and the end of the game ------------------------------------------
 
 function Curtain({ g, d, id, onReveal }: { g: GameState; d: Decision | null; id: number; onReveal: () => void }) {
   const p = g.players[id];
   const why = !d || d.player !== id ? '' : d.kind === 'react'
     ? `${g.players[d.amount ?? 0].name} встречает монстра — можно вмешаться картой.`
-    : d.kind === 'lose' || d.kind === 'pay' ? 'Нужно выбрать жетон.' : d.kind === 'dilemma' ? 'Нужно решение на Заставе.' : g.current === id ? 'Ваш ход.' : '';
+    : d.kind === 'lose' || d.kind === 'pay' ? 'Нужно выбрать жетон.' : d.kind === 'dilemma' ? 'Нужно принять решение.' : d.kind === 'trigger' ? 'Можно сыграть карту-ответ.' : g.current === id ? 'Ваш ход.' : '';
   return (
     <div className="stage stage-curtain" style={{ ['--pc' as string]: COLORS[id] }}>
       <PawnBadge id={id} size={44} />

@@ -1,0 +1,20 @@
+{
+  "version": "v024",
+  "parent": "v023",
+  "title": "Золотая Жила: жетон 500 на Вратах",
+  "generation": 34,
+  "changes": [
+    "Золотая Жила: жетон 500 на Вратах"
+  ],
+  "rationale": "Сильнее экономика.",
+  "overrides": {
+    "params": {
+      "veinIncome": 500,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    }
+  }
+}

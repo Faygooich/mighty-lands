@@ -1,0 +1,294 @@
+{
+  "base": "v026",
+  "focus": "Проверка «по одной» — Заклятия: Подмена, Налог на Роскошь, Засада, Перехват, Отвага, Второе Дыхание.",
+  "observations": "Gen 39: все шесть новых Артефактов остаются. Без любого из них Interest ниже базы на 0.9–3.0: без Зависти −3.0, без Песков −2.4, без Мимика −1.9, без Соглядатая −1.7, без Жилы −1.4, без Алтаря −0.9. Сильнее всего от каждого удаления страдают разнообразие (19.5 → 18.1–18.5) и шансы последнего места.",
+  "hypotheses": "H0. Каждое новое Заклятие нужно. Если без какого-то Interest не ниже базы, карту убираем, а её копии отдаём Подмоге.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Без карты «Подмена» (копии → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 8,
+            "hex": 4,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Нужна ли Подмена?",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Без карты «Налог на Роскошь» (копии → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 6,
+            "hex": 4,
+            "swap": 3,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Нужна ли Налог на Роскошь?",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Без карты «Засада» (копии → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 7,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Нужна ли Засада?",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Без карты «Перехват» (копии → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 7,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "courage": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Нужна ли Перехват?",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Без карты «Отвага» (копии → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 7,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "secondWind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Нужна ли Отвага?",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "F",
+      "title": "Без карты «Второе Дыхание» (копии → Подмога)",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 7,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Нужна ли Второе Дыхание?",
+      "tabletop": {
+        "explain": "—",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "—",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+0 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "—",
+  "next": "Gen 41: старые карты v1.0.0 в новой колоде.",
+  "generation": 40,
+  "verdict": "**Правила не изменены: все шесть новых Заклятий остаются.** Подмена −3.3, Второе Дыхание −2.3, Налог на Роскошь −2.0, Перехват −1.6. Без Отваги +0.3 — зона равенства; тай-брейк R4 (разнообразие) оставил карту. Отвага — единственная новая карта, у которой польза по Interest статистически не доказана. Её оставили за то, что она даёт осторожным стилям шанс на Земли Бездны: в Gen 29 доминирование стиля упало с 31% до 23%.\n\n**Засада:** без неё Interest выше (81.8), но скор 98.0 не проходит ворота. Засада — тормоз качелей: она наказывает того, кто бегает по чужим Землям, а это чаще отстающий, которого подгоняет «Отстающий». Это тот же баланс «интерес против качелей», что в Gen 36–37, и ворота держат его одинаково."
+}

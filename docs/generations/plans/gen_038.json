@@ -1,0 +1,257 @@
+{
+  "base": "v026",
+  "exploitSearch": true,
+  "exploitIters": 20,
+  "focus": "Поиск эксплойтов на новых картах и правиле «Отстающий» (новый геном ExploitBot) + последняя проверка карт, не вошедших в игру.",
+  "observations": "Gen 37: изменений нет. Мягкие версии «Отстающего» (у Врат, при разрыве 2+) возвращают официальный скор к 99.7–100, но Interest падает до 71–73 — почти до уровня без правила. Кандидаты с Бунтом снова дают Interest ≈ 82 при скоре 98.2–98.3. Граница «качели против интереса» определилась: v026 стоит в её середине.\n\nГеном ExploitBot не обновлялся с Gen 18 (найден на v013). Во всех поколениях v1.0.1 новые карты проверялись против старого эксплойта. Новое правило «Отстающий» даёт очевидную лазейку: нарочно не брать Земли, чтобы получать лишнюю карту.",
+  "hypotheses": "H1. Поиск эксплойта с архетипами «саботажник» (не захватывать ради «Отстающего»), «сборщик налогов», «засадник», «ныряльщик с Отвагой» и «пылесос карт» не найдёт стратегию, которая выигрывает у трёх Tactical заметно больше честной доли.\nH2. Кузня, Зеркало, Трофей, Попутный Ветер и Приманка на месте дублей: последняя проверка.",
+  "candidates": [
+    {
+      "id": "A",
+      "title": "Кузня 2 вместо Исцеления 1 и Телепорта 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 1,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2,
+            "forge": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Рост мощи вместо лечения.",
+      "tabletop": {
+        "explain": "«Кузня: самый мелкий жетон замените на следующий номинал.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "когда перековать",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "B",
+      "title": "Зеркало 2 вместо Разрушения 1 и Огненного шара 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 3,
+            "heal": 1,
+            "shatter": 2,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2,
+            "mirror": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Защита от take-that.",
+      "tabletop": {
+        "explain": "«Зеркало: в чужой ход отмените Заклятие против вас или вашей Земли.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "на что тратить защиту",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "C",
+      "title": "Трофей 2 вместо Разрушения 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 1,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2,
+            "loot": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Присвоить вместо разрушить.",
+      "tabletop": {
+        "explain": "«Трофей: заберите Артефакт с чужой Земли себе в руку.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "разрушить или присвоить",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "D",
+      "title": "Попутный Ветер 2 вместо Телепорта 2",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "drain": 3,
+            "aid": 5,
+            "hex": 4,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2,
+            "tailwind": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Выбор из двух бросков.",
+      "tabletop": {
+        "explain": "«Попутный Ветер: бросьте кубик дважды и выберите результат.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 1,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "какую клетку выбрать",
+        "cognitive": "низкая",
+        "arithmetic": "нет",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    },
+    {
+      "id": "E",
+      "title": "Приманка 2 вместо Помехи 1 и Вытягивания 1",
+      "overrides": {
+        "decks": {
+          "spells": {
+            "fireball": 4,
+            "heal": 1,
+            "shatter": 3,
+            "usurp": 3,
+            "teleport": 2,
+            "drain": 2,
+            "aid": 5,
+            "hex": 3,
+            "swap": 3,
+            "luxuryTax": 1,
+            "ambush": 2,
+            "intercept": 2,
+            "courage": 2,
+            "secondWind": 2,
+            "lure": 2
+          }
+        },
+        "params": {
+          "veinIncome": 300,
+          "secondWind": 500,
+          "mimicBite": 4,
+          "mimicGift": 300,
+          "quicksand": 3,
+          "courageWinOn": 4
+        }
+      },
+      "rationale": "Манчкин-комбо «заманить и помешать».",
+      "tabletop": {
+        "explain": "«Приманка: соперник переносится на ближайшую дикую Землю впереди и встречает монстра.»",
+        "noCalculator": true,
+        "noWriting": true,
+        "tempEffects": 0,
+        "onComponent": true,
+        "visible": true,
+        "notSlow": true,
+        "decision": "кого и когда заманить (и добить Помехой)",
+        "cognitive": "низкая",
+        "arithmetic": "низкая (сравнить мощь с монстром)",
+        "lookup": "нет (всё на карте)",
+        "bookkeeping": "нет",
+        "tableTime": "+2 с на партию на прочтение новых карт"
+      }
+    }
+  ],
+  "sideEffects": "—",
+  "next": "Gen 39: проверка «по одной»: какие новые карты можно убрать без потери интереса.",
+  "generation": 38,
+  "verdict": "**Правила не изменены. Эксплойтов нет.** Геном ExploitBot найден заново на v026: 16 архетипов, из них 5 новых под v1.0.1, плюс 20 мутаций. Лучший геном выигрывает 24.4% (training) и 22.6% (holdout) против трёх Tactical — ниже честной доли 25%. Архетип «саботажник» (не брать Земли, чтобы оставаться «Отстающим» и собирать карты) выигрывает 0.8%. Лишняя карта не стоит отставания по Землям.\n\nКузня, Зеркало, Трофей, Попутный Ветер и Приманка во второй раз не улучшили игру (78.1–79.1 против 79.9) и в v1.0.1 не входят."
+}

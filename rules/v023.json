@@ -1,0 +1,29 @@
+{
+  "version": "v023",
+  "parent": "v022",
+  "title": "Стартовая рука +1 Заклятие каждому (1/2/2/3/3/4/4)",
+  "generation": 33,
+  "changes": [
+    "Стартовая рука +1 Заклятие каждому (1/2/2/3/3/4/4)"
+  ],
+  "rationale": "Содержательный старт.",
+  "overrides": {
+    "params": {
+      "veinIncome": 300,
+      "secondWind": 500,
+      "mimicBite": 4,
+      "mimicGift": 300,
+      "quicksand": 3,
+      "courageWinOn": 4
+    },
+    "seatBonusCards": [
+      1,
+      2,
+      2,
+      3,
+      3,
+      4,
+      4
+    ]
+  }
+}

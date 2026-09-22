@@ -8,13 +8,13 @@ import { Controller } from '../web/src/controller.ts';
 import { optionLabel, decisionHint } from '../web/src/labels.ts';
 import { Rng } from '../core/rng.ts';
 
-test('web ruleset file is identical to the simulator ruleset v015', () => {
-  const web = JSON.parse(readFileSync(join(RULES_DIR, 'resolved', 'v015.json'), 'utf8'));
-  assert.deepEqual(web, JSON.parse(JSON.stringify(loadRules('v015'))));
+test('web ruleset file is identical to the simulator ruleset v029', () => {
+  const web = JSON.parse(readFileSync(join(RULES_DIR, 'resolved', 'v029.json'), 'utf8'));
+  assert.deepEqual(web, JSON.parse(JSON.stringify(loadRules('v029'))));
 });
 
 test('web controller plays complete games at 2..7 players (humans + bots), every option has a label', () => {
-  const rules = loadRules('v015');
+  const rules = loadRules('v029');
   for (let n = 2; n <= 7; n++) {
     for (let s = 0; s < 8; s++) {
       const seats = Array.from({ length: n }, (_, i) => ({ name: `P${i}`, kind: i % 2 === 0 ? 'human' : 'tactical' }));
@@ -35,7 +35,7 @@ test('web controller plays complete games at 2..7 players (humans + bots), every
 });
 
 test('game code replays the exact same game (foundation for online play)', () => {
-  const rules = loadRules('v015');
+  const rules = loadRules('v029');
   const seats = [{ name: 'A', kind: 'human' }, { name: 'B', kind: 'aggressive' }, { name: 'C', kind: 'human' }, { name: 'D', kind: 'economic' }];
   const c = new Controller(seats, 777, rules);
   const rng = new Rng(3);

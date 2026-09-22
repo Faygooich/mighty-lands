@@ -87,7 +87,7 @@ function LoadGame({ onClose, onLoad }: { onClose: () => void; onLoad: (c: Contro
       <div className="sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Загрузить партию">
         <div className="sheet-title">Загрузить партию <button type="button" className="icon-btn" onClick={onClose} aria-label="Закрыть"><Icon name="close" /></button></div>
         <p className="muted">Вставьте код из меню партии («Код партии»). Партия восстановится ход в ход.</p>
-        <textarea className="code-input" value={code} onChange={(e) => { setCode(e.target.value); setErr(''); }} rows={5} placeholder='{"rules":"v015","seed":…}' autoFocus />
+        <textarea className="code-input" value={code} onChange={(e) => { setCode(e.target.value); setErr(''); }} rows={5} placeholder='{"rules":"v029","seed":…}' autoFocus />
         {err && <div className="warn">{err}</div>}
         <div className="sheet-actions">
           <button type="button" className="plaque primary" disabled={!code.trim()} onClick={load}><span className="plaque-main"><Icon name="play" /> Продолжить партию</span></button>

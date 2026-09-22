@@ -16,6 +16,7 @@ import { SCENARIOS } from '../simulation/experiment.ts';
 import { cardName } from '../cards/catalog.ts';
 import type { Weights } from '../simulation/bots/heuristic.ts';
 import { exploitSearch } from './exploitSearch.ts';
+import { interestIndex, cardGate } from '../statistics/interest.ts';
 
 const ROOT = join(import.meta.dirname, '..', '..');
 const RES = join(ROOT, 'results');
@@ -64,6 +65,56 @@ interface GenResult {
   workers: number;
   totalGames: number;
   elapsedSec: number;
+  gateNotes?: string[];
+}
+
+// ---- R4 selection (v1.0.1, Gen 23+) --------------------------------------------
+
+export const R4_TIE = 1.0;
+const V1_CARDS = new Set(['tribute', 'trap', 'shackles', 'fireball', 'heal', 'shatter', 'usurp', 'teleport', 'drain', 'aid', 'hex']);
+
+/** Card types in a ruleset's decks that are new relative to v1.0.0. */
+export function newCards(r: RuleSet): string[] {
+  const out: string[] = [];
+  for (const d of [r.decks.artifacts, r.decks.spells]) for (const [c, k] of Object.entries(d)) if (k > 0 && !V1_CARDS.has(c)) out.push(c);
+  return out;
+}
+
+const SEV_W: Record<string, number> = { CRITICAL: 9, HIGH: 3, MEDIUM: 1 };
+export function openSeverity(e: Evaluation, r: RuleSet): number {
+  return detect(e, r.denominations).reduce((s, f) => s + (SEV_W[f.severity] ?? 0), 0);
+}
+
+function selectR4(n: number, base: RuleSet, rulesets: Record<string, RuleSet>, tr: Record<string, Evaluation>): { chosen: string; notes: string[] } {
+  const notes: string[] = [];
+  const baseHigh = detect(tr.base, base.denominations).filter((f) => f.severity === 'HIGH' || f.severity === 'CRITICAL').map((f) => f.key);
+  const ok: string[] = [];
+  for (const [id, r] of Object.entries(rulesets)) {
+    const e = tr[id];
+    const why: string[] = [];
+    if (e.score.hardFail.length) why.push(`жёсткое нарушение (${e.score.hardFail.join(', ')})`);
+    if (e.score.total < tr.base.score.total - 0.5) why.push(`скор ${e.score.total.toFixed(1)} < базы`);
+    const high = detect(e, r.denominations).filter((f) => (f.severity === 'HIGH' || f.severity === 'CRITICAL') && !baseHigh.includes(f.key));
+    if (high.length) why.push(`новые HIGH: ${high.map((f) => f.title).join('; ')}`);
+    const gate = cardGate(e.summaries.mixed4, newCards(r));
+    if (gate.dead.length) why.push(`мёртвые новые карты: ${gate.dead.map(cardName).join(', ')}`);
+    if (gate.swingy.length) why.push(`слишком сильные новые карты: ${gate.swingy.map(cardName).join(', ')}`);
+    if (why.length) notes.push(`**${id}** не прошёл ворота R4: ${why.join('; ')}.`);
+    else ok.push(id);
+  }
+  if (!ok.includes('base')) ok.push('base');
+  const ii = (id: string) => interestIndex(tr[id].summaries).total;
+  const best = Math.max(...ok.map(ii));
+  const variety = (id: string) => interestIndex(tr[id].summaries).values.cardVariety;
+  ok.sort((a, b) => {
+    const ta = best - ii(a) < R4_TIE;
+    const tb = best - ii(b) < R4_TIE;
+    if (ta !== tb) return ta ? -1 : 1;
+    if (!ta) return ii(b) - ii(a);
+    return openSeverity(tr[a], rulesets[a]) - openSeverity(tr[b], rulesets[b]) || variety(b) - variety(a) || (a === 'base' ? -1 : b === 'base' ? 1 : 0);
+  });
+  void n;
+  return { chosen: ok[0], notes };
 }
 
 function loadGenome(): Partial<Weights> | undefined {
@@ -85,7 +136,7 @@ async function runGeneration(n: number): Promise<void> {
   const t0 = performance.now();
   const workers = defaultWorkers();
   const pool = new Pool(workers);
-  const scale = plan.scale ?? 0.5;
+  const scale = plan.scale ?? (n >= 23 ? 1 : 0.5);
   const base = loadRules(plan.base);
   let genome = loadGenome();
   let exploitGenome: Partial<Weights> | null = null;
@@ -124,7 +175,31 @@ async function runGeneration(n: number): Promise<void> {
   let chosen = ids[0] ?? 'base';
   const validation: Record<string, Evaluation> = {};
   let decision = '';
-  if (chosen !== 'base') {
+  let gateNotes: string[] = [];
+  if (n >= 23) {
+    // R4 (v1.0.1): official score = gate, Interest Index = selection (docs/quality_criteria.md § R4)
+    const r4 = selectR4(n, base, rulesets, training);
+    chosen = r4.chosen;
+    gateNotes = r4.notes;
+  }
+  if (chosen !== 'base' && n >= 23) {
+    validation.base = await evaluate(pool, base, SEEDS.validation, { scale, genomes });
+    validation[chosen] = await evaluate(pool, rulesets[chosen], SEEDS.validation, { scale, genomes });
+    totalGames += validation.base.games + validation[chosen].games;
+    const iiB = interestIndex(validation.base.summaries).total;
+    const iiC = interestIndex(validation[chosen].summaries).total;
+    const ds = validation[chosen].score.total - validation.base.score.total;
+    if (iiC < iiB - R4_TIE || ds < -0.5) {
+      decision = `Кандидат ${chosen} лучший на training, но на validation хуже базы (Interest ${iiC.toFixed(1)} против ${iiB.toFixed(1)}, скор ${ds >= 0 ? '+' : ''}${ds.toFixed(1)}) → изменение отклонено.`;
+      chosen = 'base';
+    } else {
+      decision = `Кандидат ${chosen} лучший на training (Interest ${interestIndex(training[chosen].summaries).total.toFixed(1)}) и подтверждён на validation (Interest ${iiC.toFixed(1)} против ${iiB.toFixed(1)} у базы; скор ${validation[chosen].score.total.toFixed(1)}).`;
+    }
+  } else if (n >= 23) {
+    validation.base = await evaluate(pool, base, SEEDS.validation, { scale, genomes });
+    totalGames += validation.base.games;
+    decision = 'Ни один кандидат не прошёл ворота R4 с Interest выше базы → правила не меняются.';
+  } else if (chosen !== 'base') {
     validation.base = await evaluate(pool, base, SEEDS.validation, { scale, genomes });
     validation[chosen] = await evaluate(pool, rulesets[chosen], SEEDS.validation, { scale, genomes });
     totalGames += validation.base.games + validation[chosen].games;
@@ -184,7 +259,7 @@ async function runGeneration(n: number): Promise<void> {
   await pool.close();
   const res: GenResult = {
     generation: n, base: plan.base, chosen, newVersion, training, validation, holdout, findingsBase, findingsChosen, regression, replays,
-    exploitGenome, decision, workers, totalGames, elapsedSec: (performance.now() - t0) / 1000,
+    exploitGenome, decision, workers, totalGames, elapsedSec: (performance.now() - t0) / 1000, gateNotes,
   };
   mkdirSync(RES, { recursive: true });
   writeFileSync(join(RES, `gen_${pad(n)}.json`), JSON.stringify(res));
@@ -250,6 +325,29 @@ function metricsTable(cols: Array<[string, Evaluation]>): string {
   ];
   let s = `| Метрика | ${cols.map((c) => c[0]).join(' | ')} |\n|---|${cols.map(() => '---').join('|')}|\n`;
   for (const [name, fn] of rows) s += `| ${name} | ${cols.map((c) => fn(c[1])).join(' | ')} |\n`;
+  return s;
+}
+
+function interestTable(tr: Record<string, Evaluation>, plan: Plan): string {
+  const keys = Object.keys(tr);
+  const iis = keys.map((k) => interestIndex(tr[k].summaries));
+  const rows: Array<[string, (i: number) => string]> = [
+    ['**Interest Index**', (i) => `**${iis[i].total.toFixed(1)}**`],
+    ['Решений с учётом энтропии / ход', (i) => iis[i].values.effectiveDecisions.toFixed(2)],
+    ['Прямых влияний / ход', (i) => iis[i].values.interactionPerTurn.toFixed(2)],
+    ['Карт в чужой ход / партию', (i) => iis[i].values.reactionsPerGame.toFixed(1)],
+    ['Смен лидера / партию', (i) => iis[i].values.leadChanges.toFixed(1)],
+    ['Последний в середине → победа', (i) => pct(iis[i].values.lastHalfWin)],
+    ['Лидер старта побеждает (comeback-тест)', (i) => pct(iis[i].values.earlyLeaderWin)],
+    ['Разнообразие сыгранных карт (эфф. число)', (i) => iis[i].values.cardVariety.toFixed(1)],
+    ['Мастерство (Tactical−Random)/доля', (i) => iis[i].values.skill.toFixed(2)],
+    ['Доминирование стиля 4p / топ дуэли', (i) => `${pct(iis[i].values.styleDominance)} / ${pct(iis[i].values.duelTop)}`],
+    ['Время партии 4p', (i) => `${iis[i].values.tableMinutes.toFixed(0)} мин`],
+    ['Официальный скор (ворота)', (i) => tr[keys[i]].score.total.toFixed(1)],
+    ['Новых типов карт (к v1.0.0)', (i) => String(newCards(keys[i] === 'base' ? loadRules(plan.base) : mergeRules(loadRules(plan.base), plan.candidates.find((c) => c.id === keys[i])!.overrides)).length)],
+  ];
+  let s = `| Метрика | ${keys.map((k) => (k === 'base' ? 'база' : k)).join(' | ')} |\n|---|${keys.map(() => '---').join('|')}|\n`;
+  for (const [name, fn] of rows) s += `| ${name} | ${keys.map((_, i) => fn(i)).join(' | ')} |\n`;
   return s;
 }
 
@@ -387,6 +485,10 @@ ${defs.map((d) => `| ${d.label} | ${d.games} | ${d.lineup.type === 'fixed' ? d.l
 
 ${scoreTable(r.training, plan)}
 
+### Interest Index (R4, выбор с Gen 23)
+
+${r.generation >= 23 ? interestTable(r.training, plan) + '\n' + (r.gateNotes?.length ? r.gateNotes.map((x) => `- ${x}`).join('\n') : '_Все кандидаты прошли ворота R4._') : '_R4 не применялся (поколение до 23)._'}
+
 ### Ключевые метрики
 
 ${metricsTable([['база (train)', r.training.base], ...(ch !== 'base' ? [[`${ch} (train)`, r.training[ch]] as [string, Evaluation]] : []), ...(r.validation[ch] && ch !== 'base' ? [[`${ch} (valid)`, r.validation[ch]] as [string, Evaluation]] : []), [`итог (holdout)`, r.holdout]])}
@@ -465,6 +567,7 @@ ${plan.next ?? '_—_'}
 
 async function explore(baseV: string, overridesJson: string, scale: number, only?: string[]): Promise<void> {
   const pool = new Pool();
+  if (process.env.SEEDBASE) (SEEDS as { training: number }).training = Number(process.env.SEEDBASE);
   const base = loadRules(baseV);
   const r = overridesJson && overridesJson !== '{}' ? mergeRules(base, JSON.parse(overridesJson)) : base;
   const genome = loadGenome();
@@ -472,6 +575,8 @@ async function explore(baseV: string, overridesJson: string, scale: number, only
   await pool.close();
   const m = e.summaries.mixed4;
   console.log(`score ${e.score.total.toFixed(1)}  games ${e.games}  ${e.elapsedSec.toFixed(0)}s`);
+  const ii = interestIndex(e.summaries);
+  console.log(`INTEREST ${ii.total.toFixed(1)}`, Object.fromEntries(Object.entries(ii.values).map(([k, v]) => [k, +v.toFixed(3)])));
   console.log('penalties', Object.fromEntries(Object.entries(e.score.penalties).map(([k, v]) => [k, +v.toFixed(1)])));
   console.log('values', Object.fromEntries(Object.entries(e.score.values).map(([k, v]) => [k, +v.toFixed(3)])));
   if (m) {

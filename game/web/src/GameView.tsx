@@ -108,7 +108,7 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
           if (instantBots && isBot) break;
           const card = String(e.b);
           const t = e.a;
-          const toPlayer = card === 'fireball' || card === 'drain' || card === 'aid' || card === 'hex';
+          const toPlayer = ['fireball', 'drain', 'aid', 'hex', 'swap', 'lure', 'ambush', 'intercept', 'mirror'].includes(card);
           const tgt = t >= 0 ? (toPlayer ? name(t) : card === 'transmute' ? '' : g.cells[t]?.land?.name ?? (g.cells[t]?.type === 'start' ? 'Врата' : 'Перекрёсток')) : '';
           lastCast = { card, player: e.player, caption: `${name(e.player)} играет «${cardName(card)}»${tgt ? ` → ${tgt}` : ''}`, id: e.seq };
           break;

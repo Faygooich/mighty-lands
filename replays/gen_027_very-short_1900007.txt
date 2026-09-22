@@ -1,0 +1,35 @@
+# Replay: very-short (lateGame)
+rules: v017
+seed: 1900007
+lineup: aggressive, survival, random, defensive
+scenario: lateGame
+winner: defensive after 2 rounds (lands-target)
+choices: [3,3,1,2,11,1,2,18,1,2,2,1,2,6]
+
+[р1] AggressiveBot#1 применяет «Подмена» → RandomBot#4
+[р1] AggressiveBot#1 подменяет жетоны: берёт 500 у RandomBot#4, отдаёт 100
+[р1] AggressiveBot#1 бросает 1 → клетка 1
+[р1] SurvivalBot#2 применяет «Вытягивание» → RandomBot#4
+[р1] RandomBot#4 отдаёт жетон 100 — Вытягивание
+[р1] SurvivalBot#2 бросает 3 → клетка 3
+[р1] Срабатывает «Дань» DefensiveBot#3 против SurvivalBot#2
+[р1] SurvivalBot#2 отдаёт жетон 100 — Дань
+[р1] DefensiveBot#3 применяет «Узурпация» → Око Бездны
+[р1] DefensiveBot#3 кладёт «Дань» на Око Бездны
+[р1] DefensiveBot#3 бросает 5 → клетка 5
+[р1] Срабатывает «Дань» AggressiveBot#1 против DefensiveBot#3
+[р1] DefensiveBot#3 отдаёт жетон 100 — Дань
+[р1] RandomBot#4 применяет «Разрушение» → Кипящее Озеро
+[р1] RandomBot#4 бросает 6 → клетка 6
+[р2] AggressiveBot#1 применяет «Налог на Роскошь»
+[р2] DefensiveBot#3 отдаёт жетон 100 — Налог на Роскошь
+[р2] AggressiveBot#1 бросает 1 → клетка 2
+[р2] Срабатывает «Капкан» SurvivalBot#2 против AggressiveBot#1
+[р2] AggressiveBot#1 теряет жетон 100 — Капкан
+[р2] SurvivalBot#2 применяет «Исцеление»
+[р2] SurvivalBot#2 получает 100 мощи (100) — Исцеление
+[р2] SurvivalBot#2 бросает 2 → клетка 5
+[р2] Срабатывает «Дань» AggressiveBot#1 против SurvivalBot#2
+[р2] SurvivalBot#2 отдаёт жетон 100 — Дань
+[р2] DefensiveBot#3 применяет «Узурпация» → Пепельный Край
+[р2] 🏆 Победа: DefensiveBot#3 (lands-target)
