@@ -39,7 +39,7 @@ export function App() {
         <button onClick={() => setScreen({ s: 'rules' })}>📖 Краткие правила</button>
         <button onClick={() => { const code = prompt('Вставьте код партии'); if (code) { try { setScreen({ s: 'game', ctl: Controller.fromCode(code, RULES) }); } catch { alert('Неверный код'); } } }}>⤵ Загрузить партию по коду</button>
       </div>
-      <p className="version">Правила {RULES.version} · тот же движок, что и в симуляторе (2,7 млн тестовых партий)</p>
+      <p className="version">Правила {RULES.version} · тот же движок, что и в симуляторе (≈ 2,9 млн тестовых партий)</p>
     </div>
   );
 }
@@ -86,7 +86,7 @@ function RulesView({ onBack }: { onBack: () => void }) {
         <li><b>Артефакт</b> на чужой Земле срабатывает всегда: Дань (отдай жетон), Капкан (потеряй жетон), Оковы (пропусти ход).</li>
         <li>Не больше 1 Заклятия за свой ход. Подмога и Помеха — только в чужой бой.</li>
         <li>Потерял последний жетон — сбрось Земли и карты, возьми 300, начни с Врат.</li>
-        <li><b>Победа</b>: 9/8/7/6/6/5 Земель на 2/3/4/5/6/7 игроков.</li>
+        <li><b>Победа</b>: 9/8/7/6/6/6 Земель на 2/3/4/5/6/7 игроков.</li>
       </ol>
       <p>Полные правила — <code>docs/final_rules.md</code>.</p>
     </div>

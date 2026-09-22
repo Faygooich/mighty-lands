@@ -1,4 +1,4 @@
-// Tests for mechanics introduced by the evolution (v002–v014) + regression tests for audit findings.
+// Tests for mechanics introduced by the evolution (v002–v015) + regression tests for audit findings.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { drive, game, scriptDice, wildLand } from './helpers.ts';
@@ -8,7 +8,7 @@ import { loseTokens, pay, gainPower } from '../core/actions.ts';
 import { createGame } from '../core/state.ts';
 import { runOne } from '../simulation/runner.ts';
 
-const R = () => loadRules('v014');
+const R = () => loadRules('v015');
 
 test('v002 payment: hand over ONE token of your choice, no change', () => {
   const g = game(R());
@@ -127,8 +127,8 @@ test('v005/v013 seat compensation: Spell cards at setup 0/1/1/2/2/3/3', () => {
   assert.deepEqual(g.players.map((p) => p.hand.length), [0, 1, 1, 2, 2, 3, 3]);
 });
 
-test('v012/v013 Lands target by player count 9/8/7/6/6/5', () => {
-  for (const [n, target] of [[2, 9], [3, 8], [4, 7], [5, 6], [6, 6], [7, 5]]) {
+test('v012/v013/v015 Lands target by player count 9/8/7/6/6/6', () => {
+  for (const [n, target] of [[2, 9], [3, 8], [4, 7], [5, 6], [6, 6], [7, 6]]) {
     const g = createGame(R(), Array.from({ length: n }, (_, i) => ({ name: `P${i}`, bot: 't' })), 1);
     let k = 0;
     for (const c of g.cells) if (c.land && k < target - 1) { c.land.owner = 0; k++; }
@@ -160,7 +160,7 @@ test('removed cards are not in the decks; Teleport only before moving', () => {
   assert.ok(!mainOptions(g, g.players[0], 'post').some((o) => o.t === 'spell'));
 });
 
-test('v014 full games at 2..7 players always finish without a timeout', () => {
+test('v015 full games at 2..7 players always finish without a timeout', () => {
   const r = R();
   const styles = ['tactical', 'aggressive', 'economic', 'defensive', 'survival', 'random'];
   for (let n = 2; n <= 7; n++) {

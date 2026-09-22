@@ -1,5 +1,5 @@
 // CLI simulator.
-//   node game/simulation/cli.ts [--rules v014] [--games 10000] [--players 4] [--bots tactical,aggressive,...]
+//   node game/simulation/cli.ts [--rules v015] [--games 10000] [--players 4] [--bots tactical,aggressive,...]
 //                               [--seed 1] [--workers N] [--scenario lowHp] [--replay SEED]
 import { parseArgs } from 'node:util';
 import { writeFileSync, mkdirSync } from 'node:fs';
@@ -13,7 +13,7 @@ import { ALL_STYLES } from '../balancing/suite.ts';
 
 const { values: a } = parseArgs({
   options: {
-    rules: { type: 'string', default: 'v014' },
+    rules: { type: 'string', default: 'v015' },
     games: { type: 'string', default: '10000' },
     players: { type: 'string', default: '4' },
     bots: { type: 'string' },
