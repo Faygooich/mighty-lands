@@ -2,17 +2,51 @@ import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import type { Controller } from './controller.ts';
 import type { Option } from '../../core/types.ts';
 import { Board } from './Board.tsx';
-import { BOT_NAMES, COLORS, cardText, decisionHint, isArtifact, optionLabel } from './labels.ts';
+import { BOT_NAMES, COLORS, cardFlavor, cardText, decisionHint, isArtifact, optionLabel } from './labels.ts';
+import { CELL_FLAVOR, REGION_FLAVOR, landFlavor } from '../../cards/flavor.ts';
 import { cardName } from '../../cards/catalog.ts';
 import { landsOf, power } from '../../core/state.ts';
 
 const SPEEDS = { 'медленно': 1200, 'нормально': 500, 'быстро': 120, 'мгновенно': 0 } as const;
+
+function CellInfoImpl({ g, cell, onClose }: { g: Controller['g']; cell: number; onClose: () => void }) {
+  const c = g.cells[cell];
+  const l = c.land;
+  const f = l ? landFlavor(l.name) : undefined;
+  return (
+    <div className="cell-info">
+      <button className="close" onClick={onClose}>✕</button>
+      {l ? (
+        <>
+          <h3>{l.name}</h3>
+          <div className="region-line">{REGION_FLAVOR[l.region]}</div>
+          <p className="flav">«{f?.landText}»</p>
+          <div className="monster-card">
+            <div className="mc-name">👹 {f?.monster} · <b>МОЩЬ {l.baseMonster}</b> · 🏆 награда {l.reward}</div>
+            <div className="mc-quote">«{f?.monsterText}»</div>
+          </div>
+          <p>{l.owner >= 0 ? <>Владелец: <b style={{ color: COLORS[l.owner] }}>{g.players[l.owner].name}</b> (монстр побеждён)</> : 'Земля дикая — монстр на месте.'}</p>
+          {l.artifact && (
+            <p>🔮 <b>{cardName(l.artifact)}</b>: {cardText(g, l.artifact)} <i className="flav">«{cardFlavor(l.artifact)}»</i></p>
+          )}
+        </>
+      ) : (
+        <>
+          <h3>{c.type === 'start' ? 'Врата' : 'Перекрёсток'}</h3>
+          <p className="flav">«{CELL_FLAVOR[c.type]}»</p>
+          {c.type === 'start' && <p>Прошли или остановились — возьмите жетон 100 (если есть свободная ячейка).</p>}
+        </>
+      )}
+    </div>
+  );
+}
 
 export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void }) {
   const [, bump] = useReducer((x: number) => x + 1, 0);
   const [speed, setSpeed] = useState<keyof typeof SPEEDS>('нормально');
   const [revealAll, setRevealAll] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [info, setInfo] = useState<number | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
   const g = ctl.g;
   const d = ctl.pending;
@@ -43,14 +77,15 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
   const choose = (i: number) => { ctl.choose(i); bump(); };
 
   const groups = useMemo(() => {
-    if (!d) return [] as Array<{ title: string; text?: string; items: Array<[number, Option]> }>;
+    if (!d) return [] as Array<{ title: string; text?: string; flavor?: string; items: Array<[number, Option]> }>;
     if (d.kind !== 'main') return [{ title: '', items: d.options.map((o, i) => [i, o] as [number, Option]) }];
-    const out = new Map<string, { title: string; text?: string; items: Array<[number, Option]> }>();
+    const out = new Map<string, { title: string; text?: string; flavor?: string; items: Array<[number, Option]> }>();
     d.options.forEach((o, i) => {
       const key = o.t === 'artifact' || o.t === 'spell' ? `${o.t}:${o.card}` : o.t;
       const title = o.t === 'artifact' ? `🔮 Артефакт «${cardName(o.card)}» — положить на:` : o.t === 'spell' ? `✨ Заклятие «${cardName(o.card)}»` : '';
       const text = o.t === 'artifact' || o.t === 'spell' ? cardText(g, o.card) : undefined;
-      if (!out.has(key)) out.set(key, { title, text, items: [] });
+      const flavor = o.t === 'artifact' || o.t === 'spell' ? cardFlavor(o.card) : undefined;
+      if (!out.has(key)) out.set(key, { title, text, flavor, items: [] });
       out.get(key)!.items.push([i, o]);
     });
     return [...out.values()];
@@ -69,7 +104,7 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
       </div>
 
       <div className="layout">
-        <Board g={g} highlight={new Set(cellTargets.keys())} onCell={(c) => { const opts = cellTargets.get(c); if (opts && opts.length === 1) choose(opts[0]); }}>
+        <Board g={g} highlight={new Set(cellTargets.keys())} onCell={(c) => { const opts = cellTargets.get(c); if (opts && opts.length === 1) choose(opts[0]); else setInfo(c); }}>
           <div className="dice">🎲 {ctl.lastRoll || '–'}</div>
           {g.over ? (
             <div className="victory">
@@ -78,16 +113,29 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
               <p>{g.endReason === 'lands-target' ? `Собрано ${target} Земель` : g.endReason}</p>
               <button onClick={onExit}>Новая партия</button>
             </div>
+          ) : info !== null ? (
+            <CellInfoImpl g={g} cell={info} onClose={() => setInfo(null)} />
           ) : d ? (
             <div className={`decision ${human ? 'mine' : ''}`}>
               <div className="who" style={{ color: COLORS[d.player] }}>{g.players[d.player].name}{human ? ' — ваш выбор' : ' думает…'}</div>
               <div className="reason">{d.reason}</div>
+              {(d.kind === 'encounter' || d.kind === 'capture' || d.kind === 'react') && (() => {
+                const fighter = g.players[d.kind === 'react' ? d.amount ?? 0 : d.player];
+                const l = g.cells[fighter.pos].land;
+                const f = l && landFlavor(l.name);
+                return f ? (
+                  <div className="monster-card">
+                    <div className="mc-name">👹 {f.monster} · <b>МОЩЬ {l!.monster}</b> <small>(без реакций)</small></div>
+                    <div className="mc-quote">«{f.monsterText}»</div>
+                  </div>
+                ) : null;
+              })()}
               {human && <div className="hint">💡 {decisionHint(g, d)}</div>}
               {human && (
                 <div className="options">
                   {groups.map((grp, gi) => (
                     <div key={gi} className="opt-group">
-                      {grp.title && <div className="opt-title" title={grp.text}>{grp.title}{grp.text && <small> — {grp.text}</small>}</div>}
+                      {grp.title && <div className="opt-title" title={grp.text}>{grp.title}{grp.text && <small> — {grp.text}</small>}{grp.flavor && <i className="flav"> {grp.flavor}</i>}</div>}
                       <div className="opt-buttons">
                         {grp.items.map(([i, o]) => (
                           <button key={i} className={`opt ${o.t}`} onClick={() => choose(i)}>{optionLabel(g, d, o)}</button>
@@ -117,7 +165,8 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
                 {mine && p.hand.length > 0 && (
                   <div className="hand">
                     {p.hand.map((c, i) => (
-                      <span key={i} className={`card ${isArtifact(c) ? 'art' : 'spell'}`} title={cardText(g, c)}>{cardName(c)}</span>
+                      <span key={i} className={`card ${isArtifact(c) ? 'art' : 'spell'}`} title={`${cardText(g, c)}
+«${cardFlavor(c)}»`}>{cardName(c)}</span>
                     ))}
                   </div>
                 )}

@@ -170,3 +170,13 @@ test('v015 full games at 2..7 players always finish without a timeout', () => {
     }
   }
 });
+
+test('flavour: every Land has a named monster and texts; every card in the decks has a flavour line', async () => {
+  const { LAND_FLAVOR, CARD_FLAVOR } = await import('../cards/flavor.ts');
+  const r = R();
+  for (const c of r.board) if (c.type === 'land') {
+    const f = LAND_FLAVOR[c.name!];
+    assert.ok(f && f.monster && f.monsterText && f.landText, `flavour for ${c.name}`);
+  }
+  for (const id of [...Object.keys(r.decks.artifacts), ...Object.keys(r.decks.spells), 'outpost']) assert.ok(CARD_FLAVOR[id], `flavour for ${id}`);
+});

@@ -187,6 +187,8 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
   // «Корона»: the strict leader in Lands fights every monster at +crown (params.crown)
   const crown = r.params.crown && isLandLeader(g, p) ? r.params.crown : 0;
   const m = land.monster + minus + crown;
+  const mText = minus || crown ? `${m} (${land.monster}${minus ? ` + Помеха ${minus}` : ''}${crown ? ` + Корона ${crown}` : ''})` : `${m}`;
+  const pText = plus ? `${eff} (${effPower(p)} + Подмога ${plus})` : `${eff}`;
   const stronger = eff > m || (r.tieWins && eff === m);
   if (stronger) {
     const cost = Math.ceil((m * r.captureCostFrac) / 100) * 100;
@@ -194,7 +196,7 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
     if (!canCapture) { ev(g, 'pass', p.id, 0, land.cell); return; }
     const opts: Option[] = [{ t: 'capture' }, { t: 'pass' }];
     p.fightMod = plus - minus;
-    const idx = yield ask(g, { kind: 'capture', player: p.id, options: opts, reason: `${land.name}: монстр ${m}, ваша мощь ${eff}${cost ? `, цена захвата ${cost}` : ''}`, amount: cost });
+    const idx = yield ask(g, { kind: 'capture', player: p.id, options: opts, reason: `${land.name}: ваша мощь ${pText} больше мощи монстра ${mText}${cost ? `, цена захвата ${cost}` : ''}. Захватить?`, amount: cost });
     p.fightMod = 0;
     if (opts[idx].t === 'capture') {
       if (cost > 0) yield* pay(g, p, cost, -1, `Захват ${land.name}`, false);
@@ -213,7 +215,7 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
   let fight = false;
   if (r.encounterChoice) {
     const opts: Option[] = [{ t: 'flee' }, { t: 'fight' }];
-    const idx = yield ask(g, { kind: 'encounter', player: p.id, options: opts, reason: `${land.name}: монстр ${m} сильнее (${eff}). Бежать или сражаться?` });
+    const idx = yield ask(g, { kind: 'encounter', player: p.id, options: opts, reason: `${land.name}: ваша мощь ${pText} ${eff === m ? 'равна' : 'меньше'} мощи монстра ${mText} — этого мало. Бежать или драться?` });
     fight = opts[idx].t === 'fight';
   }
   const roll = g.rng.d6();

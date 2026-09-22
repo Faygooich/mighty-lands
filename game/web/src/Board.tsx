@@ -1,6 +1,7 @@
 import type { GameState } from '../../core/types.ts';
 import { cardName } from '../../cards/catalog.ts';
 import { COLORS, REGION_COLORS } from './labels.ts';
+import { CELL_FLAVOR, landFlavor } from '../../cards/flavor.ts';
 
 /** 24 cells on the perimeter of a 7×7 grid, clockwise from the top-left corner. */
 export function cellPos(i: number): [number, number] {
@@ -37,7 +38,8 @@ export function Board({ g, highlight, onCell, children }: Props) {
             className={`cell ${c.type} ${highlight.has(c.index) ? 'hl' : ''} ${owner ? 'owned' : ''}`}
             style={style}
             onClick={() => onCell?.(c.index)}
-            title={l ? `${l.name}: монстр ${l.monster}, награда ${l.reward}` : c.type === 'start' ? 'Врата: +100 при прохождении' : 'Перекрёсток'}
+            title={l ? `${l.name} — ${landFlavor(l.name)?.landText ?? ''}
+${landFlavor(l.name)?.monster ?? 'Монстр'} (${l.monster}): ${landFlavor(l.name)?.monsterText ?? ''}` : CELL_FLAVOR[c.type] ?? ''}
           >
             {c.type === 'start' && <div className="cell-name big">ВРАТА<br /><small>+100</small></div>}
             {c.type === 'crossroad' && <div className="cell-name">Перекрёсток</div>}
@@ -48,6 +50,9 @@ export function Board({ g, highlight, onCell, children }: Props) {
                   <div className="flag" style={{ background: COLORS[owner.id] }}>🚩 {owner.name}</div>
                 ) : (
                   <div className={`monster ${l.monster >= 4000 ? 'boss' : ''}`}>👹 {l.monster}</div>
+                )}
+                {!owner && landFlavor(l.name) && (
+                  <div className="mname">{landFlavor(l.name)!.monster}</div>
                 )}
                 {!owner && <div className="reward">🏆 {l.reward}</div>}
                 {l.artifact && <div className="artifact">🔮 {cardName(l.artifact)}</div>}

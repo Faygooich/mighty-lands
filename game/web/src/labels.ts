@@ -2,6 +2,11 @@
 import type { Decision, GameState, Option } from '../../core/types.ts';
 import { ARTIFACTS, SPELLS, cardName } from '../../cards/catalog.ts';
 import { effPower, landsOf, power } from '../../core/state.ts';
+import { CARD_FLAVOR } from '../../cards/flavor.ts';
+
+export function cardFlavor(id: string): string {
+  return CARD_FLAVOR[id] ?? '';
+}
 
 export const BOT_NAMES: Record<string, string> = {
   tactical: 'Тактик', aggressive: 'Агрессор', defensive: 'Защитник', economic: 'Экономист', survival: 'Выживальщик', random: 'Случайный', exploit: 'Эксплойтер',
