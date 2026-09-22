@@ -11,7 +11,8 @@
     "bench": "node game/simulation/benchmark.ts",
     "evolve": "node game/balancing/evolve.ts",
     "server": "node game/net/server.ts",
-    "uicheck": "node game/tests/browser/uicheck.mjs"
+    "uicheck": "node game/tests/browser/uicheck.mjs",
+    "site": "node scripts/publish-site.mjs"
   },
   "engines": {
     "node": ">=23.6"

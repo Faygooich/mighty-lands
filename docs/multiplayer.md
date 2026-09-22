@@ -97,7 +97,8 @@ npm run server                                          # PORT=8080, ROOM_IDLE_M
 
 ## Где разместить
 
-- **Любой статический хостинг** (GitHub Pages, Netlify, Cloudflare Pages): `npm --prefix game/web run build` и выложить `game/web/dist`. Работает P2P-режим, свой сервер не нужен. Сайт обязан открываться по **https** — иначе браузеры не дадут WebRTC.
+- **GitHub Pages — уже выложено: https://faygooich.github.io/mz/** (репозиторий [`Faygooich/mz`](https://github.com/Faygooich/mz), в нём только сборка). Обновить сайт после правок: `npm run site` — пересоберёт веб-версию, перенесёт её в соседнюю папку `../mz-pages` и отправит (путь можно задать через `SITE_DIR`).
+- **Любой другой статический хостинг** (Netlify, Cloudflare Pages): `npm --prefix game/web run build` и выложить `game/web/dist`. Работает P2P-режим, свой сервер не нужен. Сайт обязан открываться по **https** — иначе браузеры не дадут WebRTC.
 - **Один процесс на VPS/Render/Fly**: `npm run server` (раздаёт сборку и держит комнаты). Нужен `VITE_ROOM_SERVER=same` на сборке или `?server=same` в адресе.
 
 ---
