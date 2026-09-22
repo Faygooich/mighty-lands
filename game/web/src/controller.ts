@@ -18,6 +18,8 @@ export interface UiEvent {
   player: number;
   a: number;
   b: string | number | null;
+  /** Monotonic id — the UI animates every event it has not seen yet. */
+  seq: number;
 }
 
 export class Controller implements Hooks {
@@ -29,7 +31,9 @@ export class Controller implements Hooks {
   choices: number[] = [];
   lastRoll = 0;
   lastEvent: UiEvent | null = null;
-  flash: Array<{ cell: number; kind: 'good' | 'bad' }> = [];
+  /** Recent engine events (bounded), consumed by the UI for animations and feedback. */
+  events: UiEvent[] = [];
+  seq = 0;
 
   constructor(seats: SeatSetup[], seed: number, rules: RuleSet) {
     this.seats = seats;
@@ -41,7 +45,10 @@ export class Controller implements Hooks {
 
   ev(type: EventType, player: number, a: number, b: string | number | null): void {
     if (type === 'move') this.lastRoll = a;
-    this.lastEvent = { type, player, a, b };
+    const e: UiEvent = { type, player, a, b, seq: ++this.seq };
+    this.lastEvent = e;
+    this.events.push(e);
+    if (this.events.length > 600) this.events.splice(0, 300);
   }
 
   /** Feed a choice (or start) and stop at the next decision. */

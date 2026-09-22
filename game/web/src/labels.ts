@@ -34,20 +34,20 @@ function targetLabel(g: GameState, card: string, t: number): string {
 
 export function optionLabel(g: GameState, d: Decision, o: Option): string {
   switch (o.t) {
-    case 'done': return d.kind === 'main' ? (g.phase === 'pre' ? '🎲 Бросить кубик' : '✔ Закончить ход') : 'Готово';
-    case 'capture': return '🚩 Захватить Землю';
+    case 'done': return d.kind === 'main' ? (g.phase === 'pre' ? 'Бросить кубик' : 'Закончить ход') : 'Готово';
+    case 'capture': return 'Захватить Землю';
     case 'pass': return d.kind === 'react' ? 'Не вмешиваться' : 'Пройти мимо';
-    case 'flee': return '🏃 Бежать (5–6)';
-    case 'fight': return '⚔ Драться (6 — победа)';
+    case 'flee': return 'Бежать (5–6)';
+    case 'fight': return 'Драться (6 — победа)';
     case 'token': return `Потерять жетон ${o.value}`;
     case 'pay': return `Отдать жетон ${o.tokens.join('+')}`;
     case 'discard': return `Сбросить «${cardName(o.card)}»`;
     case 'artifact': return `«${cardName(o.card)}» → ${g.cells[o.land].land!.name}`;
     case 'spell': {
       const t = targetLabel(g, o.card, o.target);
-      return `✨ ${cardName(o.card)}${t ? ` → ${t}` : ''}`;
+      return `${cardName(o.card)}${t ? ` → ${t}` : ''}`;
     }
-    case 'react': return `${o.card === 'aid' ? '🤝' : '💀'} Сыграть «${cardName(o.card)}»`;
+    case 'react': return `Сыграть «${cardName(o.card)}»`;
     case 'choose': return o.key === 'skip' ? 'Пропустить следующий ход' : 'Отдать 1 жетон';
     case 'exchange': return `Размен ${o.give}`;
   }
@@ -75,4 +75,75 @@ export function decisionHint(g: GameState, d: Decision): string {
     }
   }
   return '';
+}
+
+// ---- Card presentation (still presentation only: numbers are read from the ruleset params) ----
+
+export type CardFrame = 'artifact' | 'spell' | 'help' | 'hinder';
+
+/** Visual family of a card: Artifacts, ordinary Spells and the two fight reactions. */
+export function cardFrame(id: string): CardFrame {
+  if (ARTIFACTS[id]) return 'artifact';
+  const r = SPELLS[id]?.reaction;
+  return r === 'help' ? 'help' : r === 'hinder' ? 'hinder' : 'spell';
+}
+
+/** Type line printed under the illustration: what the card is and when it can be played. */
+export function cardTypeLine(id: string): string {
+  const f = cardFrame(id);
+  if (f === 'artifact') return 'Артефакт · на свою Землю';
+  if (f === 'help' || f === 'hinder') return 'Реакция · в чужой бой';
+  const ph = SPELLS[id]?.phases ?? [];
+  return ph.length === 1 && ph[0] === 'pre' ? 'Заклятие · до броска' : 'Заклятие · в свой ход';
+}
+
+/** The headline number printed in the corner of a card (e.g. «300», «+500», «−1 ♥»), or null. */
+export function cardBadge(g: GameState, id: string): string | null {
+  const P = (k: string) => g.rules.params[k] ?? 0;
+  switch (id) {
+    case 'tribute': return String(P('tribute'));
+    case 'bigTribute': return String(P('bigTribute'));
+    case 'toll': return String(P('toll'));
+    case 'trap': return `−${P('trapDamage') || 1}♥`;
+    case 'fireball': return `−${P('fireballDamage') || 1}♥`;
+    case 'heal': return `+${P('heal')}`;
+    case 'drain': return String(P('drain'));
+    case 'fury': return `+${P('fury')}`;
+    case 'aid': return `+${P('aid')}`;
+    case 'hex': return `+${P('hex')}`;
+    case 'bastion': return `+${P('bastion')}`;
+  }
+  return null;
+}
+
+/** Stable ASCII keys for illustrations (used for custom art file names, see src/art/README.md). */
+export const LAND_ART_KEY: Record<string, string> = {
+  'Тихий Луг': 'meadow', 'Ручьи': 'streams', 'Мельница': 'mill', 'Овечий Холм': 'sheep-hill', 'Старый Мост': 'old-bridge',
+  'Опушка': 'forest-edge', 'Грибная Чаща': 'mushroom-thicket', 'Волчья Тропа': 'wolf-trail', 'Дуб Шептун': 'whisper-oak', 'Сердце Леса': 'forest-heart',
+  'Перевал': 'pass', 'Рудники': 'mines', 'Орлиное Гнездо': 'eagle-nest', 'Ледник': 'glacier', 'Пик Грома': 'thunder-peak',
+  'Пепельный Край': 'ash-land', 'Чёрный Провал': 'black-pit', 'Трон Костей': 'bone-throne', 'Кипящее Озеро': 'boiling-lake', 'Око Бездны': 'abyss-eye',
+};
+
+export const REGION_NAMES = ['Долина', 'Лес', 'Горы', 'Бездна'];
+
+/** Chance (in sixths) to roll at least `min` on a d6. */
+export function d6Chance(min: number): string {
+  const n = Math.max(0, Math.min(6, 7 - min));
+  return `${n} из 6`;
+}
+
+export const END_REASON: Record<string, string> = {
+  'lands-target': 'собрана цель по Землям', 'round-cap': 'лимит раундов', 'last-standing': 'остался последним', 'all-dead': 'никто не выжил',
+  'first-death': 'первое выбывание', 'power-target': 'цель по мощи', 'vp-target': 'цель по очкам', region: 'захвачен регион',
+};
+
+/** Log line for display: strips the «[р12]» round prefix and names cells instead of numbering them. */
+export function prettyLog(g: GameState, line: string): { round: string; text: string } {
+  const m = /^\[р(\d+)\]\s*/.exec(line);
+  const text = (m ? line.slice(m[0].length) : line).replace(/клетк([аеу]) (\d+)/g, (s, _end: string, n: string) => {
+    const c = g.cells[Number(n)];
+    if (!c) return s;
+    return c.land ? `«${c.land.name}»` : c.type === 'start' ? 'Врата' : 'Перекрёсток';
+  }).replace(/^🏆\s*/, '').replace(/\((lands-target|round-cap|last-standing|all-dead|first-death|power-target|vp-target|region)\)/, (_s, r: string) => `(${END_REASON[r] ?? r})`);
+  return { round: m?.[1] ?? '', text };
 }

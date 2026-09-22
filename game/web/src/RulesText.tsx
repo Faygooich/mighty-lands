@@ -1,0 +1,41 @@
+// Short rules, shared by the menu screen and the in-game rules sheet.
+import { Chip } from './ui/Tokens.tsx';
+import { Icon } from './ui/Icon.tsx';
+
+export function RulesText() {
+  return (
+    <div className="rules-text">
+      <section>
+        <h3><span className="rt-no">1</span> Жетоны — это мощь и жизни</h3>
+        <p>
+          <Chip value={100} size="sm" /> <Chip value={300} size="sm" /> <Chip value={500} size="sm" /> <Chip value={1000} size="sm" />
+          <br />Сумма чисел на жетонах — ваша <b>МОЩЬ</b>. Количество жетонов — ваши <b>жизни</b>, не больше 5.
+        </p>
+      </section>
+      <section>
+        <h3><span className="rt-no">2</span> Ход</h3>
+        <p>Возьмите 1 Артефакт и 1 Заклятие → сыграйте карты → <b>бросьте кубик</b> → клетка → снова можно сыграть карты → оставьте на руке не больше 3 карт.</p>
+        <p>Прошли Врата — возьмите жетон 100, если есть свободная ячейка.</p>
+      </section>
+      <section>
+        <h3><span className="rt-no">3</span> Монстр на дикой Земле</h3>
+        <p>Соперники могут вмешаться: <b>Подмога</b> даёт +500 вам, <b>Помеха</b> +500 монстру.</p>
+        <p>Вы сильнее — <b>захватите Землю</b> и возьмите награду. Не сильнее — <Icon name="run" size={14} /> бегите (нужно 5–6) или <Icon name="sword" size={14} /> деритесь (нужна 6). Неудача — минус 1 жетон.</p>
+      </section>
+      <section>
+        <h3><span className="rt-no">4</span> Чужая Земля</h3>
+        <p>Артефакт на ней срабатывает всегда: <b>Дань</b> — отдайте жетон, <b>Капкан</b> — потеряйте жетон, <b>Оковы</b> — пропустите ход.</p>
+      </section>
+      <section>
+        <h3><span className="rt-no">5</span> Ограничения</h3>
+        <p>Не больше одного Заклятия за свой ход. Подмогу и Помеху играют только в чужой бой.</p>
+        <p>Потеряли последний жетон — сбросьте Земли и карты, возьмите жетон 300 и начните с Врат.</p>
+      </section>
+      <section>
+        <h3><span className="rt-no">6</span> Победа</h3>
+        <p>Соберите <b>9 / 8 / 7 / 6 / 6 / 6</b> Земель при 2 / 3 / 4 / 5 / 6 / 7 игроках.</p>
+      </section>
+      <p className="muted">Полные правила — <code>docs/final_rules.md</code>.</p>
+    </div>
+  );
+}

@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react';
 import { runOne } from '../../simulation/runner.ts';
 import { RULES } from './rules.ts';
+import { Icon } from './ui/Icon.tsx';
+import { BOT_NAMES } from './labels.ts';
 
 const POOL = ['tactical', 'aggressive', 'defensive', 'economic', 'survival', 'random'];
 
@@ -40,13 +42,19 @@ export function SimulationView({ onExit }: { onExit: () => void }) {
 
   const sorted = stats ? [...stats.rounds].sort((a, b) => a - b) : [];
   return (
-    <div className="simview">
-      <button onClick={onExit}>← Меню</button>
-      <h2>Режим симуляции</h2>
+    <div className="screen">
+      <div className="screen-inner">
+      <button type="button" className="plaque ghost back" onClick={onExit}><span className="plaque-main"><Icon name="back" /> Меню</span></button>
+      <div className="parchment simview">
+      <h2 className="screen-title">Режим симуляции</h2>
       <p>Полностью автоматические партии ботов на движке правил {RULES.version}. Для массовых прогонов используйте CLI: <code>npm run sim</code>.</p>
-      <label>Игроков: <select value={n} onChange={(e) => setN(Number(e.target.value))}>{[2, 3, 4, 5, 6, 7].map((k) => <option key={k}>{k}</option>)}</select></label>
-      <label> Партий: <input type="number" value={count} min={10} max={5000} onChange={(e) => setCount(Number(e.target.value))} /></label>
-      {running ? <button onClick={() => { stop.current = true; }}>Стоп</button> : <button className="primary" onClick={run}>Запустить</button>}
+      <div className="sim-controls">
+      <label className="field">Игроков <select value={n} onChange={(e) => setN(Number(e.target.value))}>{[2, 3, 4, 5, 6, 7].map((k) => <option key={k}>{k}</option>)}</select></label>
+      <label className="field">Партий <input type="number" value={count} min={10} max={5000} onChange={(e) => setCount(Number(e.target.value))} /></label>
+      {running
+        ? <button type="button" className="plaque secondary" onClick={() => { stop.current = true; }}><span className="plaque-main">Стоп</span></button>
+        : <button type="button" className="plaque primary" onClick={run}><span className="plaque-main"><Icon name="play" /> Запустить</span></button>}
+      </div>
       {stats && (
         <div className="simstats">
           <p>Сыграно: <b>{stats.games}</b> · медиана раундов <b>{sorted[Math.floor(sorted.length / 2)]}</b> · оценка времени за столом <b>{(stats.mins / stats.games).toFixed(0)} мин</b> · Земель отнято за партию {(stats.landsTaken / stats.games).toFixed(1)} · карт в чужой ход {(stats.reactions / stats.games).toFixed(1)}</p>
@@ -54,13 +62,15 @@ export function SimulationView({ onExit }: { onExit: () => void }) {
             <thead><tr><th>Бот</th><th>Партий</th><th>Побед</th><th>Win rate</th></tr></thead>
             <tbody>
               {Object.keys(stats.apps).map((b) => (
-                <tr key={b}><td>{b}</td><td>{stats.apps[b]}</td><td>{stats.wins[b] ?? 0}</td><td>{(((stats.wins[b] ?? 0) / stats.apps[b]) * 100).toFixed(1)}%</td></tr>
+                <tr key={b}><td>{BOT_NAMES[b] ?? b}</td><td>{stats.apps[b]}</td><td>{stats.wins[b] ?? 0}</td><td>{(((stats.wins[b] ?? 0) / stats.apps[b]) * 100).toFixed(1)}%</td></tr>
               ))}
             </tbody>
           </table>
           <p>Победы по местам: {stats.seat.map((w, i) => `${i + 1}: ${((w / stats.games) * 100).toFixed(0)}%`).join(' · ')} (боты рассаживаются случайно)</p>
         </div>
       )}
+      </div>
+      </div>
     </div>
   );
 }
