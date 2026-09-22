@@ -126,9 +126,11 @@ function* payToken(g: GameState, payer: PlayerState, amount: number, recipient: 
     pool = ok.length ? ok : [payer.tokens[0]];
   }
   let value = pool[0];
+  // 'taker': the receiving player chooses which of the payer's tokens to take
+  const chooser = g.rules.payMode === 'taker' && recipient >= 0 && g.players[recipient].alive ? recipient : payer.id;
   if (pool.length > 1) {
     const idx = yield {
-      kind: 'pay', player: payer.id, amount, reason: `Отдайте 1 жетон${g.rules.payMode === 'atLeast' ? ` (не меньше ${amount})` : ''}: ${source}`,
+      kind: 'pay', player: chooser, amount, reason: `Отдайте 1 жетон${g.rules.payMode === 'atLeast' ? ` (не меньше ${amount})` : ''}: ${source}`,
       options: pool.map((v) => ({ t: 'pay' as const, tokens: [v] })),
     };
     value = pool[idx];

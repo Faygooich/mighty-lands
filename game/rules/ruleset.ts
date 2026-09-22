@@ -58,8 +58,9 @@ export interface RuleSet {
    *  'sum'   — hand over tokens worth >= amount (change per `change`)  [v001]
    *  'token' — hand over ONE token of your choice, amount ignored (no arithmetic)
    *  'atLeast' — hand over ONE token worth >= amount; if none, your largest token
+   *  'taker' — the RECEIVER picks one of the payer's tokens (bank payments: payer picks)
    */
-  payMode: 'sum' | 'token' | 'atLeast';
+  payMode: 'sum' | 'token' | 'atLeast' | 'taker';
   /** Voluntary exchange with bank during main phase (equal value, slot-limited). */
   exchange: boolean;
   /** When a visitor may try to flee an Artifact. */

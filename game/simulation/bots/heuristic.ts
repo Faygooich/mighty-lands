@@ -227,6 +227,11 @@ export class HeuristicBot {
       }
       case 'token': return -o.value * w.power;
       case 'pay': {
+        if (r.payMode === 'taker' && d.player !== g.current && me.id !== g.current) {
+          // I am the receiver choosing an opponent's token (not necessarily my turn): take the biggest
+          return o.tokens[0];
+        }
+        if (r.payMode === 'taker' && me.tokens.indexOf(o.tokens[0]) < 0) return o.tokens[0];
         const amount = d.amount ?? 0;
         const after = afterPayment(me.tokens, o.tokens, amount, r);
         const dh = after.length - me.tokens.length;
