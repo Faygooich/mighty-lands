@@ -177,6 +177,11 @@ export function kill(g: GameState, p: PlayerState, killer: number, source: strin
   for (const c of g.cells) {
     const l = c.land;
     if (!l || l.owner !== p.id) continue;
+    if (respawn && g.rules.respawnKeepsLands) {
+      if (l.artifact) g.artDiscard.push(l.artifact);
+      l.artifact = null;
+      continue;
+    }
     if (l.artifact) g.artDiscard.push(l.artifact);
     l.artifact = null;
     if (g.rules.deathLands === 'killer' && killer >= 0 && g.players[killer].alive) {
@@ -193,6 +198,7 @@ export function kill(g: GameState, p: PlayerState, killer: number, source: strin
     p.tokens = g.rules.respawnTokens.slice().sort((a, b) => b - a);
     p.pos = 0;
     p.skip = 0;
+    for (let i = 0; i < g.rules.respawnCards; i++) draw(g, p, 'spell');
     ev(g, 'respawn', p.id, killer, source);
     logMsg(g, `☠ ${p.name} теряет всё и возвращается на Врата (${source})`);
     return;

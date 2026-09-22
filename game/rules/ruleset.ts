@@ -93,6 +93,10 @@ export interface RuleSet {
   firstTurnNoDraw: boolean;
   /** BANG!-style return: losing the last token does not eliminate — lose Lands and hand, restart at Start with these tokens. [] = eliminated. */
   respawnTokens: number[];
+  /** On return to the game: keep your Lands (only Artifacts and hand are lost). */
+  respawnKeepsLands: boolean;
+  /** On return to the game: draw this many Spells. */
+  respawnCards: number;
   /** Max round count before forced end. */
   roundCap: number;
   win: WinRules;
@@ -155,6 +159,8 @@ export const BASE_RULES: RuleSet = {
   seatBonusTokens: [],
   firstTurnNoDraw: false,
   respawnTokens: [],
+  respawnKeepsLands: false,
+  respawnCards: 0,
   roundCap: 120,
   win: { lastStanding: true, landsTarget: 0, regionWin: false, powerTarget: 0, vpTarget: 0, firstDeathEnds: false },
   decks: {

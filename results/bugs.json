@@ -103,6 +103,11 @@
         "gen": 20,
         "severity": "OK",
         "value": "0.0%"
+      },
+      {
+        "gen": 21,
+        "severity": "OK",
+        "value": "0.0%"
       }
     ]
   },
@@ -208,6 +213,11 @@
       },
       {
         "gen": 20,
+        "severity": "OK",
+        "value": "0.00"
+      },
+      {
+        "gen": 21,
         "severity": "OK",
         "value": "0.00"
       }
@@ -317,6 +327,11 @@
         "gen": 20,
         "severity": "OK",
         "value": "×1.42 к раунду 15"
+      },
+      {
+        "gen": 21,
+        "severity": "OK",
+        "value": "×1.47 к раунду 15"
       }
     ]
   },
@@ -424,6 +439,11 @@
         "gen": 20,
         "severity": "LOW",
         "value": "2.16 оп/ход"
+      },
+      {
+        "gen": 21,
+        "severity": "LOW",
+        "value": "2.17 оп/ход"
       }
     ]
   },
@@ -531,6 +551,11 @@
         "gen": 20,
         "severity": "OK",
         "value": "1.29"
+      },
+      {
+        "gen": 21,
+        "severity": "OK",
+        "value": "1.28"
       }
     ]
   },
@@ -638,6 +663,11 @@
         "gen": 20,
         "severity": "OK",
         "value": "таймаут 0.0%, медиана 11"
+      },
+      {
+        "gen": 21,
+        "severity": "OK",
+        "value": "таймаут 0.0%, медиана 11"
       }
     ]
   },
@@ -735,6 +765,11 @@
         "gen": 20,
         "severity": "OK",
         "value": "4.6%"
+      },
+      {
+        "gen": 21,
+        "severity": "OK",
+        "value": "3.8%"
       }
     ]
   },
@@ -832,6 +867,11 @@
         "gen": 20,
         "severity": "MEDIUM",
         "value": "лидер старта 76.6%"
+      },
+      {
+        "gen": 21,
+        "severity": "MEDIUM",
+        "value": "лидер старта 76.8%"
       }
     ]
   },
@@ -924,6 +964,11 @@
         "gen": 20,
         "severity": "OK",
         "value": "3.4%"
+      },
+      {
+        "gen": 21,
+        "severity": "OK",
+        "value": "5.8%"
       }
     ]
   },
@@ -954,6 +999,11 @@
       },
       {
         "gen": 20,
+        "severity": "OK",
+        "value": "23 мин"
+      },
+      {
+        "gen": 21,
         "severity": "OK",
         "value": "23 мин"
       }
@@ -988,6 +1038,11 @@
         "gen": 20,
         "severity": "MEDIUM",
         "value": "aggressive 68.5%"
+      },
+      {
+        "gen": 21,
+        "severity": "MEDIUM",
+        "value": "aggressive 68.7%"
       }
     ]
   },
@@ -1015,6 +1070,23 @@
         "gen": 20,
         "severity": "OK",
         "value": "14.8%"
+      },
+      {
+        "gen": 21,
+        "severity": "OK",
+        "value": "14.1%"
+      }
+    ]
+  },
+  "lastPlace": {
+    "id": "BUG-013",
+    "title": "Последний в середине партии почти не может победить",
+    "firstGen": 21,
+    "history": [
+      {
+        "gen": 21,
+        "severity": "MEDIUM",
+        "value": "2.3%"
       }
     ]
   }

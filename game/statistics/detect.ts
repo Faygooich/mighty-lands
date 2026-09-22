@@ -47,6 +47,7 @@ export function detect(e: Evaluation, denoms: number[]): Finding[] {
   const cb = m.comebackRate;
   add('snowball', 'Snowball: лидер середины партии почти всегда побеждает', cb < 0.15 ? 'HIGH' : cb < 0.25 ? 'MEDIUM' : 'OK', `камбэк ${pct(cb)}`, `лидер в середине выигрывает ${pct(m.leaderHalfWinRate)}, последний в середине выигрывает ${pct(m.lastHalfWinRate)}`);
   if (cb > 0.6) add('chaos', 'Преимущество ничего не значит (хаос)', 'MEDIUM', pct(cb), '');
+  add('lastPlace', 'Последний в середине партии почти не может победить', m.lastHalfWinRate < 0.05 ? 'MEDIUM' : m.lastHalfWinRate < 0.1 ? 'LOW' : 'OK', pct(m.lastHalfWinRate), `честная доля ${pct(1 / m.players)}; камбэк лидера ${pct(m.comebackRate)}`);
   if (S.earlyLead) {
     const w0 = S.earlyLead.seatWinRate[0] ?? 0;
     add('comeback', 'Нет возврата после раннего отставания', sev(w0, [[0.8, 'HIGH'], [0.6, 'MEDIUM'], [0.45, 'LOW']]), `лидер старта ${pct(w0)}`, 'Место 1 начинает с 5 жетонами и 3 Землями');
