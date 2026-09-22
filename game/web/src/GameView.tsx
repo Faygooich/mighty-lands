@@ -1,7 +1,9 @@
 // The game table. Layout: rail (tertiary) · board with the table centre (primary) · opponents,
 // stage and recent events (secondary) · the viewer's mat and hand in the dock (primary).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from 'react';
-import type { Controller, UiEvent } from './controller.ts';
+import type { TableCtl, UiEvent } from './controller.ts';
+import type { Decision, GameState } from '../../core/types.ts';
+import type { NetInfo } from './net/NetGame.tsx';
 import { cardName } from '../../cards/catalog.ts';
 import { CELL_FLAVOR, REGION_FLAVOR, landFlavor } from '../../cards/flavor.ts';
 import { Board, STEP_MS, type CellFx, type CellMark } from './Board.tsx';
@@ -32,11 +34,12 @@ function writePref(k: string, v: string) {
   try { localStorage.setItem(k, v); } catch { /* private mode */ }
 }
 
-export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void }) {
+export function GameView({ ctl, onExit, net }: { ctl: TableCtl; onExit: () => void; net?: NetInfo }) {
   const [, bump] = useReducer((x: number) => x + 1, 0);
   const [speed, setSpeedState] = useState<Speed>(() => { const s = readPref<Speed>('mz.speed', 'нормально'); return s in SPEEDS ? s : 'нормально'; });
   const [motion, setMotionState] = useState<'full' | 'reduced'>(() => readPref('mz.motion', 'full'));
-  const [revealAll, setRevealAll] = useState(false);
+  const [revealAll, setRevealAllState] = useState(false);
+  const setRevealAll = (v: boolean) => setRevealAllState(net ? false : v); // over the network nobody peeks
   const [copied, setCopied] = useState(false);
   const [info, setInfo] = useState<number | null>(null);
   const [zoom, setZoom] = useState<string | null>(null);
@@ -62,12 +65,14 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
   }, [motion]);
 
   // ---- who is looking at the screen -------------------------------------------------
+  // Over the network the viewer is fixed (own seat, or nothing for a spectator); locally the device
+  // travels around the table, so a curtain hides the hand until the next player says they are ready.
   const humans = ctl.seats.map((s, i) => (s.kind === 'human' ? i : -1)).filter((i) => i >= 0);
-  const hotSeat = humans.length > 1;
+  const hotSeat = !net && humans.length > 1;
   const pendingHuman = d && !ctl.botTurn() ? d.player : null;
   const [revealed, setRevealed] = useState<number | null>(hotSeat ? null : humans[0] ?? null);
   const curtainFor = hotSeat && !revealAll && pendingHuman !== null && revealed !== pendingHuman && !g.over ? pendingHuman : null;
-  const viewer = hotSeat ? (curtainFor !== null ? null : revealed) : humans[0] ?? null;
+  const viewer = net ? (net.you >= 0 ? net.you : null) : hotSeat ? (curtainFor !== null ? null : revealed) : humans[0] ?? null;
   const focus = viewer ?? pendingHuman ?? g.current;
   const mine = d !== null && viewer !== null && d.player === viewer && !ctl.botTurn();
 
@@ -139,9 +144,10 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
     return () => clearTimeout(t);
   });
 
-  // Bots play automatically (after the animations settle, unless «мгновенно»).
+  // Bots play automatically (after the animations settle, unless «мгновенно»). Over the network the
+  // room runs them — its own pacing, one truth for everybody.
   useEffect(() => {
-    if (!d || !ctl.botTurn()) return;
+    if (!ctl.drivesBots || !d || !ctl.botTurn()) return;
     const wait = instantBots ? 0 : Math.max(SPEEDS[speed], busyUntil.current - Date.now());
     const t = setTimeout(() => { ctl.stepBot(); bump(); }, wait);
     return () => clearTimeout(t);
@@ -210,7 +216,8 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
     return () => window.removeEventListener('keydown', onKey);
   }, [zoom, info, panel, selected]);
 
-  const copyCode = () => { navigator.clipboard?.writeText(ctl.exportCode()); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const replayCode = ctl.exportCode();
+  const copyCode = () => { if (!replayCode) return; navigator.clipboard?.writeText(replayCode); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
   const stageInside = boardW >= 520;
   // When the stage sits below the board (small screens), bring it into view when it needs the viewer.
@@ -223,7 +230,9 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
     <Stage
       g={g} d={d} mine={mine} busy={busy} curtainFor={curtainFor} viewerTurn={viewer === g.current} onReveal={() => setRevealed(curtainFor)}
       selected={selKind !== undefined && selOpts.length ? selected : null} onCancelSelect={() => setSelected(null)}
-      choose={choose} onPreview={setPreview} onExit={onExit} onCopy={copyCode} goal={goal} names={g.players.map((p) => p.name)}
+      choose={choose} onPreview={setPreview} onExit={net ? (net.admin ? () => net.op({ op: 'lobby' }) : () => {}) : onExit}
+      exitLabel={net ? (net.admin ? 'Ещё партию (все в лобби)' : 'Ждём хозяина комнаты…') : 'Новая партия'}
+      canCopy={!!replayCode} onCopy={copyCode} goal={goal} names={g.players.map((p) => p.name)}
     />
   );
   const opponents = g.players.filter((p) => p.id !== focus);
@@ -235,7 +244,7 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
         <button type="button" className="rail-btn" onClick={() => setPanel(panel === 'menu' ? null : 'menu')} aria-expanded={panel === 'menu'} aria-label="Меню" title="Меню">
           <Icon name="gear" /> <span className="hide-sm">Меню</span>
         </button>
-        <div className="rail-title">МОЩНЫЕ ЗЕМЛИ</div>
+        <div className="rail-title">МОЩНЫЕ ЗЕМЛИ{net && <span className="rail-code" title="Код комнаты">{net.room.code}</span>}</div>
         <div className="rail-turn" style={{ ['--pc' as string]: COLORS[g.current] }}>
           <PawnBadge id={g.current} size={16} />
           <span>
@@ -302,23 +311,31 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
         <div className="sheet-backdrop" onClick={() => setPanel(null)}>
           <div className="sheet menu-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Меню">
             <div className="sheet-title">Меню</div>
-            <label className="field">Скорость ботов
-              <select value={speed} onChange={(e) => setSpeed(e.target.value as Speed)}>
-                {Object.keys(SPEEDS).map((s) => <option key={s}>{s}</option>)}
-              </select>
-            </label>
+            {(!net || net.admin) && (
+              <label className="field">Скорость ботов{net && <span className="muted small"> — для всех в комнате</span>}
+                <select
+                  value={net ? (Object.keys(SPEEDS).find((k) => SPEEDS[k as Speed] === net.room.botDelay) ?? 'нормально') : speed}
+                  onChange={(e) => { const s = e.target.value as Speed; if (net) net.op({ op: 'botDelay', ms: SPEEDS[s] }); else setSpeed(s); }}
+                >
+                  {Object.keys(SPEEDS).map((s) => <option key={s}>{s}</option>)}
+                </select>
+              </label>
+            )}
             <label className="field">Анимации
               <select value={motion} onChange={(e) => setMotion(e.target.value as 'full' | 'reduced')}>
                 <option value="full">полные</option><option value="reduced">минимум</option>
               </select>
             </label>
-            <label className="check"><input type="checkbox" checked={revealAll} onChange={(e) => setRevealAll(e.target.checked)} /> Показать все руки (для обучения)</label>
+            {!net && <label className="check"><input type="checkbox" checked={revealAll} onChange={(e) => setRevealAll(e.target.checked)} /> Показать все руки (для обучения)</label>}
+            {net && <NetSeats net={net} />}
             <div className="sheet-actions">
               <button type="button" className="plaque secondary" onClick={() => setPanel('rules')}><span className="plaque-main"><Icon name="book" /> Правила</span></button>
-              <button type="button" className="plaque secondary" onClick={copyCode}><span className="plaque-main"><Icon name="copy" /> {copied ? 'Скопировано' : 'Код партии'}</span></button>
-              <button type="button" className="plaque ghost" onClick={onExit}><span className="plaque-main"><Icon name="back" /> Выйти в главное меню</span></button>
+              {replayCode && <button type="button" className="plaque secondary" onClick={copyCode}><span className="plaque-main"><Icon name="copy" /> {copied ? 'Скопировано' : 'Код партии'}</span></button>}
+              <button type="button" className="plaque ghost" onClick={onExit}>
+                <span className="plaque-main"><Icon name="back" /> {net ? (net.admin ? 'Закрыть комнату' : 'Выйти из комнаты') : 'Выйти в главное меню'}</span>
+              </button>
             </div>
-            <p className="muted small">Код партии воспроизводит её целиком: seed + все ходы.</p>
+            <p className="muted small">{replayCode ? 'Код партии воспроизводит её целиком: seed + все ходы.' : 'Код партии появится, когда партия закончится: он воспроизводит её целиком.'}</p>
           </div>
         </div>
       )}
@@ -338,6 +355,7 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
           </div>
         </div>
       )}
+      {net && <NetStatus net={net} g={g} d={d} />}
       {info !== null && <LandSheet g={g} cell={info} onClose={() => setInfo(null)} />}
       {zoom && (
         <div className="sheet-backdrop" onClick={() => setZoom(null)}>
@@ -352,8 +370,59 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
   );
 }
 
+/** Who is in the room, and (for the host) who can be handed over to a bot. */
+function NetSeats({ net }: { net: NetInfo }) {
+  return (
+    <div className="net-seats">
+      <div className="sheet-sub">Комната {net.room.code}</div>
+      {net.room.seats.map((s, i) => (
+        <div key={i} className={`net-seat ${s.online ? '' : 'off'}`} style={{ ['--pc' as string]: COLORS[i] }}>
+          <PawnBadge id={i} size={16} />
+          <span className="ns-name">{s.name}{i === net.you && ' (вы)'}</span>
+          <span className="ns-state">
+            {!s.person ? <><Icon name="bot" size={13} /> бот</>
+              : s.kind !== 'human' ? <><Icon name="bot" size={13} /> играет бот</>
+              : s.online ? <><Icon name="check" size={13} /> на связи</>
+              : 'нет связи'}
+          </span>
+          {net.admin && s.person && s.kind === 'human' && !s.online && (
+            <button type="button" className="plaque ghost tiny" onClick={() => net.op({ op: 'setKind', seat: i, kind: 'tactical' })}>Отдать боту</button>
+          )}
+          {net.admin && s.person && s.kind !== 'human' && s.online && (
+            <button type="button" className="plaque ghost tiny" onClick={() => net.op({ op: 'setKind', seat: i, kind: 'human' })}>Вернуть игроку</button>
+          )}
+        </div>
+      ))}
+      {net.room.spectators.length > 0 && <div className="muted small"><Icon name="eye" size={13} /> Смотрят: {net.room.spectators.join(', ')}</div>}
+    </div>
+  );
+}
+
+/** Connection trouble and «we are waiting for somebody who dropped out». */
+function NetStatus({ net, g, d }: { net: NetInfo; g: GameState; d: Decision | null }) {
+  const seat = d && !g.over ? net.room.seats[d.player] : undefined;
+  const waiting = seat && seat.person && seat.kind === 'human' && !seat.online;
+  if (net.status === 'online' && !waiting) return null;
+  const lost = net.status !== 'online';
+  return (
+    <div className={`net-banner ${lost ? 'lost' : 'wait'}`} role="status" aria-live="polite">
+      {lost ? (
+        <>
+          <span className="spinner" aria-hidden /> {net.status === 'connecting' ? 'Подключаемся к комнате…' : 'Связь с комнатой потеряна — восстанавливаем. Партия ждёт вас.'}
+          {net.error && <b> {net.error}</b>}
+        </>
+      ) : (
+        <>
+          <span className="spinner" aria-hidden /> Ждём {seat!.name}: игрок потерял связь.
+          {net.admin && <button type="button" className="plaque secondary tiny" onClick={() => net.op({ op: 'setKind', seat: d!.player, kind: 'tactical' })}>Пусть доиграет бот</button>}
+        </>
+      )}
+    </div>
+  );
+}
+
 /** The last few things that happened, newest highlighted. */
-function Ticker({ g }: { g: Controller['g'] }) {
+function Ticker({ g }: { g: GameState }) {
   const lines = (g.log ?? []).slice(-4);
   const base = (g.log?.length ?? 0) - lines.length;
   return (
@@ -363,7 +432,7 @@ function Ticker({ g }: { g: Controller['g'] }) {
   );
 }
 
-function LogList({ g, lines, names }: { g: Controller['g']; lines: string[]; names: string[] }) {
+function LogList({ g, lines, names }: { g: GameState; lines: string[]; names: string[] }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => { ref.current?.scrollTo(0, ref.current.scrollHeight); }, [lines.length]);
   return (
@@ -383,7 +452,7 @@ function LogList({ g, lines, names }: { g: Controller['g']; lines: string[]; nam
 }
 
 /** A Land (or corner) shown as a large board card. */
-function LandSheet({ g, cell, onClose }: { g: Controller['g']; cell: number; onClose: () => void }) {
+function LandSheet({ g, cell, onClose }: { g: GameState; cell: number; onClose: () => void }) {
   const c = g.cells[cell];
   const l = c.land;
   const f = l ? landFlavor(l.name) : undefined;

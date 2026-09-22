@@ -962,3 +962,59 @@ button.gcard { cursor: pointer; }
 :root[data-motion='reduced'] *, :root[data-motion='reduced'] *::before, :root[data-motion='reduced'] *::after {
   animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important;
 }
+
+/* ---- Multiplayer: online menu, lobby, room status (v1.0.3) ------------------------------ */
+.net-cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 10px 0; }
+.net-card { display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; background: rgba(120, 90, 50, 0.07); box-shadow: inset 0 0 0 1px rgba(120, 90, 50, 0.22); }
+.net-card h3 { margin: 0; font-family: var(--font-display); font-size: 1.2rem; }
+.net-card .plaque.big { min-height: 54px; }
+.net-card .check { margin: 0; font-size: 0.85rem; }
+.code-big {
+  width: 100%; padding: 10px 14px; text-align: center; text-transform: uppercase;
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(1.8rem, 9vw, 2.6rem); letter-spacing: 0.35em; text-indent: 0.35em;
+}
+.net-resume { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
+.net-resume .plaque { flex: 1 1 260px; }
+
+.room-code { display: grid; justify-items: center; gap: 8px; padding: 16px; margin-bottom: 14px; border-radius: 14px; background: rgba(0, 0, 0, 0.3); box-shadow: inset 0 0 0 1px rgba(247, 217, 138, 0.25); }
+.rc-label { color: var(--on-felt-muted); font-weight: 700; font-size: 0.85rem; }
+.rc-code {
+  font-family: var(--font-display); font-weight: 900; font-size: clamp(3rem, 18vw, 6rem); line-height: 1;
+  letter-spacing: 0.18em; text-indent: 0.18em; color: var(--gold-hi); text-shadow: 0 3px 0 rgba(0, 0, 0, 0.45);
+}
+.rc-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.room-code .muted { text-align: center; }
+
+.net-state { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--on-felt-muted); margin-bottom: 6px; }
+.net-state.online { color: #9fe0a8; }
+.net-state.reconnecting, .net-state.connecting { color: var(--gold-hi); }
+.spinner { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: spin 900ms linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.seat.offline { opacity: 0.72; }
+.seat.offline::before { background: repeating-linear-gradient(180deg, var(--pc) 0 6px, transparent 6px 12px); }
+.seat-name { font-weight: 800; }
+.seat-admin { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
+.seat-admin select { max-width: 150px; }
+.plaque.tiny { min-height: 32px; padding: 4px 10px; font-size: 0.78rem; }
+.lobby-name { max-width: 260px; }
+.lobby-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.lobby-actions .plaque { color: var(--on-felt); }
+.lobby-bot { display: flex; gap: 6px; align-items: center; }
+.lobby-wait { display: flex; align-items: center; gap: 8px; justify-content: center; padding: 14px; font-weight: 700; color: var(--on-felt-muted); }
+
+.rail-code { margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0.12em; color: var(--gold-hi); background: rgba(0, 0, 0, 0.3); }
+.net-seats { display: grid; gap: 6px; margin: 10px 0; }
+.sheet-sub { font-weight: 800; color: var(--ink-muted); }
+.net-seat { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; background: rgba(120, 90, 50, 0.08); border-left: 4px solid var(--pc); }
+.net-seat.off { opacity: 0.7; }
+.ns-name { font-weight: 800; flex: 1 1 auto; min-width: 0; }
+.ns-state { display: inline-flex; align-items: center; gap: 4px; font-size: 0.8rem; color: var(--ink-muted); }
+.net-banner {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 60;
+  display: flex; align-items: center; gap: 10px; max-width: min(520px, calc(100vw - 24px));
+  padding: 10px 16px; border-radius: 999px; font-weight: 700; color: #2b1a08;
+  background: linear-gradient(180deg, var(--gold-hi), var(--gold)); box-shadow: var(--sh-held);
+}
+.net-banner.lost { color: #f7e3d8; background: linear-gradient(180deg, #8d2f1c, #6b1d12); }
+.net-banner .plaque { color: inherit; }

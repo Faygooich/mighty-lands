@@ -12,5 +12,5 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["game/core", "game/cards", "game/rules", "game/simulation", "game/statistics", "game/balancing", "game/tests"]
+  "include": ["game/core", "game/net", "game/cards", "game/rules", "game/simulation", "game/statistics", "game/balancing", "game/tests"]
 }

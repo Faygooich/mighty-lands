@@ -22,7 +22,24 @@ export interface UiEvent {
   seq: number;
 }
 
-export class Controller implements Hooks {
+/** What the table UI needs from a game: a local Controller or a network client (net/client.ts). */
+export interface TableCtl {
+  g: GameState;
+  pending: Decision | null;
+  seats: SeatSetup[];
+  events: UiEvent[];
+  seq: number;
+  /** Does this UI step the bots itself? (false over the network: the room host does it.) */
+  readonly drivesBots: boolean;
+  botTurn(): boolean;
+  stepBot(): void;
+  choose(idx: number): void;
+  /** Replay code, or null when this client cannot see the whole game. */
+  exportCode(): string | null;
+}
+
+export class Controller implements Hooks, TableCtl {
+  readonly drivesBots = true;
   g: GameState;
   it: Engine;
   pending: Decision | null = null;
@@ -69,6 +86,12 @@ export class Controller implements Hooks {
     let idx = bot(this.g, this.pending);
     if (!(idx >= 0 && idx < this.pending.options.length)) idx = 0;
     this.choose(idx);
+  }
+
+  /** Hand a seat to a bot or back to a human mid-game (network: a player dropped out or returned). */
+  setSeatKind(seat: number, kind: string): void {
+    this.seats[seat] = { ...this.seats[seat], kind };
+    this.bots[seat] = kind === 'human' ? null : makeBot(kind, this.g.seed * 31 + seat + this.choices.length * 7919);
   }
 
   choose(idx: number): void {

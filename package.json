@@ -1,6 +1,6 @@
 {
   "name": "moshchnye-zemli",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "type": "module",
   "description": "МОЩНЫЕ ЗЕМЛИ — board game engine, evolutionary playtesting pipeline and web version",
@@ -9,13 +9,21 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "sim": "node game/simulation/cli.ts",
     "bench": "node game/simulation/benchmark.ts",
-    "evolve": "node game/balancing/evolve.ts"
+    "evolve": "node game/balancing/evolve.ts",
+    "server": "node game/net/server.ts",
+    "uicheck": "node game/tests/browser/uicheck.mjs"
   },
   "engines": {
     "node": ">=23.6"
   },
   "devDependencies": {
     "@types/node": "^24.13.6",
+    "@types/ws": "^8.18.1",
+    "peer": "^1.0.2",
+    "puppeteer-core": "^25.11.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
   }
 }

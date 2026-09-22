@@ -8,6 +8,10 @@ import { COLORS } from './labels.ts';
 import { Art } from './art/index.tsx';
 import { Icon } from './ui/Icon.tsx';
 import { PawnBadge } from './PlayerMat.tsx';
+import { OnlineMenu } from './net/OnlineMenu.tsx';
+import { NetTable } from './net/NetGame.tsx';
+import type { Session } from './net/session.ts';
+import { normCode } from '../../net/protocol.ts';
 
 const BOT_KINDS: Array<[string, string, string]> = [
   ['tactical', 'Бородатый Стратег', 'считает выгоду, поглаживая бороду'], ['aggressive', 'Берсерк', 'бьёт первым, думает никогда'], ['defensive', 'Щитоносец', 'бережёт жетоны, как последнюю рубаху'],
@@ -15,11 +19,22 @@ const BOT_KINDS: Array<[string, string, string]> = [
 ];
 const NAMES = ['Громобой', 'Валькирия', 'Бородарь', 'Кувалда', 'Ярополк', 'Броня', 'Хрящ'];
 
-type Screen = { s: 'menu' } | { s: 'setup'; mode: 'local' | 'bots' } | { s: 'game'; ctl: Controller } | { s: 'sim' } | { s: 'rules' };
+type Screen =
+  | { s: 'menu' }
+  | { s: 'setup'; mode: 'local' | 'bots' }
+  | { s: 'game'; ctl: Controller }
+  | { s: 'online'; code?: string }
+  | { s: 'net'; session: Session }
+  | { s: 'sim' }
+  | { s: 'rules' };
 
-/** ?watch=N — demo: N bots play automatically (handy for showing the game or a screenshot). */
+/** ?watch=N — demo: N bots play automatically (handy for showing the game or a screenshot).
+ *  ?room=ABCD — an invitation link: straight to the join screen with the code filled in. */
 function initialScreen(): Screen {
-  const n = Number(new URLSearchParams(location.search).get('watch'));
+  const q = new URLSearchParams(location.search);
+  const room = normCode(q.get('room') ?? '');
+  if (room.length === 4) return { s: 'online', code: room };
+  const n = Number(q.get('watch'));
   if (n >= 2 && n <= 7) {
     const kinds = ['tactical', 'aggressive', 'economic', 'defensive', 'survival', 'tactical', 'aggressive'];
     return { s: 'game', ctl: new Controller(NAMES.slice(0, n).map((name, i) => ({ name, kind: kinds[i] })), 42, RULES) };
@@ -31,6 +46,8 @@ export function App() {
   const [screen, setScreen] = useState<Screen>(initialScreen);
   const [loadOpen, setLoadOpen] = useState(false);
   if (screen.s === 'game') return <GameView ctl={screen.ctl} onExit={() => setScreen({ s: 'menu' })} />;
+  if (screen.s === 'net') return <NetTable session={screen.session} onLeave={() => setScreen({ s: 'menu' })} />;
+  if (screen.s === 'online') return <OnlineMenu initialCode={screen.code} onBack={() => setScreen({ s: 'menu' })} onSession={(session) => setScreen({ s: 'net', session })} />;
   if (screen.s === 'sim') return <SimulationView onExit={() => setScreen({ s: 'menu' })} />;
   if (screen.s === 'setup') return <Setup mode={screen.mode} onBack={() => setScreen({ s: 'menu' })} onStart={(ctl) => setScreen({ s: 'game', ctl })} />;
   if (screen.s === 'rules') {
@@ -60,8 +77,12 @@ export function App() {
           <span className="plaque-main"><Icon name="bot" size={20} /> Игра против ботов</span>
           <span className="plaque-sub">вы и 1–6 соперников с тяжёлым характером</span>
         </button>
+        <button type="button" className="plaque primary big" onClick={() => setScreen({ s: 'online' })}>
+          <span className="plaque-main"><Icon name="users" size={20} /> Игра по сети</span>
+          <span className="plaque-sub">комната с кодом: у каждого своё устройство и своя рука</span>
+        </button>
         <button type="button" className="plaque secondary big" onClick={() => setScreen({ s: 'setup', mode: 'local' })}>
-          <span className="plaque-main"><Icon name="users" size={20} /> За одним экраном</span>
+          <span className="plaque-main"><Icon name="hand" size={20} /> За одним экраном</span>
           <span className="plaque-sub">2–7 героев передают устройство по кругу</span>
         </button>
         <div className="title-row">

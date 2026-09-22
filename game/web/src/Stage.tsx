@@ -27,7 +27,10 @@ export interface StageProps {
   choose: (i: number) => void;
   onPreview: (cells: number[] | null) => void;
   onExit: () => void;
+  /** Label of the button after the game (network: the host sends everybody back to the lobby). */
+  exitLabel?: string;
   onCopy: () => void;
+  canCopy?: boolean;
   goal: number;
   names: string[];
 }
@@ -404,7 +407,7 @@ function Curtain({ g, d, id, onReveal }: { g: GameState; d: Decision | null; id:
   );
 }
 
-function Victory({ g, goal, onExit, onCopy }: StageProps) {
+function Victory({ g, goal, onExit, onCopy, exitLabel = 'Новая партия', canCopy = true }: StageProps) {
   const w = g.winner >= 0 ? g.players[g.winner] : null;
   const ranking = [...g.players].sort((a, b) => landsOf(g, b.id).length - landsOf(g, a.id).length || power(b) - power(a));
   return (
@@ -425,8 +428,8 @@ function Victory({ g, goal, onExit, onCopy }: StageProps) {
         ))}
       </ol>
       <div className="stage-actions">
-        <Btn kind="primary" onClick={onExit}>Новая партия</Btn>
-        <Btn icon="copy" onClick={onCopy}>Код партии</Btn>
+        <Btn kind="primary" onClick={onExit} disabled={exitLabel.endsWith('…')}>{exitLabel}</Btn>
+        {canCopy && <Btn icon="copy" onClick={onCopy}>Код партии</Btn>}
       </div>
     </div>
   );
