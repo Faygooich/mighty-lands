@@ -2,7 +2,7 @@
 // Simulator, tests and web UI all drive the same generator.
 import type { Decision, Engine, GameState, LandState, Option, PlayerState } from './types.ts';
 import { checkEnd, discard, draw, endGame, ev, gainPower, loseTokens, pay, setOwner } from './actions.ts';
-import { effPower, handLimit, landsOf, logMsg, power, victoryPoints } from './state.ts';
+import { effPower, handLimit, inSet, landsOf, logMsg, power, victoryPoints } from './state.ts';
 import { ARTIFACTS, SPELLS, applyExchange } from '../cards/catalog.ts';
 import { exchangeOptions } from './tokens.ts';
 
@@ -266,7 +266,15 @@ function* enemyLand(g: GameState, p: PlayerState, land: LandState): Engine {
     }
   }
   const art = land.artifact;
-  if (!art) return;
+  if (!art) {
+    // «Набор цвета»: a Land in an owner's set takes Дань even without an Artifact
+    if (r.params.setTribute && inSet(g, land)) {
+      ev(g, 'artifactTrigger', owner.id, p.id, 'set');
+      logMsg(g, `${land.name}: набор цвета ${owner.name} — Дань`);
+      yield* pay(g, p, r.params.tribute ?? 0, owner.id, 'Набор цвета');
+    }
+    return;
+  }
   const canFlee =
     r.artifactFlee === 'always' ||
     (r.artifactFlee === 'stronger' && effPower(p) > power(owner)) ||

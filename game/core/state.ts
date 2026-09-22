@@ -97,6 +97,19 @@ export function landsOf(g: GameState, pid: number): LandState[] {
   return out;
 }
 
+/** Number of Lands `pid` owns in `region`. */
+export function regionCount(g: GameState, pid: number, region: number): number {
+  let n = 0;
+  for (const c of g.cells) if (c.land && c.land.owner === pid && c.land.region === region) n++;
+  return n;
+}
+
+/** «Набор цвета»: owner holds at least params.setSize Lands of this Land's region. */
+export function inSet(g: GameState, l: LandState): boolean {
+  const k = g.rules.params.setSize ?? 0;
+  return k > 0 && l.owner >= 0 && regionCount(g, l.owner, l.region) >= k;
+}
+
 export function alivePlayers(g: GameState): PlayerState[] {
   return g.players.filter((p) => p.alive);
 }

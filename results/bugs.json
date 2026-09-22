@@ -58,6 +58,11 @@
         "gen": 11,
         "severity": "OK",
         "value": "0.0%"
+      },
+      {
+        "gen": 12,
+        "severity": "OK",
+        "value": "0.0%"
       }
     ]
   },
@@ -118,6 +123,11 @@
       },
       {
         "gen": 11,
+        "severity": "OK",
+        "value": "0.00"
+      },
+      {
+        "gen": 12,
         "severity": "OK",
         "value": "0.00"
       }
@@ -182,6 +192,11 @@
         "gen": 11,
         "severity": "OK",
         "value": "×1.59 к раунду 15"
+      },
+      {
+        "gen": 12,
+        "severity": "OK",
+        "value": "×1.59 к раунду 15"
       }
     ]
   },
@@ -242,6 +257,11 @@
       },
       {
         "gen": 11,
+        "severity": "LOW",
+        "value": "2.21 оп/ход"
+      },
+      {
+        "gen": 12,
         "severity": "LOW",
         "value": "2.21 оп/ход"
       }
@@ -306,6 +326,11 @@
         "gen": 11,
         "severity": "OK",
         "value": "1.35"
+      },
+      {
+        "gen": 12,
+        "severity": "OK",
+        "value": "1.35"
       }
     ]
   },
@@ -368,6 +393,11 @@
         "gen": 11,
         "severity": "OK",
         "value": "таймаут 0.0%, медиана 13"
+      },
+      {
+        "gen": 12,
+        "severity": "OK",
+        "value": "таймаут 0.0%, медиана 13"
       }
     ]
   },
@@ -418,6 +448,11 @@
       },
       {
         "gen": 11,
+        "severity": "OK",
+        "value": "6.6%"
+      },
+      {
+        "gen": 12,
         "severity": "OK",
         "value": "6.6%"
       }
@@ -472,6 +507,11 @@
         "gen": 11,
         "severity": "MEDIUM",
         "value": "лидер старта 64.9%"
+      },
+      {
+        "gen": 12,
+        "severity": "MEDIUM",
+        "value": "лидер старта 64.9%"
       }
     ]
   },
@@ -517,6 +557,11 @@
       },
       {
         "gen": 11,
+        "severity": "OK",
+        "value": "5.0%"
+      },
+      {
+        "gen": 12,
         "severity": "OK",
         "value": "5.0%"
       }

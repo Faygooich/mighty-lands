@@ -90,11 +90,11 @@ export class HeuristicBot {
     let v = 450 + 0.3 * l.baseMonster + incomeBonus + (l.owner === -1 ? l.reward * this.w.power : 0);
     if (r.win.landsTarget) v += 900;
     if (r.win.vpTarget) v += 700 + (r.params.vpPerRegionTier ?? 0) * l.region * 500;
-    if (r.win.regionWin || r.params.vpRegionBonus) {
+    if (r.win.regionWin || r.params.vpRegionBonus || r.params.setSize) {
       let mine = 0;
       let size = 0;
       for (const c of g.cells) if (c.land && c.land.region === l.region) { size++; if (c.land.owner === g.current) mine++; }
-      v += 400 * (mine / size) * (r.win.regionWin ? 3 : 1);
+      v += 400 * (mine / size) * (r.win.regionWin ? 3 : 1) + (r.params.setSize && mine + 1 === r.params.setSize ? 500 : 0);
     }
     return v * this.w.land;
   }
@@ -148,6 +148,11 @@ export class HeuristicBot {
     let v = 0;
     if (r.landChallenge && eff > l.baseMonster * r.ownedDefenceFrac) v += this.landVal(g, l) * 0.8;
     else if (l.artifact) v -= this.artHarm(g, l.artifact, p, o) * this.w.risk;
+    else if (r.params.setTribute && r.params.setSize) {
+      let n = 0;
+      for (const c of g.cells) if (c.land && c.land.owner === o.id && c.land.region === l.region) n++;
+      if (n >= r.params.setSize) v -= this.artHarm(g, 'tribute', p, o) * this.w.risk;
+    }
     return v;
   }
 

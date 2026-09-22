@@ -1,7 +1,7 @@
 // Card catalog: every Artifact and Spell that any rules version may put in its decks.
 import type { Engine, GameState, LandState, Phase, PlayerState } from '../core/types.ts';
 import { CARD_KIND, discard, ev, gainPower, loseTokens, pay, setOwner } from '../core/actions.ts';
-import { effPower, logMsg, power } from '../core/state.ts';
+import { effPower, inSet, logMsg, power } from '../core/state.ts';
 import { exchangeOptions } from '../core/tokens.ts';
 
 export interface ArtifactDef {
@@ -112,6 +112,7 @@ function enemyLands(g: GameState, p: PlayerState, pred: (l: LandState) => boolea
     const l = c.land;
     if (!l || l.owner < 0 || l.owner === p.id) continue;
     if (l.artifact && ARTIFACTS[l.artifact].protects) continue;
+    if (g.rules.params.setProtect && inSet(g, l)) continue;
     if (pred(l)) out.push(l.cell);
   }
   return out;
