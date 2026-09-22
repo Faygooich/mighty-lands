@@ -22,6 +22,8 @@ export interface WinRules {
   vpTarget: number;
   /** The game ends as soon as any player is eliminated; best standing (lands, then power, then HP) wins. */
   firstDeathEnds: boolean;
+  /** Lands target by player count, e.g. {"2": 9, "3": 8}; falls back to landsTarget. */
+  landsTargetBy?: Record<string, number>;
 }
 
 export interface RuleSet {

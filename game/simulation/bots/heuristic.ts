@@ -88,7 +88,7 @@ export class HeuristicBot {
     const r = g.rules;
     const incomeBonus = r.incomePerLand * 3;
     let v = 450 + 0.3 * l.baseMonster + incomeBonus + (l.owner === -1 ? l.reward * this.w.power : 0);
-    if (r.win.landsTarget) v += 900;
+    if (r.win.landsTarget || r.win.landsTargetBy) v += 900;
     if (r.win.vpTarget) v += 700 + (r.params.vpPerRegionTier ?? 0) * l.region * 500;
     if (r.win.regionWin || r.params.vpRegionBonus || r.params.setSize) {
       let mine = 0;

@@ -48,7 +48,8 @@ export function checkWin(g: GameState): void {
   for (const p of g.players) {
     if (!p.alive) continue;
     const lands = landsOf(g, p.id);
-    if (w.landsTarget && lands.length >= w.landsTarget) return endGame(g, p.id, 'lands-target');
+    const target = w.landsTargetBy?.[String(g.players.length)] ?? w.landsTarget;
+    if (target && lands.length >= target) return endGame(g, p.id, 'lands-target');
     if (w.powerTarget && power(p) >= w.powerTarget) return endGame(g, p.id, 'power-target');
     if (w.vpTarget && victoryPoints(g, p) >= w.vpTarget) return endGame(g, p.id, 'vp-target');
     if (w.regionWin) {

@@ -1,0 +1,56 @@
+# Replay: very-short (lateGame)
+rules: v011
+seed: 1900003
+lineup: aggressive, tactical, defensive, economic
+scenario: lateGame
+winner: aggressive after 3 rounds (lands-target)
+choices: [1,2,24,2,3,2,2,1,2,3,2,1,4,1,2,0,1,2,3,2,3,0,1,5]
+
+[р1] EconomicBot#1 применяет «Исцеление»
+[р1] EconomicBot#1 получает 100 мощи (100) — Исцеление
+[р1] EconomicBot#1 бросает 4 → клетка 4
+[р1] Срабатывает «Дань» DefensiveBot#4 против EconomicBot#1
+[р1] EconomicBot#1 отдаёт жетон 100 — Дань
+[р1] TacticalBot#2 применяет «Исцеление»
+[р1] TacticalBot#2 получает 100 мощи (100) — Исцеление
+[р1] TacticalBot#2 бросает 1 → клетка 1
+[р1] Срабатывает «Дань» EconomicBot#1 против TacticalBot#2
+[р1] TacticalBot#2 отдаёт жетон 100 — Дань
+[р1] AggressiveBot#3 применяет «Вытягивание» → DefensiveBot#4
+[р1] DefensiveBot#4 отдаёт жетон 100 — Вытягивание
+[р1] AggressiveBot#3 бросает 1 → клетка 1
+[р1] Срабатывает «Дань» EconomicBot#1 против AggressiveBot#3
+[р1] AggressiveBot#3 отдаёт жетон 100 — Дань
+[р1] DefensiveBot#4 применяет «Огненный шар» → EconomicBot#1
+[р1] EconomicBot#1 теряет жетон 100 — Огненный шар
+[р1] DefensiveBot#4 бросает 3 → клетка 3
+[р1] Срабатывает «Карманник» AggressiveBot#3 против DefensiveBot#4
+[р1] AggressiveBot#3 крадёт карту у DefensiveBot#4
+[р2] EconomicBot#1 применяет «Вытягивание» → DefensiveBot#4
+[р2] DefensiveBot#4 отдаёт жетон 100 — Вытягивание
+[р2] EconomicBot#1 бросает 6 → клетка 10
+[р2] TacticalBot#2 применяет «Телепорт» → клетка 0
+[р2] TacticalBot#2 телепортируется на клетку 0
+[р2] AggressiveBot#3 применяет «Узурпация» → Пепельный Край
+[р2] AggressiveBot#3 кладёт «Капкан» на Пепельный Край
+[р2] AggressiveBot#3 бросает 6 → клетка 7
+[р2] Срабатывает «Капкан» TacticalBot#2 против AggressiveBot#3
+[р2] AggressiveBot#3 теряет жетон 100 — Капкан
+[р2] DefensiveBot#4 бросает 5 → клетка 8
+[р2] Срабатывает «Дань» AggressiveBot#3 против DefensiveBot#4
+[р2] DefensiveBot#4 отдаёт жетон 300 — Дань
+[р3] EconomicBot#1 применяет «Огненный шар» → DefensiveBot#4
+[р3] DefensiveBot#4 теряет жетон 500 — Огненный шар
+[р3] ☠ DefensiveBot#4 теряет всё и возвращается на Врата (Огненный шар)
+[р3] EconomicBot#1 бросает 6 → клетка 16
+[р3] Срабатывает «Капкан» TacticalBot#2 против EconomicBot#1
+[р3] EconomicBot#1 теряет жетон 100 — Капкан
+[р3] TacticalBot#2 применяет «Вытягивание» → DefensiveBot#4
+[р3] DefensiveBot#4 отдаёт жетон 300 — Вытягивание
+[р3] ☠ DefensiveBot#4 теряет всё и возвращается на Врата (Вытягивание)
+[р3] TacticalBot#2 бросает 4 → клетка 4
+[р3] TacticalBot#2 захватывает Овечий Холм (монстр 400)
+[р3] TacticalBot#2 получает 100 мощи (100) — Награда: Овечий Холм
+[р3] TacticalBot#2 кладёт «Капкан» на Овечий Холм
+[р3] AggressiveBot#3 применяет «Узурпация» → Чёрный Провал
+[р3] 🏆 Победа: AggressiveBot#3 (lands-target)

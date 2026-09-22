@@ -78,6 +78,11 @@
         "gen": 15,
         "severity": "OK",
         "value": "0.0%"
+      },
+      {
+        "gen": 16,
+        "severity": "OK",
+        "value": "0.0%"
       }
     ]
   },
@@ -158,6 +163,11 @@
       },
       {
         "gen": 15,
+        "severity": "OK",
+        "value": "0.00"
+      },
+      {
+        "gen": 16,
         "severity": "OK",
         "value": "0.00"
       }
@@ -242,6 +252,11 @@
         "gen": 15,
         "severity": "OK",
         "value": "×1.45 к раунду 15"
+      },
+      {
+        "gen": 16,
+        "severity": "OK",
+        "value": "×1.45 к раунду 15"
       }
     ]
   },
@@ -322,6 +337,11 @@
       },
       {
         "gen": 15,
+        "severity": "LOW",
+        "value": "2.18 оп/ход"
+      },
+      {
+        "gen": 16,
         "severity": "LOW",
         "value": "2.18 оп/ход"
       }
@@ -406,6 +426,11 @@
         "gen": 15,
         "severity": "OK",
         "value": "1.30"
+      },
+      {
+        "gen": 16,
+        "severity": "OK",
+        "value": "1.30"
       }
     ]
   },
@@ -488,6 +513,11 @@
         "gen": 15,
         "severity": "OK",
         "value": "таймаут 0.0%, медиана 11"
+      },
+      {
+        "gen": 16,
+        "severity": "OK",
+        "value": "таймаут 0.0%, медиана 11"
       }
     ]
   },
@@ -560,6 +590,11 @@
         "gen": 15,
         "severity": "OK",
         "value": "4.6%"
+      },
+      {
+        "gen": 16,
+        "severity": "OK",
+        "value": "3.8%"
       }
     ]
   },
@@ -632,6 +667,11 @@
         "gen": 15,
         "severity": "MEDIUM",
         "value": "лидер старта 75.5%"
+      },
+      {
+        "gen": 16,
+        "severity": "MEDIUM",
+        "value": "лидер старта 75.5%"
       }
     ]
   },
@@ -699,6 +739,35 @@
         "gen": 15,
         "severity": "OK",
         "value": "2.4%"
+      },
+      {
+        "gen": 16,
+        "severity": "OK",
+        "value": "2.4%"
+      }
+    ]
+  },
+  "duelLength": {
+    "id": "BUG-010",
+    "title": "Дуэль (2 игрока) слишком короткая/длинная",
+    "firstGen": 16,
+    "history": [
+      {
+        "gen": 16,
+        "severity": "OK",
+        "value": "24 мин"
+      }
+    ]
+  },
+  "duelDominance": {
+    "id": "BUG-011",
+    "title": "Доминирующий стиль в дуэли",
+    "firstGen": 16,
+    "history": [
+      {
+        "gen": 16,
+        "severity": "MEDIUM",
+        "value": "aggressive 69.7%"
       }
     ]
   }

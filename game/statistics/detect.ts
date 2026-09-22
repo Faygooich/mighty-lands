@@ -82,6 +82,14 @@ export function detect(e: Evaluation, denoms: number[]): Finding[] {
   if (S.lateGame) add('lateGame', 'Late-game сценарий', sev(S.lateGame.timeoutRate, [[0.05, 'HIGH'], [0.01, 'MEDIUM']]), `таймаут ${pct(S.lateGame.timeoutRate)}, медиана ${S.lateGame.medianRounds}`);
   add('tableTime', 'Human Table Test: реальная длительность партии вне 30–75 мин', m.tableMinutes > 100 || m.tableMinutes < 20 ? 'HIGH' : m.tableMinutes > 75 || m.tableMinutes < 30 ? 'MEDIUM' : 'OK', `${m.tableMinutes.toFixed(0)} мин`, `${m.secPerTurn.toFixed(0)} с на ход, p90 ≈ ${m.tableMinutesP90.toFixed(0)} мин`);
   add('arithmetic', 'Human Table Test: арифметика за столом', m.arithPerTurn > 6 ? 'HIGH' : m.arithPerTurn > 3 ? 'MEDIUM' : m.arithPerTurn > 2 ? 'LOW' : 'OK', `${m.arithPerTurn.toFixed(2)} оп/ход`, `размен сдачи ${m.changeMakingPerGame.toFixed(1)} раз за партию`);
+  if (S.duel) {
+    const d = S.duel;
+    add('duelLength', 'Дуэль (2 игрока) слишком короткая/длинная', d.tableMinutes < 20 || d.tableMinutes > 60 ? 'MEDIUM' : 'OK', `${d.tableMinutes.toFixed(0)} мин`, `медиана ${d.medianRounds} раундов`);
+    let top = 0; let who = '';
+    for (const b of STYLE) if ((d.winRate[b] ?? 0) > top) { top = d.winRate[b]; who = b; }
+    add('duelDominance', 'Доминирующий стиль в дуэли', top > 0.65 ? 'MEDIUM' : top > 0.6 ? 'LOW' : 'OK', `${who} ${pct(top)}`, Object.entries(d.winRate).map(([b, w]) => `${b} ${pct(w)}`).join(', '));
+  }
+  if (S.three) add('threeLength', 'Партия на 3 игрока слишком короткая/длинная', S.three.tableMinutes < 25 || S.three.tableMinutes > 75 ? 'MEDIUM' : 'OK', `${S.three.tableMinutes.toFixed(0)} мин`, `медиана ${S.three.medianRounds} раундов`);
   if (m.noWinnerRate > 0) add('noWinner', 'Партии без победителя', sev(m.noWinnerRate, [[0.02, 'HIGH'], [0.005, 'MEDIUM'], [0.0001, 'LOW']]), pct(m.noWinnerRate));
   return out;
 }
