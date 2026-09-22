@@ -1,0 +1,13 @@
+{
+  "version": "v010",
+  "parent": "v009",
+  "title": "Лимит руки всегда 3",
+  "generation": 13,
+  "changes": [
+    "Лимит руки всегда 3"
+  ],
+  "rationale": "Проверка: нужна ли связь рука ↔ HP.",
+  "overrides": {
+    "handLimit": 3
+  }
+}
