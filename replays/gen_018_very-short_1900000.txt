@@ -1,0 +1,51 @@
+# Replay: very-short (lateGame)
+rules: v013
+seed: 1900000
+lineup: random, defensive, economic, aggressive
+scenario: lateGame
+winner: defensive after 3 rounds (lands-target)
+choices: [1,16,18,1,0,3,2,9,2,27,2,2,18,1,5,2,1,2,2,2,11,0,1]
+
+[р1] RandomBot#1 бросает 4 → клетка 4
+[р1] Срабатывает «Дань» DefensiveBot#4 против RandomBot#1
+[р1] RandomBot#1 отдаёт жетон 300 — Дань
+[р1] AggressiveBot#2 бросает 5 → клетка 5
+[р1] Срабатывает «Оковы» RandomBot#1 против AggressiveBot#2
+[р1] AggressiveBot#2 скован и пропустит ход
+[р1] EconomicBot#3 применяет «Исцеление»
+[р1] EconomicBot#3 получает 100 мощи (100) — Исцеление
+[р1] EconomicBot#3 бросает 6 → клетка 6
+[р1] DefensiveBot#4 применяет «Узурпация» → Кипящее Озеро
+[р1] DefensiveBot#4 кладёт «Капкан» на Кипящее Озеро
+[р1] DefensiveBot#4 бросает 6 → клетка 6
+[р2] RandomBot#1 бросает 1 → клетка 5
+[р2] RandomBot#1 применяет «Огненный шар» → DefensiveBot#4
+[р2] DefensiveBot#4 теряет жетон 100 — Огненный шар
+[р2] AggressiveBot#2 пропускает ход
+[р2] EconomicBot#3 применяет «Разрушение» → Рудники
+[р2] EconomicBot#3 бросает 4 → клетка 10
+[р2] Срабатывает «Дань» RandomBot#1 против EconomicBot#3
+[р2] EconomicBot#3 отдаёт жетон 100 — Дань
+[р2] DefensiveBot#4 кладёт «Оковы» на Рудники
+[р2] DefensiveBot#4 применяет «Вытягивание» → AggressiveBot#2
+[р2] AggressiveBot#2 отдаёт жетон 100 — Вытягивание
+[р2] DefensiveBot#4 бросает 3 → клетка 9
+[р3] RandomBot#1 применяет «Телепорт» → клетка 18
+[р3] RandomBot#1 телепортируется на клетку 18
+[р3] AggressiveBot#2 применяет «Узурпация» → Чёрный Провал
+[р3] AggressiveBot#2 кладёт «Капкан» на Чёрный Провал
+[р3] AggressiveBot#2 бросает 3 → клетка 8
+[р3] Срабатывает «Капкан» EconomicBot#3 против AggressiveBot#2
+[р3] AggressiveBot#2 теряет жетон 300 — Капкан
+[р3] EconomicBot#3 применяет «Огненный шар» → AggressiveBot#2
+[р3] AggressiveBot#2 теряет жетон 500 — Огненный шар
+[р3] ☠ AggressiveBot#2 теряет всё и возвращается на Врата (Огненный шар)
+[р3] EconomicBot#3 бросает 5 → клетка 15
+[р3] Срабатывает «Дань» RandomBot#1 против EconomicBot#3
+[р3] EconomicBot#3 отдаёт жетон 100 — Дань
+[р3] DefensiveBot#4 применяет «Телепорт» → Сердце Леса
+[р3] DefensiveBot#4 телепортируется на клетку 11
+[р3] DefensiveBot#4 захватывает Сердце Леса (монстр 900)
+[р3] DefensiveBot#4 получает 300 мощи (300) — Награда: Сердце Леса
+[р3] DefensiveBot#4 кладёт «Дань» на Сердце Леса
+[р3] 🏆 Победа: DefensiveBot#4 (lands-target)

@@ -40,6 +40,7 @@ export interface Plan {
   verdict?: string;
   next?: string;
   exploitSearch?: boolean;
+  exploitIters?: number;
   scale?: number;
   /** Designer notes for GAME FEEL / Munchkin sections (after reading the numbers). */
   gameFeel?: string;
@@ -90,7 +91,7 @@ async function runGeneration(n: number): Promise<void> {
   let exploitGenome: Partial<Weights> | null = null;
   if (plan.exploitSearch) {
     console.log('exploit search on base ruleset...');
-    exploitGenome = await exploitSearch(pool, base, SEEDS.training + 700_000, genome);
+    exploitGenome = await exploitSearch(pool, base, SEEDS.training + 700_000, genome, plan.exploitIters ?? 10);
     genome = exploitGenome;
     writeFileSync(join(RES, 'exploit_genome.json'), JSON.stringify({ found: `gen ${n} on ${base.version}`, genome }, null, 2));
   }

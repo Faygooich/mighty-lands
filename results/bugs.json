@@ -88,6 +88,11 @@
         "gen": 17,
         "severity": "OK",
         "value": "0.0%"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "0.0%"
       }
     ]
   },
@@ -178,6 +183,11 @@
       },
       {
         "gen": 17,
+        "severity": "OK",
+        "value": "0.00"
+      },
+      {
+        "gen": 18,
         "severity": "OK",
         "value": "0.00"
       }
@@ -272,6 +282,11 @@
         "gen": 17,
         "severity": "OK",
         "value": "×1.45 к раунду 15"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "×1.42 к раунду 15"
       }
     ]
   },
@@ -364,6 +379,11 @@
         "gen": 17,
         "severity": "LOW",
         "value": "2.18 оп/ход"
+      },
+      {
+        "gen": 18,
+        "severity": "LOW",
+        "value": "2.16 оп/ход"
       }
     ]
   },
@@ -456,6 +476,11 @@
         "gen": 17,
         "severity": "OK",
         "value": "1.30"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "1.29"
       }
     ]
   },
@@ -548,6 +573,11 @@
         "gen": 17,
         "severity": "OK",
         "value": "таймаут 0.0%, медиана 11"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "таймаут 0.0%, медиана 11"
       }
     ]
   },
@@ -630,6 +660,11 @@
         "gen": 17,
         "severity": "OK",
         "value": "3.8%"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "4.6%"
       }
     ]
   },
@@ -712,6 +747,11 @@
         "gen": 17,
         "severity": "MEDIUM",
         "value": "лидер старта 75.5%"
+      },
+      {
+        "gen": 18,
+        "severity": "MEDIUM",
+        "value": "лидер старта 76.6%"
       }
     ]
   },
@@ -789,6 +829,11 @@
         "gen": 17,
         "severity": "OK",
         "value": "2.4%"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "3.4%"
       }
     ]
   },
@@ -806,6 +851,11 @@
         "gen": 17,
         "severity": "OK",
         "value": "24 мин"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "23 мин"
       }
     ]
   },
@@ -823,6 +873,11 @@
         "gen": 17,
         "severity": "MEDIUM",
         "value": "aggressive 69.7%"
+      },
+      {
+        "gen": 18,
+        "severity": "MEDIUM",
+        "value": "aggressive 68.5%"
       }
     ]
   },
@@ -835,6 +890,11 @@
         "gen": 17,
         "severity": "LOW",
         "value": "18.8%"
+      },
+      {
+        "gen": 18,
+        "severity": "OK",
+        "value": "14.8%"
       }
     ]
   }

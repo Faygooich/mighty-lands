@@ -1,0 +1,19 @@
+{
+  "version": "v014",
+  "parent": "v013",
+  "title": "Убрать оба (Дань 17, Капкан 8, Оковы 5)",
+  "generation": 18,
+  "changes": [
+    "Убрать оба (Дань 17, Капкан 8, Оковы 5)"
+  ],
+  "rationale": "3 типа Артефактов.",
+  "overrides": {
+    "decks": {
+      "artifacts": {
+        "tribute": 17,
+        "trap": 8,
+        "shackles": 5
+      }
+    }
+  }
+}
