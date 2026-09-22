@@ -47,19 +47,19 @@ export function whyNot(g: GameState, p: PlayerState, card: string, d: Decision |
   if (!d || d.player !== p.id) {
     return isReaction ? 'Играется, когда соперник встретит монстра' : 'Дождитесь своего хода';
   }
-  if (d.kind === 'react') return ARTIFACTS[card] ? 'Артефакты — только в свой ход' : 'В чужой бой — только Подмога и Помеха';
+  if (d.kind === 'react') return ARTIFACTS[card] ? 'Артефакты — только в свой ход' : `В чужой бой — только «${SPELLS.aid.name}» и «${SPELLS.hex.name}»`;
   if (d.kind !== 'main') return 'Сначала завершите текущее решение';
   if (isReaction) return 'Только в чужой бой с монстром';
-  if (ARTIFACTS[card]) return landsOf(g, p.id).length ? 'На всех ваших Землях уже есть Артефакт' : 'Нужна своя Земля — захватите её';
+  if (ARTIFACTS[card]) return landsOf(g, p.id).length ? 'На всех ваших Землях уже есть Артефакт' : 'Нужна своя Земля — сначала захватите её';
   if (!sp) return 'Сейчас нельзя';
   if (p.spellsThisTurn >= g.rules.spellsPerTurn) return `Лимит: ${g.rules.spellsPerTurn} Заклятие за ход`;
   if (g.phase !== 'none' && !sp.phases.includes(g.phase)) return sp.phases.includes('pre') ? 'Только до броска кубика' : 'Только после хода';
   switch (card) {
     case 'heal': return 'Нет свободной ячейки для жетона';
     case 'shatter': return 'У соперников нет Артефактов';
-    case 'usurp': return 'Ваша мощь должна быть больше, чем у владельца';
+    case 'usurp': return 'Ваша МОЩЬ должна быть больше, чем у владельца';
     case 'release': return 'У соперников нет Земель';
-    case 'ward': return 'Оберег уже действует';
+    case 'ward': return `${SPELLS.ward.name} уже действует`;
     case 'transmute': return 'Нечего разменять';
     case 'secondWind': return 'Только если ни у кого нет меньше Земель, чем у вас';
     case 'revolt': return 'Нет единоличного лидера по Землям (или это вы)';
@@ -67,7 +67,7 @@ export function whyNot(g: GameState, p: PlayerState, card: string, d: Decision |
     case 'loot': return 'У соперников нет Артефактов';
     case 'luxuryTax': return 'Ни у кого нет больше Земель, чем у вас';
     case 'quake': return 'Ни у кого из соперников нет 4–5 жетонов';
-    case 'forge': return 'Все ваши жетоны уже максимального номинала';
+    case 'forge': return 'Все ваши жетоны уже максимального номинала. Куда ещё?';
     case 'tailwind': case 'hunt': return 'Движение в этот ход уже выбрано';
   }
   return 'Нет подходящей цели';

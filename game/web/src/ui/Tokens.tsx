@@ -84,7 +84,7 @@ export function Lives({ n, max }: { n: number; max: number }) {
     prev.current = n;
   }, [n]);
   return (
-    <span key={hit} className={`lives ${hit ? 'lives-hit' : ''} ${n <= 1 ? 'lives-low' : ''}`} title={`Жизни: ${n} из ${max} (жизнь = жетон)`}>
+    <span key={hit} className={`lives ${hit ? 'lives-hit' : ''} ${n <= 1 ? 'lives-low' : ''}`} title={`Жизни: ${n} из ${max} (жизнь = жетон; мужики не считают, но вы считайте)`}>
       {Array.from({ length: max }, (_, i) => (
         <svg key={i} viewBox="0 0 24 24" className={i < n ? 'heart on' : 'heart'} aria-hidden>
           <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />

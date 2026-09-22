@@ -10,10 +10,10 @@ import { Icon } from './ui/Icon.tsx';
 import { PawnBadge } from './PlayerMat.tsx';
 
 const BOT_KINDS: Array<[string, string, string]> = [
-  ['tactical', 'Тактик', 'взвешенно считает выгоду'], ['aggressive', 'Агрессор', 'бьёт и лезет в драку'], ['defensive', 'Защитник', 'бережёт жетоны'],
-  ['economic', 'Экономист', 'копит мощь'], ['survival', 'Выживальщик', 'избегает риска'], ['random', 'Случайный', 'делает что угодно'],
+  ['tactical', 'Бородатый Стратег', 'считает выгоду, поглаживая бороду'], ['aggressive', 'Берсерк', 'бьёт первым, думает никогда'], ['defensive', 'Щитоносец', 'бережёт жетоны, как последнюю рубаху'],
+  ['economic', 'Скопидом', 'копит МОЩЬ, как хомяк протеин'], ['survival', 'Выживальщик', 'не рискует: мама просила вернуться'], ['random', 'Пьяный Бард', 'делает что попало, зато с песней'],
 ];
-const NAMES = ['Аня', 'Борис', 'Вика', 'Гоша', 'Даша', 'Егор', 'Женя'];
+const NAMES = ['Громобой', 'Валькирия', 'Бородарь', 'Кувалда', 'Ярополк', 'Броня', 'Хрящ'];
 
 type Screen = { s: 'menu' } | { s: 'setup'; mode: 'local' | 'bots' } | { s: 'game'; ctl: Controller } | { s: 'sim' } | { s: 'rules' };
 
@@ -39,7 +39,7 @@ export function App() {
         <div className="screen-inner narrow">
           <button type="button" className="plaque ghost back" onClick={() => setScreen({ s: 'menu' })}><span className="plaque-main"><Icon name="back" /> Назад</span></button>
           <div className="parchment">
-            <h2 className="screen-title">Коротко о правилах</h2>
+            <h2 className="screen-title">Кодекс МОЩИ вкратце</h2>
             <RulesText />
           </div>
         </div>
@@ -49,20 +49,20 @@ export function App() {
   return (
     <div className="screen title-screen">
       <div className="title-fan" aria-hidden>
-        {[['Тихий Луг', 0], ['Дуб Шептун', 1], ['Пик Грома', 2], ['Око Бездны', 3]].map(([name, region], i) => (
+        {[['Луг Слабаков', 0], ['Дуб Мотивации', 1], ['Пик Грома', 2], ['Око Бездны', 3]].map(([name, region], i) => (
           <div key={i} className="fan-card" style={{ ['--i' as string]: i, ['--dy' as string]: `${Math.abs(i - 1.5) * 12}px` }}><Art of={{ kind: 'land', name: name as string, region: region as number }} /></div>
         ))}
       </div>
       <h1 className="logo">МОЩНЫЕ<br />ЗЕМЛИ</h1>
-      <p className="tagline">Стань МОЩНЕЕ. Забери Земли. Не дай соседу победить.</p>
+      <p className="tagline">Стань МОЩНЕЕ. Забери Земли. Не заплачь.</p>
       <nav className="title-menu">
         <button type="button" className="plaque primary big" onClick={() => setScreen({ s: 'setup', mode: 'bots' })}>
           <span className="plaque-main"><Icon name="bot" size={20} /> Игра против ботов</span>
-          <span className="plaque-sub">вы и 1–6 соперников с разным характером</span>
+          <span className="plaque-sub">вы и 1–6 соперников с тяжёлым характером</span>
         </button>
         <button type="button" className="plaque secondary big" onClick={() => setScreen({ s: 'setup', mode: 'local' })}>
           <span className="plaque-main"><Icon name="users" size={20} /> За одним экраном</span>
-          <span className="plaque-sub">2–7 человек передают устройство по кругу</span>
+          <span className="plaque-sub">2–7 героев передают устройство по кругу</span>
         </button>
         <div className="title-row">
           <button type="button" className="plaque ghost" onClick={() => setScreen({ s: 'rules' })}><span className="plaque-main"><Icon name="book" /> Правила</span></button>
@@ -70,7 +70,7 @@ export function App() {
           <button type="button" className="plaque ghost" onClick={() => setScreen({ s: 'sim' })}><span className="plaque-main"><Icon name="chart" /> Симуляция</span></button>
         </div>
       </nav>
-      <p className="version">Правила {RULES.version} · тот же движок, что и в симуляторе (≈ 3 млн тестовых партий)</p>
+      <p className="version">Правила {RULES.version} · тот же движок, что и в симуляторе (≈ 11 млн тестовых партий, ни одна не заплакала)</p>
       {loadOpen && <LoadGame onClose={() => setLoadOpen(false)} onLoad={(ctl) => setScreen({ s: 'game', ctl })} />}
     </div>
   );
@@ -125,7 +125,7 @@ function Setup({ mode, onBack, onStart }: { mode: 'local' | 'bots'; onBack: () =
               <div className="seat-main">
                 <input value={s.name} onChange={(e) => set(i, { name: e.target.value })} aria-label={`Имя игрока ${i + 1}`} maxLength={14} />
                 <select value={s.kind} onChange={(e) => set(i, { kind: e.target.value })} aria-label={`Кто играет за место ${i + 1}`}>
-                  <option value="human">Человек</option>
+                  <option value="human">Человек (герой)</option>
                   {BOT_KINDS.map(([k, label, hint]) => <option key={k} value={k}>Бот: {label} — {hint}</option>)}
                 </select>
               </div>
@@ -143,7 +143,7 @@ function Setup({ mode, onBack, onStart }: { mode: 'local' | 'bots'; onBack: () =
           </label>
         </details>
         <button type="button" className="plaque primary big start" onClick={() => onStart(new Controller(seats.slice(0, n), seed, RULES))}>
-          <span className="plaque-main"><Icon name="play" size={20} /> Сесть за стол</span>
+          <span className="plaque-main"><Icon name="play" size={20} /> Сесть за стол и нахмуриться</span>
         </button>
       </div>
     </div>

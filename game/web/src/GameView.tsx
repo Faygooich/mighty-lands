@@ -44,7 +44,7 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
   const [selected, setSelected] = useState<string | null>(null);
   const [preview, setPreview] = useState<number[] | null>(null);
   const [boardW, setBoardW] = useState(0);
-  const [roll, setRoll] = useState<Roll>({ value: 0, id: 0, label: 'Кубик ждёт' });
+  const [roll, setRoll] = useState<Roll>({ value: 0, id: 0, label: 'Кубик ждёт героя' });
   const [cast, setCast] = useState<Cast | null>(null);
   const [banner, setBanner] = useState<Banner | null>(null);
   const [fx, fireFx] = useTransient<CellFx>(1300);
@@ -94,8 +94,8 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
           break;
         case 'fleeOk': case 'fleeFail': case 'fightWin': case 'fightLose': case 'artifactFleeOk': case 'artifactFleeFail': {
           const good = e.type === 'fleeOk' || e.type === 'fightWin' || e.type === 'artifactFleeOk';
-          const what = e.type.startsWith('fight') ? 'Бой' : 'Побег';
-          lastRoll = { value: e.a, id: e.seq, label: `${what}: ${e.a} — ${good ? (what === 'Бой' ? 'победа!' : 'удался') : (what === 'Бой' ? 'поражение' : 'не удался')}`, good };
+          const what = e.type.startsWith('fight') ? 'Бой' : 'Отступление';
+          lastRoll = { value: e.a, id: e.seq, label: `${what}: ${e.a} — ${good ? (what === 'Бой' ? 'ПОБЕДА!' : 'удалось') : (what === 'Бой' ? 'по лицу' : 'не удалось')}`, good };
           if (!quiet) busyUntil.current = Math.max(busyUntil.current, now + 900);
           if (typeof e.b === 'number') fireFx(String(e.b), good ? 'escape' : 'hit');
           break;
@@ -115,10 +115,10 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
         }
         case 'turn':
           if (instantBots && isBot) break;
-          lastBanner = { text: e.player === viewer ? 'Ваш ход' : `Ход: ${name(e.player)}`, player: e.player, id: e.seq };
+          lastBanner = { text: e.player === viewer ? 'Ваш ход, герой' : `Ход: ${name(e.player)}`, player: e.player, id: e.seq };
           break;
-        case 'skip': lastBanner = { text: `${name(e.player)} пропускает ход`, player: e.player, id: e.seq }; break;
-        case 'respawn': lastBanner = { text: `${name(e.player)} теряет всё и начинает с Врат`, player: e.player, id: e.seq }; break;
+        case 'skip': lastBanner = { text: `${name(e.player)} пропускает ход: Оковы не отпускают`, player: e.player, id: e.seq }; break;
+        case 'respawn': lastBanner = { text: `${name(e.player)} пал и возвращается из Вальхаллы к Вратам`, player: e.player, id: e.seq }; break;
       }
     }
     if (lastRoll) setRoll(lastRoll);
@@ -333,7 +333,7 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
       {panel === 'rules' && (
         <div className="sheet-backdrop" onClick={() => setPanel(null)}>
           <div className="sheet rules-sheet" onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Правила">
-            <div className="sheet-title">Коротко о правилах <button type="button" className="icon-btn" onClick={() => setPanel(null)} aria-label="Закрыть"><Icon name="close" /></button></div>
+            <div className="sheet-title">Кодекс МОЩИ вкратце <button type="button" className="icon-btn" onClick={() => setPanel(null)} aria-label="Закрыть"><Icon name="close" /></button></div>
             <RulesText />
           </div>
         </div>
@@ -344,7 +344,7 @@ export function GameView({ ctl, onExit }: { ctl: Controller; onExit: () => void 
           <div className="zoom" onClick={(e) => e.stopPropagation()} role="dialog" aria-label={cardName(zoom)}>
             <GameCard g={g} id={zoom} size="lg" />
             <p className="zoom-why">{whyNot(g, me, zoom, mine ? d : null) ?? cardText(g, zoom)}</p>
-            <button type="button" className="plaque secondary" onClick={() => setZoom(null)}><span className="plaque-main">Понятно</span></button>
+            <button type="button" className="plaque secondary" onClick={() => setZoom(null)}><span className="plaque-main">Понятно, брат</span></button>
           </div>
         </div>
       )}
@@ -404,12 +404,12 @@ function LandSheet({ g, cell, onClose }: { g: Controller['g']; cell: number; onC
                 <div className="lc-quote">«{f?.monsterText}»</div>
               </div>
               <div className="lc-stats">
-                <span className="lc-power" title="Мощь монстра">{l.monster}</span>
+                <span className="lc-power" title="МОЩЬ монстра">{l.monster}</span>
                 <span className="lc-reward">награда <Chip value={l.reward} size="xs" /></span>
               </div>
             </div>
             <div className={`lc-owner ${owner ? 'owned' : ''}`} style={owner ? { ['--pc' as string]: COLORS[owner.id] } : undefined}>
-              {owner ? <><Icon name="flag" size={15} /> Владелец: <b>{owner.name}</b> — монстр побеждён</> : 'Дикая Земля: монстр на месте. Встанете сюда — придётся с ним разобраться.'}
+              {owner ? <><Icon name="flag" size={15} /> Владелец: <b>{owner.name}</b> — монстр повержен</> : 'Дикая Земля: монстр на месте и разминает шею. Встанете сюда — придётся с ним разобраться.'}
             </div>
             {l.artifact && (
               <div className="lc-artifact">
@@ -422,7 +422,7 @@ function LandSheet({ g, cell, onClose }: { g: Controller['g']; cell: number; onC
         ) : (
           <>
             <p className="lc-flavor">«{CELL_FLAVOR[c.type]}»</p>
-            {c.type === 'start' && <p>Прошли или остановились — возьмите жетон <Chip value={100} size="xs" /> (если есть свободная ячейка).</p>}
+            {c.type === 'start' && <p>Прошли или остановились — возьмите жетон <Chip value={100} size="xs" /> (с Золотой Жилой Бицепса — <Chip value={500} size="xs" />): в свободную ячейку или вместо вашего самого мелкого, если новый крупнее.</p>}
           </>
         )}
         {here.length > 0 && <div className="lc-here">Здесь стоят: {here.map((p) => <span key={p.id} style={{ ['--pc' as string]: COLORS[p.id] }}><PawnBadge id={p.id} size={12} /> {p.name}</span>)}</div>}

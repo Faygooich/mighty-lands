@@ -1,6 +1,6 @@
 {
   "name": "moshchnye-zemli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "description": "МОЩНЫЕ ЗЕМЛИ — board game engine, evolutionary playtesting pipeline and web version",

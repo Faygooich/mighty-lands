@@ -26,14 +26,14 @@ export function gainPower(g: GameState, p: PlayerState, amount: number, source: 
       sortDesc(p.tokens);
       got += t - small;
       ev(g, 'upgrade', p.id, t - small, source);
-      logMsg(g, `${p.name} меняет жетон ${small} на ${t} (апгрейд)`);
+      logMsg(g, `${p.name} меняет жетон ${small} на ${t} (МОЩЬ растёт)`);
       add = add.concat([t]);
     }
   }
   if (add.length) ev(g, 'hpGain', p.id, add.length, source);
   if (got < amount) ev(g, 'burn', p.id, amount - got, source);
   ev(g, 'receive', p.id, got, source);
-  if (got) logMsg(g, `${p.name} получает ${got} мощи (${add.join('+')}) — ${source}`);
+  if (got) logMsg(g, `${p.name} наливается МОЩЬЮ: +${got} (${add.join('+')}) — ${source}`);
   return got;
 }
 
@@ -136,7 +136,7 @@ export function receiveToken(g: GameState, p: PlayerState, value: number, source
     sortDesc(p.tokens);
     ev(g, 'upgrade', p.id, value - small, source);
     ev(g, 'receive', p.id, value - small, source);
-    logMsg(g, `${p.name} меняет жетон ${small} на ${value} (апгрейд)`);
+    logMsg(g, `${p.name} меняет жетон ${small} на ${value} (МОЩЬ растёт)`);
   } else ev(g, 'burn', p.id, value, 'full');
 }
 
@@ -200,7 +200,7 @@ export function kill(g: GameState, p: PlayerState, killer: number, source: strin
     p.skip = 0;
     for (let i = 0; i < g.rules.respawnCards; i++) draw(g, p, 'spell');
     ev(g, 'respawn', p.id, killer, source);
-    logMsg(g, `☠ ${p.name} теряет всё и возвращается на Врата (${source})`);
+    logMsg(g, `☠ ${p.name} пал, теряет всё и возвращается из Вальхаллы к Вратам (${source})`);
     return;
   }
   ev(g, 'death', p.id, killer, source);
@@ -275,7 +275,7 @@ export function endGame(g: GameState, winner: number, reason: string): void {
   g.winner = winner;
   g.endReason = reason;
   ev(g, 'end', winner, g.round, reason);
-  logMsg(g, winner >= 0 ? `🏆 Победа: ${g.players[winner].name} (${reason})` : `Партия окончена без победителя (${reason})`);
+  logMsg(g, winner >= 0 ? `🏆 ВЕЛИКАЯ ПОБЕДА: ${g.players[winner].name} (${reason})` : `Партия окончена без победителя (${reason})`);
 }
 
 export function powerOf(g: GameState, pid: number): number {

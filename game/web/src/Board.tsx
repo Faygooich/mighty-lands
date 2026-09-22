@@ -49,8 +49,8 @@ export function Board({ g, marks, fx, onCell, children, onSize }: Props) {
         const corner = c.type !== 'land';
         const fl = l ? landFlavor(l.name) : undefined;
         const title = l
-          ? `${l.name} · ${REGION_NAMES[l.region]}\n${owner ? `Владелец: ${owner.name}` : `${fl?.monster ?? 'Монстр'}: мощь ${l.monster}, награда ${l.reward}`}${l.artifact ? `\nАртефакт «${cardName(l.artifact)}»: ${cardText(g, l.artifact)}` : ''}`
-          : c.type === 'start' ? 'Врата: прошли или встали — жетон 100' : 'Перекрёсток: ничего не происходит';
+          ? `${l.name} · ${REGION_NAMES[l.region]}\n${owner ? `Владелец: ${owner.name}` : `${fl?.monster ?? 'Монстр'}: МОЩЬ ${l.monster}, награда ${l.reward}`}${l.artifact ? `\nАртефакт «${cardName(l.artifact)}»: ${cardText(g, l.artifact)}` : ''}`
+          : c.type === 'start' ? 'Врата: прошли или встали — жетон 100 (с Золотой Жилой Бицепса — 500)' : 'Перекрёсток: ничего не происходит';
         const style = { gridRow: r + 1, gridColumn: col + 1, ['--owner' as string]: owner ? COLORS[owner.id] : undefined } as React.CSSProperties;
         return (
           <button
@@ -75,7 +75,7 @@ export function Board({ g, marks, fx, onCell, children, onSize }: Props) {
                   <span className="tile-flag"><Icon name="flag" size={12} /> <span>{owner.name}</span></span>
                 ) : (
                   <span className="tile-stats">
-                    <span className="tile-monster" title="Мощь монстра">{l.monster}</span>
+                    <span className="tile-monster" title="МОЩЬ монстра">{l.monster}</span>
                     {size !== 'xs' && <span className="tile-reward" title="Награда за победу">+{l.reward}</span>}
                   </span>
                 )}

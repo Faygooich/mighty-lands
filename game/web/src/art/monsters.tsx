@@ -123,7 +123,7 @@ export const MONSTERS: Record<string, () => ReactElement> = {
       <Eye x={90} y={58} r={4} dx={-1.5} dy={0.5} />
       <Brows x1={70} x2={90} y={51} mood={-1} />
       <rect x="64" y="94" width="32" height="10" rx="2" fill="#fff" {...Thin} />
-      <text x="80" y="102" fontSize="7" textAnchor="middle" fontWeight="700" fill={INK}>СТАЖЁР</text>
+      <text x="80" y="102" fontSize="7" textAnchor="middle" fontWeight="700" fill={INK}>АУФ</text>
     </g>
   ),
   'whisper-oak': () => (
@@ -189,7 +189,7 @@ export const MONSTERS: Record<string, () => ReactElement> = {
       <Brows x1={74} x2={86} y={56} mood={1.3} w={6} />
       <path d="M112 104 V62" {...S} stroke="#7a5230" strokeWidth={3} />
       <rect x="96" y="44" width="36" height="20" fill="#fffaf0" {...S} />
-      <text x="114" y="58" fontSize="9" textAnchor="middle" fontWeight="800" fill="#c0392b">НЕТ!</text>
+      <text x="114" y="58" fontSize="9" textAnchor="middle" fontWeight="800" fill="#c0392b">САМ!</text>
     </g>
   ),
   'eagle-nest': () => (
@@ -253,7 +253,7 @@ export const MONSTERS: Record<string, () => ReactElement> = {
       <path d="M70 82 Q80 90 90 82" fill="#fff" {...Thin} />
       <path d="M116 58 V104" {...S} stroke="#5a3a24" strokeWidth={3} />
       <rect x="112" y="46" width="44" height="22" fill="#fffaf0" {...S} />
-      <text x="134" y="61" fontSize="8" textAnchor="middle" fontWeight="800" fill="#c0392b">ПРОДАЁТСЯ</text>
+      <text x="134" y="61" fontSize="8" textAnchor="middle" fontWeight="800" fill="#c0392b">НЕ ЛЕЗЬ</text>
     </g>
   ),
   'black-pit': () => (
@@ -329,9 +329,9 @@ export const CELLS: Record<string, () => ReactElement> = {
       <path d="M82 36 H122 L130 44 L122 52 H82Z" fill="#d9b98a" {...S} />
       <path d="M78 58 H38 L30 66 L38 74 H78Z" fill="#d9b98a" {...S} />
       <path d="M82 78 H116 L122 84 L116 90 H82Z" fill="#d9b98a" {...S} />
-      <text x="104" y="47" fontSize="8" textAnchor="middle" fontWeight="700" fill={INK}>ТУДА</text>
-      <text x="56" y="69" fontSize="8" textAnchor="middle" fontWeight="700" fill={INK}>ТОЖЕ</text>
-      <text x="100" y="87" fontSize="7" textAnchor="middle" fontWeight="700" fill={INK}>ТУДА</text>
+      <text x="104" y="47" fontSize="8" textAnchor="middle" fontWeight="700" fill={INK}>ВПЕРЁД</text>
+      <text x="56" y="69" fontSize="8" textAnchor="middle" fontWeight="700" fill={INK}>НИКОГДА</text>
+      <text x="100" y="87" fontSize="7" textAnchor="middle" fontWeight="700" fill={INK}>ВПЕРЁД</text>
     </g>
   ),
 };

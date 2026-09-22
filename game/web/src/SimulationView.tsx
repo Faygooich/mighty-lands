@@ -47,7 +47,7 @@ export function SimulationView({ onExit }: { onExit: () => void }) {
       <button type="button" className="plaque ghost back" onClick={onExit}><span className="plaque-main"><Icon name="back" /> Меню</span></button>
       <div className="parchment simview">
       <h2 className="screen-title">Режим симуляции</h2>
-      <p>Полностью автоматические партии ботов на движке правил {RULES.version}. Для массовых прогонов используйте CLI: <code>npm run sim</code>.</p>
+      <p>Боты сражаются сами, без героев, на движке правил {RULES.version}. Для массовых прогонов используйте CLI: <code>npm run sim</code>.</p>
       <div className="sim-controls">
       <label className="field">Игроков <select value={n} onChange={(e) => setN(Number(e.target.value))}>{[2, 3, 4, 5, 6, 7].map((k) => <option key={k}>{k}</option>)}</select></label>
       <label className="field">Партий <input type="number" value={count} min={10} max={5000} onChange={(e) => setCount(Number(e.target.value))} /></label>

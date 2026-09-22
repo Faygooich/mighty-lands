@@ -30,7 +30,7 @@ export function Hand({ g, owner, cards, hidden, count }: { g: GameState; owner: 
       </div>
     );
   }
-  if (!cards.length) return <div className="hand"><div className="hand-empty">Рука пуста — карты придут в начале хода</div></div>;
+  if (!cards.length) return <div className="hand"><div className="hand-empty">Рука пуста. Голыми руками тоже можно — карты придут в начале хода</div></div>;
   const n = cards.length;
   const left = [...fresh];
   return (

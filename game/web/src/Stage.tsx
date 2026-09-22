@@ -4,7 +4,7 @@ import type { Decision, GameState, Option } from '../../core/types.ts';
 import { cardName } from '../../cards/catalog.ts';
 import { landFlavor } from '../../cards/flavor.ts';
 import { effPower, landsOf, power } from '../../core/state.ts';
-import { COLORS, END_REASON, cardText, d6Chance, optionLabel } from './labels.ts';
+import { COLORS, END_REASON, cardText, d6Chance, optionLabel, rankLine, rankTitle } from './labels.ts';
 import { Art } from './art/index.tsx';
 import { GameCard } from './ui/GameCard.tsx';
 import { Icon } from './ui/Icon.tsx';
@@ -45,10 +45,10 @@ function Btn({ kind = 'secondary', icon, children, sub, onClick, onHover, disabl
   );
 }
 
-/** Parses «мощь 900 (400 + Подмога 500)» from the engine's reason text (falls back to plain numbers). */
+/** Parses «МОЩЬ 900 (400 + Мужское Плечо 500)» from the engine's reason text (falls back to plain numbers). */
 function fightNumbers(reason: string, you: number, monster: number) {
-  const p = /ваша мощь (\d+)(?: \(([^)]*)\))?/.exec(reason);
-  const m = /мощи монстра (\d+)(?: \(([^)]*)\))?/.exec(reason);
+  const p = /ваша МОЩЬ (\d+)(?: \(([^)]*)\))?/i.exec(reason);
+  const m = /МОЩИ монстра (\d+)(?: \(([^)]*)\))?/i.exec(reason);
   return { you: p ? Number(p[1]) : you, youNote: p?.[2] ?? '', monster: m ? Number(m[1]) : monster, monsterNote: m?.[2] ?? '' };
 }
 
@@ -61,7 +61,7 @@ export function Stage(props: StageProps) {
   if (busy) {
     return (
       <div className="stage stage-wait" aria-live="polite">
-        <StageHead g={g} id={g.current} text="Фишка идёт по полю…" />
+        <StageHead g={g} id={g.current} text="Герой шагает по полю. Земля дрожит…" />
       </div>
     );
   }
@@ -91,13 +91,13 @@ export function Stage(props: StageProps) {
 
 function thinkingText(d: Decision): string {
   switch (d.kind) {
-    case 'main': return 'обдумывает ход';
-    case 'lose': return 'выбирает, какой жетон потерять';
+    case 'main': return 'сурово обдумывает ход';
+    case 'lose': return 'выбирает, с каким жетоном проститься';
     case 'pay': return 'выбирает, каким жетоном заплатить';
-    case 'discard': return 'сбрасывает лишнюю карту';
-    case 'dilemma': return d.reason.startsWith('Попутный') ? 'выбирает бросок' : d.reason.startsWith('Алтарь') ? 'выбирает у Алтаря' : 'выбирает на Заставе';
+    case 'discard': return 'сбрасывает лишнюю карту — рука не резиновая';
+    case 'dilemma': return d.reason.startsWith(cardName('tailwind')) ? 'выбирает бросок' : d.reason.startsWith(cardName('altar')) ? 'выбирает, чем пожертвовать Богу Железа' : 'выбирает у Богатырской Заставы';
     case 'trigger': return 'решает, сыграть ли карту-ответ';
-    default: return 'думает';
+    default: return 'думает (это видно по бровям)';
   }
 }
 
@@ -139,7 +139,7 @@ function MainPhase({ g, d, selected, onCancelSelect, choose, onPreview }: StageP
               {kind === 'cell' && 'Выберите цель — подсвеченную клетку на поле или в списке:'}
               {kind === 'player' && 'Выберите соперника — нажмите на его зону или на имя:'}
               {kind === 'variant' && 'Выберите вариант размена:'}
-              {kind === 'none' && 'Сыграть карту сейчас?'}
+              {kind === 'none' && 'Сыграть карту сейчас? Подвиг ждёт.'}
             </div>
             <div className={`target-list ${opts.length > 8 ? 'dense' : ''}`}>
               {opts.map(([i, o]) => {
@@ -167,21 +167,21 @@ function MainPhase({ g, d, selected, onCancelSelect, choose, onPreview }: StageP
   };
   return (
     <div className="stage stage-main">
-      <StageHead g={g} id={p.id} big={pre ? 'Ваш ход' : 'Ход сделан'} text={pre ? `${p.name}, сыграйте карты или сразу бросайте кубик` : `${p.name}, можно доиграть карты или передать ход`} />
+      <StageHead g={g} id={p.id} big={pre ? 'Ваш ход, герой' : 'Ход сделан'} text={pre ? `${p.name}, сыграйте карты или сразу мечите кубик` : `${p.name}, можно доиграть карты или с достоинством передать ход`} />
       <div className="phase-track" aria-label="Фазы хода">
         <span className="done">Карты</span><span className={pre ? 'now' : 'done'}>До броска</span><span className={pre ? '' : 'done'}>Бросок и клетка</span><span className={pre ? '' : 'now'}>После хода</span>
       </div>
       <p className="stage-text">
         {cardOpts.size > 0
           ? <>Можно сыграть: <b>{[...cardOpts].map((c) => cardName(c)).join(', ')}</b> — нажмите на карту в руке.</>
-          : 'Подходящих карт нет.'}
+          : 'Подходящих карт нет. Придётся голыми руками.'}
         {' '}Заклятий за ход: {p.spellsThisTurn}/{g.rules.spellsPerTurn}.
       </p>
       <div className="stage-actions">
         {doneIdx >= 0 && (pre ? (
           <Btn kind="primary" icon="dice" onClick={() => { onPreview(null); choose(doneIdx); }} onHover={(on) => onPreview(on ? reach() : null)}
-            sub={tele ? `Телепорт на «${targetName(g, tele.index)}»` : 'Фишка пройдёт 1–6 клеток (подсвечены на поле)'}>
-            {tele ? 'Переместиться' : 'Бросить кубик'}
+            sub={tele ? `Прыжок на «${targetName(g, tele.index)}»` : 'Фишка пройдёт 1–6 клеток (подсвечены на поле)'}>
+            {tele ? 'Прыгнуть' : 'Метнуть кубик'}
           </Btn>
         ) : (
           <Btn kind="primary" icon="check" onClick={() => choose(doneIdx)} sub={next ? `Следующим ходит ${next}` : undefined}>Закончить ход</Btn>
@@ -215,7 +215,7 @@ function MonsterCard({ g, cell, power: shownPower, note }: { g: GameState; cell:
     <div className={`monster-card r${l.region}`}>
       <div className="mc-art">
         <Art of={{ kind: 'land', name: l.name, region: l.region }} />
-        <span className="mc-power" title="Мощь монстра"><span>мощь</span><b>{shownPower}</b></span>
+        <span className="mc-power" title="МОЩЬ монстра"><span>МОЩЬ</span><b>{shownPower}</b></span>
       </div>
       <div className="mc-body">
         <div className="mc-land">{l.name}</div>
@@ -244,47 +244,47 @@ function Battle({ g, d, mine, choose }: StageProps) {
     <div className="stage stage-battle">
       <div className="battle-title">
         {d!.kind === 'react'
-          ? <><b style={{ color: COLORS[fighter.id] }}>{fighter.name}</b> встречает монстра</>
-          : <><b style={{ color: COLORS[fighter.id] }}>{fighter.name}</b> против монстра</>}
+          ? <><b style={{ color: COLORS[fighter.id] }}>{fighter.name}</b> бросает вызов монстру</>
+          : <><b style={{ color: COLORS[fighter.id] }}>{fighter.name}</b> против монстра: час истины</>}
       </div>
       <div className="battle">
         <div className="fighter" style={{ ['--pc' as string]: COLORS[fighter.id] }}>
           <PawnBadge id={fighter.id} size={40} />
           <div className="f-name">{fighter.name}</div>
-          <div className="f-power"><span>Мощь</span><b>{nums.you}</b>{nums.youNote && <small>{nums.youNote}</small>}</div>
+          <div className="f-power" title={rankLine(nums.you)}><span>МОЩЬ</span><b>{nums.you}</b>{nums.youNote && <small>{nums.youNote}</small>}</div>
         </div>
         <div className={`versus ${stronger ? 'win' : 'lose'}`}>
           <span className="vs-sign">{stronger ? '>' : nums.you === nums.monster ? '=' : '<'}</span>
-          <span className="vs-text">{stronger ? 'сильнее' : 'слабее'}</span>
+          <span className="vs-text">{stronger ? 'МОЩНЕЕ' : 'слабее'}</span>
         </div>
         <MonsterCard g={g} cell={cell} power={nums.monster} note={nums.monsterNote} />
       </div>
       {!mine && (
         <div className="stage-note">
-          {d!.kind === 'react' ? `${asker.name} решает, вмешаться ли в бой…` : `${fighter.name} решает…`}
+          {d!.kind === 'react' ? `${asker.name} решает, вмешаться ли в бой…` : `${fighter.name} решает, собрав волю в кулак…`}
         </div>
       )}
       {mine && d!.kind === 'capture' && (
         <div className="stage-actions">
-          <Btn kind="primary" icon="flag" onClick={() => choose(idx('capture'))} sub={<>Земля ваша + жетон {l.reward}</>}>Захватить Землю</Btn>
-          <Btn onClick={() => choose(idx('pass'))} sub="Земля останется дикой">Пройти мимо</Btn>
+          <Btn kind="primary" icon="flag" onClick={() => choose(idx('capture'))} sub={<>флаг на Землю + жетон {l.reward}</>}>Захватить Землю</Btn>
+          <Btn onClick={() => choose(idx('pass'))} sub="Земля останется дикой, монстр — живым">Гордо пройти мимо</Btn>
         </div>
       )}
       {mine && d!.kind === 'encounter' && (
         <>
-          {lastLife && <div className="warn"><Icon name="skull" size={16} /> Последний жетон! Проигрыш — вы выбываете и теряете все Земли.</div>}
+          {lastLife && <div className="warn"><Icon name="skull" size={16} /> Последний жетон! Неудача — вы теряете все Земли и карты и возвращаетесь из Вальхаллы к Вратам с жетоном 300.</div>}
           <div className="stage-actions">
-            <Btn icon="run" onClick={() => choose(idx('flee'))} sub={<>нужно {fleeMin}–6 · шанс {d6Chance(fleeMin)} · иначе −1 жетон</>}>Бежать</Btn>
+            <Btn icon="run" onClick={() => choose(idx('flee'))} sub={<>нужно {fleeMin}–6 · шанс {d6Chance(fleeMin)} · иначе −1 жетон</>}>Тактически отступить</Btn>
             <Btn kind="danger" icon="sword" onClick={() => choose(idx('fight'))} sub={<>нужно {winOn} · шанс {d6Chance(winOn)} · победа: Земля и +{l.reward}</>}>Драться</Btn>
             {idx('react') >= 0 && (
-              <Btn kind="primary" icon="sword" onClick={() => choose(idx('react'))} sub={<>карта «Отвага» · нужно {g.rules.params.courageWinOn || 4}–6 · шанс {d6Chance(g.rules.params.courageWinOn || 4)}</>}>Драться с Отвагой</Btn>
+              <Btn kind="primary" icon="sword" onClick={() => choose(idx('react'))} sub={<>карта «{cardName('courage')}» · нужно {g.rules.params.courageWinOn || 4}–6 · шанс {d6Chance(g.rules.params.courageWinOn || 4)}</>}>Драться с Безрассудной Отвагой</Btn>
             )}
           </div>
         </>
       )}
       {mine && d!.kind === 'react' && (
         <>
-          <div className="stage-ask">Вмешаетесь? Можно сыграть одну карту:</div>
+          <div className="stage-ask">Вмешаетесь в чужой подвиг? Можно сыграть одну карту:</div>
           <div className="react-row">
             {d!.options.map((o, i) => o.t === 'react' ? (
               <GameCard key={i} g={g} id={o.card} size="mini" state={{ playable: true }} onClick={() => choose(i)} />
@@ -292,7 +292,7 @@ function Battle({ g, d, mine, choose }: StageProps) {
             <Btn kind="ghost" onClick={() => choose(idx('pass'))}>Не вмешиваться</Btn>
           </div>
           <div className="stage-note small">
-            Подмога: +{g.rules.params.aid ?? 0} бойцу, и если он победит — вам жетон {g.rules.params.aidReward ?? 0}. Помеха: +{g.rules.params.hex ?? 0} монстру.
+            «{cardName('aid')}»: +{g.rules.params.aid ?? 0} бойцу, и если он победит — вам жетон {g.rules.params.aidReward ?? 0}. «{cardName('hex')}»: +{g.rules.params.hex ?? 0} монстру.
           </div>
         </>
       )}
@@ -307,9 +307,9 @@ function TokenChoice({ g, d, choose }: StageProps) {
   const lose = d!.kind === 'lose';
   return (
     <div className="stage stage-tokens">
-      <StageHead g={g} id={p.id} big={lose ? 'Потеря жетона' : 'Оплата жетоном'} text={d!.reason} />
+      <StageHead g={g} id={p.id} big={lose ? 'Потеря жетона' : 'Расплата жетоном'} text={d!.reason} />
       <p className="stage-text">
-        {lose ? 'Жетон — это жизнь. Отдайте мелкий, чтобы сохранить мощь.' : 'Отдайте один жетон. Мелкий бережёт вашу мощь.'}
+        {lose ? 'Жетон — это жизнь. Отдайте мелкий, чтобы сберечь МОЩЬ. Мужики не плачут — мужики теряют жетоны.' : 'Отдайте один жетон. Мелкий бережёт вашу МОЩЬ.'}
       </p>
       <div className="token-choices">
         {d!.options.map((o, i) => {
@@ -319,7 +319,7 @@ function TokenChoice({ g, d, choose }: StageProps) {
             <button key={i} type="button" className="token-choice" onClick={() => choose(i)}>
               <span className="tc-chips">{vals.map((v, k) => <Chip key={k} value={v} size="lg" />)}</span>
               <span className="tc-label">{lose ? 'Потерять' : 'Отдать'} {vals.join('+')}</span>
-              <span className="tc-after">мощь станет {after}</span>
+              <span className="tc-after" title={rankLine(after)}>МОЩЬ станет {after} · {rankTitle(after)}</span>
             </button>
           );
         })}
@@ -332,7 +332,7 @@ function Discard({ g, d, choose }: StageProps) {
   const p = g.players[d!.player];
   return (
     <div className="stage stage-discard">
-      <StageHead g={g} id={p.id} big="Лишняя карта" text={`${d!.reason}. Выберите карту, которую сбросить:`} />
+      <StageHead g={g} id={p.id} big="Рука не резиновая" text={`${d!.reason}. Выберите карту, которую сбросить:`} />
       <div className="react-row">
         {d!.options.map((o, i) => o.t === 'discard' ? (
           <GameCard key={i} g={g} id={o.card} size="mini" state={{ mode: 'discard' }} onClick={() => choose(i)} />
@@ -345,8 +345,8 @@ function Discard({ g, d, choose }: StageProps) {
 function Dilemma({ g, d, choose }: StageProps) {
   const p = g.players[d!.player];
   const owner = d!.amount !== undefined ? g.players[d!.amount] : null;
-  if (!d!.reason.startsWith('Застава')) {
-    const title = d!.reason.startsWith('Попутный') ? 'Попутный Ветер' : 'Алтарь';
+  if (!d!.reason.startsWith(cardName('outpost'))) {
+    const title = d!.reason.startsWith(cardName('tailwind')) ? cardName('tailwind') : cardName('altar');
     return (
       <div className="stage stage-dilemma">
         <StageHead g={g} id={p.id} big={title} text={d!.reason} />
@@ -358,7 +358,7 @@ function Dilemma({ g, d, choose }: StageProps) {
   }
   return (
     <div className="stage stage-dilemma">
-      <StageHead g={g} id={p.id} big="Застава" text={d!.reason} />
+      <StageHead g={g} id={p.id} big={cardName('outpost')} text={d!.reason} />
       <div className="stage-actions">
         {d!.options.map((o, i) => o.t === 'choose' ? (
           <Btn key={i} kind={o.key === 'token' ? 'secondary' : 'secondary'} icon={o.key === 'skip' ? 'chain' : 'heart'} onClick={() => choose(i)}
@@ -380,7 +380,7 @@ function Trigger({ g, d, choose }: StageProps) {
       <StageHead g={g} id={p.id} big={cardName(card)} text={d!.reason} />
       <div className="react-row">
         {card && <GameCard g={g} id={card} size="mini" state={{ playable: true }} onClick={() => choose(i)} />}
-        <Btn kind="ghost" onClick={() => choose(d!.options.findIndex((o) => o.t === 'pass'))}>Не играть</Btn>
+        <Btn kind="ghost" onClick={() => choose(d!.options.findIndex((o) => o.t === 'pass'))}>Приберечь карту</Btn>
       </div>
       <div className="stage-note small">{cardText(g, card)}</div>
     </div>
@@ -392,13 +392,13 @@ function Trigger({ g, d, choose }: StageProps) {
 function Curtain({ g, d, id, onReveal }: { g: GameState; d: Decision | null; id: number; onReveal: () => void }) {
   const p = g.players[id];
   const why = !d || d.player !== id ? '' : d.kind === 'react'
-    ? `${g.players[d.amount ?? 0].name} встречает монстра — можно вмешаться картой.`
-    : d.kind === 'lose' || d.kind === 'pay' ? 'Нужно выбрать жетон.' : d.kind === 'dilemma' ? 'Нужно принять решение.' : d.kind === 'trigger' ? 'Можно сыграть карту-ответ.' : g.current === id ? 'Ваш ход.' : '';
+    ? `${g.players[d.amount ?? 0].name} бросает вызов монстру — можно вмешаться картой.`
+    : d.kind === 'lose' || d.kind === 'pay' ? 'Нужно выбрать жетон.' : d.kind === 'dilemma' ? 'Нужно принять решение.' : d.kind === 'trigger' ? 'Можно сыграть карту-ответ.' : g.current === id ? 'Ваш ход, герой.' : '';
   return (
     <div className="stage stage-curtain" style={{ ['--pc' as string]: COLORS[id] }}>
       <PawnBadge id={id} size={44} />
       <div className="stage-title">Передайте устройство: {p.name}</div>
-      <p className="stage-text">{why} Карты на руке скрыты, чтобы соседи не подсматривали.</p>
+      <p className="stage-text">{why} Карты на руке скрыты: настоящие мужики не подсматривают, но проверять не будем.</p>
       <Btn kind="primary" icon="eye" onClick={onReveal}>Я {p.name} — показать мои карты</Btn>
     </div>
   );
@@ -410,7 +410,7 @@ function Victory({ g, goal, onExit, onCopy }: StageProps) {
   return (
     <div className="stage stage-victory" style={{ ['--pc' as string]: w ? COLORS[w.id] : undefined }}>
       <Icon name="crown" size={48} className="crown" />
-      <div className="stage-title">{w ? `${w.name} побеждает!` : 'Партия окончена'}</div>
+      <div className="stage-title">{w ? `${w.name} побеждает! Слава, бицепсы, вечность.` : 'Партия окончена'}</div>
       <p className="stage-text">
         {g.endReason === 'lands-target' ? `Собрано ${goal} Земель` : g.endReason === 'round-cap' ? 'Достигнут лимит раундов — побеждает лидер' : END_REASON[g.endReason] ?? g.endReason}
         {' · '}раундов: {g.round}
@@ -420,7 +420,7 @@ function Victory({ g, goal, onExit, onCopy }: StageProps) {
           <li key={p.id} style={{ ['--pc' as string]: COLORS[p.id] }}>
             <PawnBadge id={p.id} size={16} /> <span className="rk-name">{p.name}</span>
             <span><Icon name="flag" size={13} /> {landsOf(g, p.id).length}</span>
-            <span>мощь {power(p)}</span>
+            <span title={rankLine(power(p))}>МОЩЬ {power(p)} · {rankTitle(power(p))}</span>
           </li>
         ))}
       </ol>

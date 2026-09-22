@@ -1,6 +1,7 @@
 // Per-game metrics collector (engine Hooks). Produces a compact GameRecord.
 import type { EventType, GameState, Hooks } from '../core/types.ts';
 import { power, standing } from '../core/state.ts';
+import { ARTIFACTS, SPELLS } from '../cards/catalog.ts';
 
 export interface PlayerStats {
   hpLost: number; hpGained: number; powerGained: number; powerPaid: number; burned: number;
@@ -339,7 +340,7 @@ export class Collector implements Hooks {
 
 function srcKey(s: string): string {
   if (s.startsWith('Монстр')) return 'monster';
-  if (s === 'Капкан') return 'trap';
-  if (s === 'Огненный шар') return 'fireball';
+  if (s === ARTIFACTS.trap.name) return 'trap';
+  if (s === SPELLS.fireball.name) return 'fireball';
   return s;
 }

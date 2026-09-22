@@ -2,7 +2,7 @@
 import type { GameState, PlayerState } from '../../core/types.ts';
 import { cardName } from '../../cards/catalog.ts';
 import { landsOf, power } from '../../core/state.ts';
-import { BOT_NAMES, COLORS } from './labels.ts';
+import { BOT_NAMES, COLORS, rankLine, rankTitle } from './labels.ts';
 import { Icon } from './ui/Icon.tsx';
 import { Lives, PowerValue, TokenRow } from './ui/Tokens.tsx';
 
@@ -42,8 +42,8 @@ export function OpponentMat({ g, p, kind, compact, active, deciding, showHand, t
         {active && <span className="turn-tag">ходит</span>}
         {deciding && !active && <span className="turn-tag alt">решает</span>}
       </span>
-      <span className="mat-power">
-        <span className="mat-label">Мощь</span>
+      <span className="mat-power" title={rankLine(power(p))}>
+        <span className="mat-label">{compact ? 'МОЩЬ' : rankTitle(power(p))}</span>
         <PowerValue value={power(p)} />
       </span>
       <span className="mat-tokens"><TokenRow tokens={p.tokens} slots={g.rules.maxSlots} size={compact ? 'xs' : 'sm'} /></span>
@@ -51,8 +51,8 @@ export function OpponentMat({ g, p, kind, compact, active, deciding, showHand, t
         <span title="Земли / цель"><Icon name="flag" size={14} /> <b>{lands}</b>/{goal}</span>
         <span title="Карт на руке"><Icon name="cards" size={14} /> <b>{p.hand.length}</b></span>
         {p.skip > 0 && <span className="status bad" title="Пропустит ход"><Icon name="chain" size={14} /> пропуск</span>}
-        {p.shield > 0 && <span className="status good" title="Оберег"><Icon name="shield" size={14} /></span>}
-        {!p.alive && <span className="status bad"><Icon name="skull" size={14} /> выбыл</span>}
+        {p.shield > 0 && <span className="status good" title={cardName('ward')}><Icon name="shield" size={14} /></span>}
+        {!p.alive && <span className="status bad"><Icon name="skull" size={14} /> пал</span>}
       </span>
       {showHand && p.hand.length > 0 && <span className="mat-peek">{p.hand.map((c) => cardName(c)).join(' · ')}</span>}
       {target && <span className="mat-target-cta">{target.label}</span>}
@@ -76,8 +76,8 @@ export function MyMat({ g, p, kind, active, deciding, hidden }: MatProps & { hid
           <div className="mine-sub">{hidden ? 'карты скрыты' : active ? (deciding ? 'ваш ход' : 'ходит') : deciding ? 'нужно решение' : 'ждёт хода'}</div>
         </div>
       </div>
-      <div className="mine-power">
-        <span className="mat-label">Мощь</span>
+      <div className="mine-power" title={rankLine(power(p))}>
+        <span className="mat-label">МОЩЬ · {rankTitle(power(p))}</span>
         <PowerValue value={power(p)} className="huge" />
       </div>
       <div className="mine-tokens">
@@ -91,7 +91,7 @@ export function MyMat({ g, p, kind, active, deciding, hidden }: MatProps & { hid
           <b>{lands}/{goal}</b>
         </span>
         {p.skip > 0 && <span className="status bad"><Icon name="chain" size={14} /> пропустит ход</span>}
-        {p.shield > 0 && <span className="status good"><Icon name="shield" size={14} /> Оберег</span>}
+        {p.shield > 0 && <span className="status good"><Icon name="shield" size={14} /> {cardName('ward')}</span>}
         {p.tempPower > 0 && <span className="status good">+{p.tempPower} до конца хода</span>}
       </div>
     </div>

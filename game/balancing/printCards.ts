@@ -5,19 +5,28 @@ import { join } from 'node:path';
 import { loadRules } from '../rules/load.ts';
 import { createGame } from '../core/state.ts';
 import { ARTIFACTS, SPELLS } from '../cards/catalog.ts';
-import { CARD_FLAVOR, CELL_FLAVOR, LAND_FLAVOR, REGION_FLAVOR } from '../cards/flavor.ts';
+import { CARD_FLAVOR, CELL_FLAVOR, LAND_FLAVOR, POWER_RANKS, REGION_FLAVOR } from '../cards/flavor.ts';
 import { REGION_NAMES } from '../rules/ruleset.ts';
 
 const version = process.argv[2] ?? 'v029';
 const rules = loadRules(version);
 const g = createGame(rules, [{ name: 'A', bot: '-' }, { name: 'B', bot: '-' }], 1);
 const out: string[] = [];
-out.push(`# МОЩНЫЕ ЗЕМЛИ — тексты карт и Земель (правила ${version})`, '');
-out.push('Документ сгенерирован из тех же данных, что использует движок (`game/balancing/printCards.ts`). Жирный текст — правило, курсив — просто для смеха.', '');
+out.push(`# МОЩНЫЕ ЗЕМЛИ — Летопись Карт и Земель (правила ${version})`, '');
+out.push('Документ сгенерирован из тех же данных, что использует движок (`game/balancing/printCards.ts`). **Жирный текст — Закон** (правило, действует всегда). *Курсив — Сага* (для атмосферы; на правила не влияет). Стиль и словарь — [`style_guide.md`](style_guide.md).', '');
+
+out.push('## Шкала МОЩИ', '', 'Звание героя по его МОЩИ (сумма жетонов). Печатается на планшете. Ни на что не влияет, кроме самооценки.', '');
+out.push('| МОЩЬ | Звание | Как это выглядит |', '|---|---|---|');
+POWER_RANKS.forEach((r, i) => {
+  const next = POWER_RANKS[i + 1];
+  const range = next ? (r.min === 0 ? `до ${next.min - 100}` : `${r.min}–${next.min - 100}`) : `${r.min}`;
+  out.push(`| ${range} | **${r.title}** | *${r.text}* |`);
+});
+out.push('');
 
 out.push('## Поле', '');
-out.push(`**Врата** — *${CELL_FLAVOR.start}* Прошёл или встал — возьми жетон 100 (если есть свободная ячейка).`, '');
-out.push(`**Перекрёсток** — *${CELL_FLAVOR.crossroad}* Ничего не происходит.`, '');
+out.push(`**Врата** — *${CELL_FLAVOR.start}* **Прошёл или встал — возьми жетон 100 (с Золотой Жилой Бицепса — 500) по правилу получения жетона.**`, '');
+out.push(`**Перекрёсток** — *${CELL_FLAVOR.crossroad}* **Ничего не происходит.**`, '');
 
 let region = -1;
 for (const c of g.cells) {
@@ -45,7 +54,7 @@ const deck = (title: string, spec: Record<string, number>, defs: Record<string, 
 };
 deck('Артефакты', rules.decks.artifacts, ARTIFACTS);
 deck('Заклятия', rules.decks.spells, SPELLS);
-out.push('## Вариант «Застава»', '', `| **${ARTIFACTS.outpost.name}** | 5 (вместо Оков) | **${ARTIFACTS.outpost.text(g)}** | *${CARD_FLAVOR.outpost}* |`, '');
+out.push(`## Вариант «${ARTIFACTS.outpost.name}»`, '', '| Карта | Кол-во | Правило | Текст |', '|---|---|---|---|', `| **${ARTIFACTS.outpost.name}** | ${rules.decks.artifacts.shackles} (вместо карт «${ARTIFACTS.shackles.name}») | **${ARTIFACTS.outpost.text(g)}** | *${CARD_FLAVOR.outpost}* |`, '');
 
 writeFileSync(join(import.meta.dirname, '..', '..', 'docs', 'cards.md'), out.join('\n'));
 console.log('docs/cards.md written');

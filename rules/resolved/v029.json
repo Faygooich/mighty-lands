@@ -21,31 +21,31 @@
     },
     {
       "type": "land",
-      "name": "Тихий Луг",
+      "name": "Луг Слабаков",
       "region": 0,
       "monster": 200
     },
     {
       "type": "land",
-      "name": "Ручьи",
+      "name": "Ручьи Закалки",
       "region": 0,
       "monster": 300
     },
     {
       "type": "land",
-      "name": "Мельница",
+      "name": "Мельница Массы",
       "region": 0,
       "monster": 300
     },
     {
       "type": "land",
-      "name": "Овечий Холм",
+      "name": "Холм Ста Альф",
       "region": 0,
       "monster": 400
     },
     {
       "type": "land",
-      "name": "Старый Мост",
+      "name": "Мост Мужиков",
       "region": 0,
       "monster": 500
     },
@@ -55,13 +55,13 @@
     },
     {
       "type": "land",
-      "name": "Опушка",
+      "name": "Бородатая Опушка",
       "region": 1,
       "monster": 600
     },
     {
       "type": "land",
-      "name": "Грибная Чаща",
+      "name": "Чаща Прозрений",
       "region": 1,
       "monster": 700
     },
@@ -73,7 +73,7 @@
     },
     {
       "type": "land",
-      "name": "Дуб Шептун",
+      "name": "Дуб Мотивации",
       "region": 1,
       "monster": 800
     },
@@ -89,13 +89,13 @@
     },
     {
       "type": "land",
-      "name": "Перевал",
+      "name": "Басовый Перевал",
       "region": 2,
       "monster": 1000
     },
     {
       "type": "land",
-      "name": "Рудники",
+      "name": "Упрямые Рудники",
       "region": 2,
       "monster": 1200
     },
@@ -107,7 +107,7 @@
     },
     {
       "type": "land",
-      "name": "Ледник",
+      "name": "Ледник Скупых Слёз",
       "region": 2,
       "monster": 1500
     },
@@ -123,7 +123,7 @@
     },
     {
       "type": "land",
-      "name": "Пепельный Край",
+      "name": "Мангальный Край",
       "region": 3,
       "monster": 1800
     },
@@ -141,7 +141,7 @@
     },
     {
       "type": "land",
-      "name": "Кипящее Озеро",
+      "name": "Озеро-Парилка",
       "region": 3,
       "monster": 2600
     },

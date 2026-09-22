@@ -27,7 +27,7 @@ export interface PlayerState {
   eliminatedRound: number;
   /** Consecutive failed flees / generic per-player counter used by some rules. */
   laps: number;
-  /** «Попутный Ветер»: roll two dice this turn and pick one. */
+  /** «Попутный Ветер Славы»: roll two dice this turn and pick one. */
   rollTwice: boolean;
 }
 
@@ -103,7 +103,7 @@ export type DecisionKind =
   | 'discard'
   | 'react'
   | 'dilemma'
-  /** A card that answers another player's action (Зеркало, Засада, Перехват). */
+  /** A card that answers another player's action (Зеркало Самолюбования, Засада в Кустах, Перехват Славы). */
   | 'trigger';
 
 export interface Decision {

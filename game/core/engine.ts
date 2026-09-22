@@ -74,7 +74,7 @@ function* takeTurn(g: GameState, p: PlayerState): Engine {
   if (p.skip > 0) {
     p.skip--;
     ev(g, 'skip', p.id, 0, null);
-    logMsg(g, `${p.name} пропускает ход`);
+    logMsg(g, `${p.name} пропускает ход: Оковы не отпускают`);
     return;
   }
   // 1. Draw (optionally not on the very first turn of the game)
@@ -82,7 +82,7 @@ function* takeTurn(g: GameState, p: PlayerState): Engine {
   for (let i = 0; i < r.drawArtifacts && !skipDraw; i++) draw(g, p, 'artifact');
   for (let i = 0; i < r.drawSpells && !skipDraw; i++) draw(g, p, 'spell');
   if (r.catchUpDraw > 0 && isWeakest(g, p)) for (let i = 0; i < r.catchUpDraw; i++) draw(g, p, 'spell');
-  // v1.0.1 candidate «Отстающий»: fewest Lands (and someone has more) draws +N Spells
+  // v1.0.1 candidate «Ярость Отстающего»: fewest Lands (and someone has more) draws +N Spells
   if (!skipDraw && (r.params.catchUpLands ?? 0) > 0 && hasFewestLands(g, p)) for (let i = 0; i < r.params.catchUpLands; i++) draw(g, p, 'spell');
   // 2. Main phase before movement
   yield* mainPhase(g, p, 'pre');
@@ -111,7 +111,7 @@ function isWeakest(g: GameState, p: PlayerState): boolean {
 }
 
 /**
- * «Отстающий»: nobody has fewer Lands than `p`, and at least one player has more
+ * «Ярость Отстающего»: nobody has fewer Lands than `p`, and at least one player has more
  * (with params.catchUpGap = k: at least k more than `p`).
  */
 export function hasFewestLands(g: GameState, p: PlayerState): boolean {
@@ -135,7 +135,7 @@ export function isLandLeader(g: GameState, p: PlayerState): boolean {
   return true;
 }
 
-/** Movement with a possible choice of roll («Попутный Ветер»). */
+/** Movement with a possible choice of roll («Попутный Ветер Славы»). */
 function* moveStep(g: GameState, p: PlayerState): Engine {
   if (!p.rollTwice || p.teleportTo >= 0) return move(g, p);
   p.rollTwice = false;
@@ -143,11 +143,11 @@ function* moveStep(g: GameState, p: PlayerState): Engine {
   const b = g.rng.d6();
   if (a === b) return move(g, p, a);
   const opts: Option[] = [{ t: 'choose', key: `roll:${a}` }, { t: 'choose', key: `roll:${b}` }];
-  const idx = yield ask(g, { kind: 'dilemma', player: p.id, options: opts, reason: `Попутный Ветер: выпало ${a} и ${b}. Какой результат взять?` });
+  const idx = yield ask(g, { kind: 'dilemma', player: p.id, options: opts, reason: `${SPELLS.tailwind.name}: выпало ${a} и ${b}. Какой результат взять?` });
   move(g, p, idx === 0 ? a : b);
 }
 
-/** True if `p` has a «Золотая Жила» on one of their Lands. */
+/** True if `p` has a «Золотая Жила Бицепса» on one of their Lands. */
 export function hasVein(g: GameState, p: PlayerState): boolean {
   for (const c of g.cells) if (c.land && c.land.owner === p.id && c.land.artifact === 'vein') return true;
   return false;
@@ -160,7 +160,7 @@ export function move(g: GameState, p: PlayerState, forcedSteps = 0): void {
     p.pos = p.teleportTo;
     p.teleportTo = -1;
     ev(g, 'move', p.id, 0, p.pos);
-    logMsg(g, `${p.name} телепортируется на клетку ${p.pos}`);
+    logMsg(g, `${p.name} одним героическим прыжком оказывается на клетке ${p.pos}`);
     return;
   }
   let steps = forcedSteps;
@@ -168,7 +168,7 @@ export function move(g: GameState, p: PlayerState, forcedSteps = 0): void {
   const passed = p.pos + steps >= n;
   p.pos = (p.pos + steps) % n;
   ev(g, 'move', p.id, steps, p.pos);
-  logMsg(g, `${p.name} бросает ${steps} → клетка ${p.pos}`);
+  logMsg(g, `${p.name} мечет кубик: ${steps} → клетка ${p.pos}`);
   if (passed) {
     p.laps++;
     const base = hasVein(g, p) ? r.params.veinIncome || 300 : r.startIncome;
@@ -190,7 +190,7 @@ export function* resolveCell(g: GameState, p: PlayerState): Engine {
 
 /**
  * Munchkin window: every other player (in seat order) may play ONE reaction card
- * (Подмога → +X to the fighter, Помеха → +X to the monster). Returns [fighterBonus, monsterBonus, helpers].
+ * (Мужское Плечо → +X to the fighter, Подлая Подножка → +X to the monster). Returns [fighterBonus, monsterBonus, helpers].
  */
 function* reactionWindow(g: GameState, p: PlayerState, land: LandState): Generator<Decision, [number, number, number[]], number> {
   let plus = 0;
@@ -204,7 +204,7 @@ function* reactionWindow(g: GameState, p: PlayerState, land: LandState): Generat
     for (const c of q.hand) if (SPELLS[c]?.reaction && !seen.has(c)) { seen.add(c); opts.push({ t: 'react', card: c }); }
     if (opts.length === 1) continue;
     p.fightMod = plus - minus;
-    const idx = yield ask(g, { kind: 'react', player: q.id, options: opts, reason: `${p.name} встречает монстра ${land.name} (${land.monster}). Вмешаться?`, amount: p.id });
+    const idx = yield ask(g, { kind: 'react', player: q.id, options: opts, reason: `${p.name} бросает вызов монстру ${land.name} (МОЩЬ ${land.monster}). Вмешаетесь?`, amount: p.id });
     const o = opts[idx];
     if (o.t !== 'react') continue;
     q.hand.splice(q.hand.indexOf(o.card), 1);
@@ -214,14 +214,14 @@ function* reactionWindow(g: GameState, p: PlayerState, land: LandState): Generat
     else minus += g.rules.params[o.card] ?? 0;
     ev(g, 'react', q.id, p.id, sp.reaction ?? null);
     ev(g, 'spell', q.id, p.id, o.card);
-    logMsg(g, `${q.name} играет «${sp.name}» в бою ${p.name}`);
+    logMsg(g, `${q.name} вмешивается в бой ${p.name}: «${sp.name}»`);
   }
   p.fightMod = 0;
   return [plus, minus, helpers];
 }
 
 /**
- * «Перехват»: other players (in seat order from the capturer's left) may take the reward token.
+ * «Перехват Славы»: other players (in seat order from the capturer's left) may take the reward token.
  * Returns the player who receives the reward.
  */
 function* interceptWindow(g: GameState, p: PlayerState, land: LandState): Generator<Decision, PlayerState, number> {
@@ -230,10 +230,10 @@ function* interceptWindow(g: GameState, p: PlayerState, land: LandState): Genera
     const q = g.players[(p.id + k) % g.players.length];
     if (!q.alive || !q.hand.includes('intercept')) continue;
     const opts: Option[] = [{ t: 'pass' }, { t: 'react', card: 'intercept' }];
-    const idx = yield ask(g, { kind: 'trigger', player: q.id, options: opts, card: 'intercept', amount: p.id, reason: `${p.name} побеждает монстра ${land.name} — награда жетон ${land.reward}. Перехватить?` });
+    const idx = yield ask(g, { kind: 'trigger', player: q.id, options: opts, card: 'intercept', amount: p.id, reason: `${p.name} побеждает монстра ${land.name} — награда жетон ${land.reward}. Сыграть «${SPELLS.intercept.name}»?` });
     if (opts[idx].t !== 'react') continue;
     playTrigger(g, q, 'intercept', p.id);
-    logMsg(g, `${q.name} перехватывает награду ${p.name}!`);
+    logMsg(g, `${q.name} уводит награду ${p.name} прямо из-под носа!`);
     return q;
   }
   return p;
@@ -250,7 +250,7 @@ function playTrigger(g: GameState, q: PlayerState, card: string, victim: number)
 function* grantCapture(g: GameState, p: PlayerState, land: LandState, helpers: number[]): Engine {
   const taker = yield* interceptWindow(g, p, land);
   if (land.reward && taker.alive) gainPower(g, taker, land.reward, `Награда: ${land.name}`);
-  for (const h of helpers) gainPower(g, g.players[h], g.rules.params.aidReward ?? 0, 'Подмога');
+  for (const h of helpers) gainPower(g, g.players[h], g.rules.params.aidReward ?? 0, SPELLS.aid.name);
 }
 
 function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engine {
@@ -261,8 +261,8 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
   // «Корона»: the strict leader in Lands fights every monster at +crown (params.crown)
   const crown = r.params.crown && isLandLeader(g, p) ? r.params.crown : 0;
   const m = land.monster + minus + crown;
-  const mText = minus || crown ? `${m} (${land.monster}${minus ? ` + Помеха ${minus}` : ''}${crown ? ` + Корона ${crown}` : ''})` : `${m}`;
-  const pText = plus ? `${eff} (${effPower(p)} + Подмога ${plus})` : `${eff}`;
+  const mText = minus || crown ? `${m} (${land.monster}${minus ? ` + ${SPELLS.hex.name} ${minus}` : ''}${crown ? ` + Корона ${crown}` : ''})` : `${m}`;
+  const pText = plus ? `${eff} (${effPower(p)} + ${SPELLS.aid.name} ${plus})` : `${eff}`;
   const stronger = eff > m || (r.tieWins && eff === m);
   if (stronger) {
     const cost = Math.ceil((m * r.captureCostFrac) / 100) * 100;
@@ -270,14 +270,14 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
     if (!canCapture) { ev(g, 'pass', p.id, 0, land.cell); return; }
     const opts: Option[] = [{ t: 'capture' }, { t: 'pass' }];
     p.fightMod = plus - minus;
-    const idx = yield ask(g, { kind: 'capture', player: p.id, options: opts, reason: `${land.name}: ваша мощь ${pText} больше мощи монстра ${mText}${cost ? `, цена захвата ${cost}` : ''}. Захватить?`, amount: cost });
+    const idx = yield ask(g, { kind: 'capture', player: p.id, options: opts, reason: `${land.name}: ваша мощь ${pText} больше МОЩИ монстра ${mText}${cost ? `, цена захвата ${cost}` : ''} — монстр дрожит. Захватить Землю?`, amount: cost });
     p.fightMod = 0;
     if (opts[idx].t === 'capture') {
       if (cost > 0) yield* pay(g, p, cost, -1, `Захват ${land.name}`, false);
       if (!p.alive) return;
       setOwner(g, land, p.id);
       ev(g, 'capture', p.id, land.cell, 'monster');
-      logMsg(g, `${p.name} захватывает ${land.name} (монстр ${m})`);
+      logMsg(g, `${p.name} водружает флаг на ${land.name} (монстр ${m} повержен)`);
       yield* grantCapture(g, p, land, helpers);
     } else {
       ev(g, 'pass', p.id, 0, land.cell);
@@ -290,13 +290,13 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
   if (r.encounterChoice) {
     const opts: Option[] = [{ t: 'flee' }, { t: 'fight' }];
     if (p.hand.includes('courage')) opts.push({ t: 'react', card: 'courage' });
-    const idx = yield ask(g, { kind: 'encounter', player: p.id, options: opts, reason: `${land.name}: ваша мощь ${pText} ${eff === m ? 'равна' : 'меньше'} мощи монстра ${mText} — этого мало. Бежать или драться?` });
+    const idx = yield ask(g, { kind: 'encounter', player: p.id, options: opts, reason: `${land.name}: ваша мощь ${pText} ${eff === m ? 'равна' : 'меньше'} МОЩИ монстра ${mText} — этого мало. Тактически отступить или драться?` });
     const o = opts[idx];
     fight = o.t === 'fight' || o.t === 'react';
     if (o.t === 'react') {
       playTrigger(g, p, 'courage', p.id);
       winOn = r.params.courageWinOn || 4;
-      logMsg(g, `${p.name} играет «Отвагу»: победа на ${winOn}–6`);
+      logMsg(g, `${p.name} играет «${SPELLS.courage.name}»: победа на ${winOn}–6`);
     }
   }
   const roll = g.rng.d6();
@@ -307,21 +307,21 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
       ev(g, 'fightWin', p.id, roll, land.cell);
       setOwner(g, land, p.id);
       ev(g, 'capture', p.id, land.cell, 'fight');
-      logMsg(g, `${p.name} бросает ${roll} и побеждает монстра ${land.name}`);
+      logMsg(g, `${p.name} бросает ${roll} и в честном бою повергает монстра ${land.name}!`);
       yield* grantCapture(g, p, land, helpers);
     } else {
       ev(g, 'fightLose', p.id, roll, land.cell);
-      logMsg(g, `${p.name} бросает ${roll} и проигрывает бой`);
+      logMsg(g, `${p.name} бросает ${roll} и получает от монстра по лицу`);
       yield* loseTokens(g, p, r.params.fightLossHp || 1, `Монстр ${land.name}`, -1, false);
     }
     return;
   }
   if (roll >= r.fleeMin) {
     ev(g, 'fleeOk', p.id, roll, land.cell);
-    logMsg(g, `${p.name} бросает ${roll} и сбегает от монстра ${land.name}`);
+    logMsg(g, `${p.name} бросает ${roll} и тактически отступает от монстра ${land.name}`);
   } else {
     ev(g, 'fleeFail', p.id, roll, land.cell);
-    logMsg(g, `${p.name} бросает ${roll} — побег не удался`);
+    logMsg(g, `${p.name} бросает ${roll} — тактическое отступление не удалось`);
     yield* loseTokens(g, p, 1, `Монстр ${land.name}`, -1, false);
   }
 }
@@ -329,15 +329,15 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
 function* enemyLand(g: GameState, p: PlayerState, land: LandState): Engine {
   const ownerId = land.owner;
   yield* enemyLandEffect(g, p, land);
-  // «Засада»: the owner may make the visitor lose a token (works with or without an Artifact)
+  // «Засада в Кустах»: the owner may make the visitor lose a token (works with or without an Artifact)
   const owner = g.players[ownerId];
   if (g.over || !p.alive || !owner?.alive || land.owner !== ownerId || p.pos !== land.cell || !owner.hand.includes('ambush')) return;
   const opts: Option[] = [{ t: 'pass' }, { t: 'react', card: 'ambush' }];
-  const idx = yield ask(g, { kind: 'trigger', player: owner.id, options: opts, card: 'ambush', amount: p.id, reason: `${p.name} остановился на вашей Земле ${land.name}. Засада?` });
+  const idx = yield ask(g, { kind: 'trigger', player: owner.id, options: opts, card: 'ambush', amount: p.id, reason: `${p.name} остановился на вашей Земле ${land.name}. Выскочить из кустов («${SPELLS.ambush.name}»)?` });
   if (opts[idx].t !== 'react') return;
   playTrigger(g, owner, 'ambush', p.id);
-  logMsg(g, `${owner.name} устраивает Засаду на ${land.name}!`);
-  yield* loseTokens(g, p, 1, 'Засада', owner.id);
+  logMsg(g, `${owner.name} выскакивает из кустов на ${land.name}!`);
+  yield* loseTokens(g, p, 1, SPELLS.ambush.name, owner.id);
 }
 
 function* enemyLandEffect(g: GameState, p: PlayerState, land: LandState): Engine {
@@ -365,10 +365,10 @@ function* enemyLandEffect(g: GameState, p: PlayerState, land: LandState): Engine
   }
   const art = land.artifact;
   if (!art) {
-    // «Набор цвета»: a Land in an owner's set takes Дань even without an Artifact
+    // «Набор цвета»: a Land in an owner's set takes Дань Уважения even without an Artifact
     if (r.params.setTribute && inSet(g, land)) {
       ev(g, 'artifactTrigger', owner.id, p.id, 'set');
-      logMsg(g, `${land.name}: набор цвета ${owner.name} — Дань`);
+      logMsg(g, `${land.name}: набор цвета ${owner.name} — ${ARTIFACTS.tribute.name}`);
       yield* pay(g, p, r.params.tribute ?? 0, owner.id, 'Набор цвета');
     }
     return;
@@ -387,7 +387,7 @@ function* enemyLandEffect(g: GameState, p: PlayerState, land: LandState): Engine
     ev(g, 'artifactFleeFail', p.id, roll, art);
   }
   ev(g, 'artifactTrigger', owner.id, p.id, art);
-  logMsg(g, `Срабатывает «${ARTIFACTS[art].name}» ${owner.name} против ${p.name}`);
+  logMsg(g, `«${ARTIFACTS[art].name}» ${owner.name} обрушивается на ${p.name}`);
   yield* ARTIFACTS[art].onVisit(g, p, owner, land);
   if (r.artifactsSingleUse && land.artifact === art) {
     discard(g, art);
@@ -434,16 +434,16 @@ function* applyMain(g: GameState, p: PlayerState, o: Option): Engine {
     p.hand.splice(p.hand.indexOf(o.card), 1);
     p.spellsThisTurn++;
     ev(g, 'spell', p.id, o.target, o.card);
-    logMsg(g, `${p.name} применяет «${SPELLS[o.card].name}»${o.target >= 0 ? ` → ${targetName(g, o.card, o.target)}` : ''}`);
-    // «Зеркало»: the victim of a targeted Spell may cancel it
+    logMsg(g, `${p.name} пускает в ход «${SPELLS[o.card].name}»${o.target >= 0 ? ` → ${targetName(g, o.card, o.target)}` : ''}`);
+    // «Зеркало Самолюбования»: the victim of a targeted Spell may cancel it
     const vid = spellVictim(g, o.card, o.target);
     const v = vid >= 0 && vid !== p.id ? g.players[vid] : null;
     if (v && v.alive && v.hand.includes('mirror')) {
       const opts: Option[] = [{ t: 'pass' }, { t: 'react', card: 'mirror' }];
-      const idx = yield ask(g, { kind: 'trigger', player: v.id, options: opts, card: o.card, amount: p.id, reason: `${p.name} играет «${SPELLS[o.card].name}» против вас. Отразить Зеркалом?` });
+      const idx = yield ask(g, { kind: 'trigger', player: v.id, options: opts, card: o.card, amount: p.id, reason: `${p.name} играет «${SPELLS[o.card].name}» против вас. Отразить («${SPELLS.mirror.name}»)?` });
       if (opts[idx].t === 'react') {
         playTrigger(g, v, 'mirror', p.id);
-        logMsg(g, `${v.name} отражает «${SPELLS[o.card].name}» Зеркалом`);
+        logMsg(g, `${v.name} отражает «${SPELLS[o.card].name}» (${SPELLS.mirror.name})`);
         g.spellDiscard.push(o.card);
         return;
       }
@@ -454,7 +454,7 @@ function* applyMain(g: GameState, p: PlayerState, o: Option): Engine {
     p.hand.splice(p.hand.indexOf(o.card), 1);
     g.cells[o.land].land!.artifact = o.card;
     ev(g, 'artifactPlace', p.id, o.land, o.card);
-    logMsg(g, `${p.name} кладёт «${ARTIFACTS[o.card].name}» на ${g.cells[o.land].land!.name}`);
+    logMsg(g, `${p.name} водружает «${ARTIFACTS[o.card].name}» на ${g.cells[o.land].land!.name}`);
   } else if (o.t === 'exchange') {
     applyExchange(g, p, o);
   }
@@ -474,7 +474,7 @@ export function* discardPhase(g: GameState, p: PlayerState): Engine {
     let card = distinct[0];
     if (distinct.length > 1) {
       const opts: Option[] = distinct.map((c) => ({ t: 'discard', card: c }));
-      const idx = yield ask(g, { kind: 'discard', player: p.id, options: opts, reason: `Сбросьте карту до лимита ${limit}` });
+      const idx = yield ask(g, { kind: 'discard', player: p.id, options: opts, reason: `Рука не резиновая: сбросьте карту до лимита ${limit}` });
       card = (opts[idx] as { card: string }).card;
     }
     p.hand.splice(p.hand.indexOf(card), 1);

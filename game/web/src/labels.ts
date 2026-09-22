@@ -2,14 +2,25 @@
 import type { Decision, GameState, Option } from '../../core/types.ts';
 import { ARTIFACTS, SPELLS, cardName } from '../../cards/catalog.ts';
 import { effPower, landsOf, power } from '../../core/state.ts';
-import { CARD_FLAVOR } from '../../cards/flavor.ts';
+import { CARD_FLAVOR, powerRank } from '../../cards/flavor.ts';
 
 export function cardFlavor(id: string): string {
   return CARD_FLAVOR[id] ?? '';
 }
 
+/** A hero's title by МОЩЬ, e.g. «МУЖИКОТАВР» (flavour only: no rule reads it). */
+export function rankTitle(value: number): string {
+  return powerRank(value).title;
+}
+
+/** «МУЖИКОТАВР: Настолько могуч…» for tooltips. */
+export function rankLine(value: number): string {
+  const r = powerRank(value);
+  return `${r.title}: ${r.text}`;
+}
+
 export const BOT_NAMES: Record<string, string> = {
-  tactical: 'Тактик', aggressive: 'Агрессор', defensive: 'Защитник', economic: 'Экономист', survival: 'Выживальщик', random: 'Случайный', exploit: 'Эксплойтер',
+  tactical: 'Бородатый Стратег', aggressive: 'Берсерк', defensive: 'Щитоносец', economic: 'Скопидом', survival: 'Выживальщик', random: 'Пьяный Бард', exploit: 'Хитрый Гном',
 };
 
 export const COLORS = ['#e8453c', '#3b82f6', '#22c55e', '#eab308', '#a855f7', '#f97316', '#14b8a6'];
@@ -34,10 +45,10 @@ function targetLabel(g: GameState, card: string, t: number): string {
 
 export function optionLabel(g: GameState, d: Decision, o: Option): string {
   switch (o.t) {
-    case 'done': return d.kind === 'main' ? (g.phase === 'pre' ? 'Бросить кубик' : 'Закончить ход') : 'Готово';
+    case 'done': return d.kind === 'main' ? (g.phase === 'pre' ? 'Метнуть кубик' : 'Закончить ход') : 'Готово';
     case 'capture': return 'Захватить Землю';
-    case 'pass': return d.kind === 'react' ? 'Не вмешиваться' : d.kind === 'trigger' ? 'Не играть' : 'Пройти мимо';
-    case 'flee': return `Бежать (${g.rules.fleeMin}–6)`;
+    case 'pass': return d.kind === 'react' ? 'Не вмешиваться' : d.kind === 'trigger' ? 'Приберечь карту' : 'Гордо пройти мимо';
+    case 'flee': return `Тактически отступить (${g.rules.fleeMin}–6)`;
     case 'fight': return 'Драться (6 — победа)';
     case 'token': return `Потерять жетон ${o.value}`;
     case 'pay': return `Отдать жетон ${o.tokens.join('+')}`;
@@ -47,11 +58,11 @@ export function optionLabel(g: GameState, d: Decision, o: Option): string {
       const t = targetLabel(g, o.card, o.target);
       return `${cardName(o.card)}${t ? ` → ${t}` : ''}`;
     }
-    case 'react': return o.card === 'courage' ? `Драться с «Отвагой» (${g.rules.params.courageWinOn || 4}–6 — победа)` : `Сыграть «${cardName(o.card)}»`;
+    case 'react': return o.card === 'courage' ? `Драться с «${cardName('courage')}» (${g.rules.params.courageWinOn || 4}–6 — победа)` : `Сыграть «${cardName(o.card)}»`;
     case 'choose':
       if (o.key.startsWith('roll:')) return `Идти на ${o.key.slice(5)}`;
       if (o.key === 'hand') return 'Сбросить все карты';
-      return o.key === 'skip' ? 'Пропустить следующий ход' : d.reason.startsWith('Алтарь') ? 'Потерять 1 жетон' : 'Отдать 1 жетон';
+      return o.key === 'skip' ? 'Пропустить следующий ход' : d.reason.startsWith(cardName('altar')) ? 'Потерять 1 жетон' : 'Отдать 1 жетон';
     case 'exchange': return `Размен ${o.give}`;
   }
   return '?';
@@ -61,24 +72,24 @@ export function optionLabel(g: GameState, d: Decision, o: Option): string {
 export function decisionHint(g: GameState, d: Decision): string {
   const p = g.players[d.player];
   switch (d.kind) {
-    case 'capture': return `Ваша мощь больше — Земля ваша, если захотите. Награда: жетон ${g.cells[p.pos].land?.reward ?? 0}.`;
-    case 'encounter': return `Бежать: ${d6Chance(g.rules.fleeMin)} без потерь. Драться: ${d6Chance(g.rules.params.fightWinOn ?? 6)} — победа и Земля, иначе −1 жетон${p.hand.includes('courage') ? `; с Отвагой — ${d6Chance(g.rules.params.courageWinOn || 4)}` : ''}. С последним жетоном рискуете всеми Землями!`;
-    case 'lose': return 'Жетон = жизнь. Обычно отдают самый мелкий, чтобы сохранить мощь.';
-    case 'pay': return 'Отдайте один жетон. Мелкий — сохраните мощь, но соперник всё равно получит жетон.';
-    case 'discard': return `В конце хода на руке не больше ${g.rules.handLimit === 'hp' ? 'числа жетонов' : g.rules.handLimit} карт.`;
+    case 'capture': return `Ваша МОЩЬ больше — монстр дрожит. Земля ваша, если захотите. Награда: жетон ${g.cells[p.pos].land?.reward ?? 0}.`;
+    case 'encounter': return `Тактическое отступление: ${d6Chance(g.rules.fleeMin)} без потерь. Драться: ${d6Chance(g.rules.params.fightWinOn ?? 6)} — победа и Земля, иначе −1 жетон${p.hand.includes('courage') ? `; с «${cardName('courage')}» — ${d6Chance(g.rules.params.courageWinOn || 4)}` : ''}. С последним жетоном рискуете всеми Землями!`;
+    case 'lose': return 'Жетон = жизнь. Мудрые отдают самый мелкий, чтобы сберечь МОЩЬ. Плакать можно, но внутри.';
+    case 'pay': return 'Отдайте один жетон. Мелкий сбережёт вашу МОЩЬ, но соперник всё равно получит жетон.';
+    case 'discard': return `Рука не резиновая: в конце хода на ней не больше ${g.rules.handLimit === 'hp' ? 'числа жетонов' : g.rules.handLimit} карт.`;
     case 'react': {
       const f = g.players[d.amount ?? 0];
       const l = g.cells[f.pos].land;
-      return `${f.name}: мощь ${effPower(f) + f.fightMod} против монстра ${l?.monster ?? '?'}. Подмога +500 ему (и вам 500 при его победе), Помеха +500 монстру.`;
+      return `${f.name}: МОЩЬ ${effPower(f) + f.fightMod} против монстра ${l?.monster ?? '?'}. «${cardName('aid')}»: +${g.rules.params.aid ?? 0} ему (и вам жетон ${g.rules.params.aidReward ?? 0} при его победе). «${cardName('hex')}»: +${g.rules.params.hex ?? 0} монстру.`;
     }
     case 'dilemma':
-      if (d.reason.startsWith('Попутный')) return 'Выберите, на сколько клеток идти.';
-      if (d.reason.startsWith('Алтарь')) return 'Жетон — это жизнь и мощь; карты — ваши будущие ходы.';
-      return 'Жетон уйдёт владельцу Заставы; пропуск хода — потеря темпа.';
-    case 'trigger': return 'Карта-ответ: играется только в такой момент. Можно приберечь.';
+      if (d.reason.startsWith(cardName('tailwind'))) return 'Выберите, на сколько клеток идти.';
+      if (d.reason.startsWith(cardName('altar'))) return 'Жетон — это жизнь и МОЩЬ; карты — ваши будущие подвиги.';
+      return `Жетон уйдёт владельцу («${cardName('outpost')}»); пропуск хода — потеря темпа.`;
+    case 'trigger': return 'Карта-ответ: играется только в такой момент. Можно приберечь для подвига поважнее.';
     case 'main': {
       const target = g.rules.win.landsTargetBy?.[String(g.players.length)] ?? g.rules.win.landsTarget;
-      return `У вас ${landsOf(g, p.id).length} из ${target} Земель. Мощь ${power(p)}. ${g.phase === 'pre' ? 'До броска: положите Артефакты, сыграйте ≤1 Заклятие или бросьте кубик.' : 'После хода: Артефакты и Заклятие (если ещё не играли).'}`;
+      return `У вас ${landsOf(g, p.id).length} из ${target} Земель. МОЩЬ ${power(p)} — ${rankTitle(power(p))}. ${g.phase === 'pre' ? 'До броска: положите Артефакты, сыграйте ≤1 Заклятие или метните кубик.' : 'После хода: Артефакты и Заклятие (если ещё не играли).'}`;
     }
   }
   return '';
@@ -138,10 +149,10 @@ export function cardBadge(g: GameState, id: string): string | null {
 
 /** Stable ASCII keys for illustrations (used for custom art file names, see src/art/README.md). */
 export const LAND_ART_KEY: Record<string, string> = {
-  'Тихий Луг': 'meadow', 'Ручьи': 'streams', 'Мельница': 'mill', 'Овечий Холм': 'sheep-hill', 'Старый Мост': 'old-bridge',
-  'Опушка': 'forest-edge', 'Грибная Чаща': 'mushroom-thicket', 'Волчья Тропа': 'wolf-trail', 'Дуб Шептун': 'whisper-oak', 'Сердце Леса': 'forest-heart',
-  'Перевал': 'pass', 'Рудники': 'mines', 'Орлиное Гнездо': 'eagle-nest', 'Ледник': 'glacier', 'Пик Грома': 'thunder-peak',
-  'Пепельный Край': 'ash-land', 'Чёрный Провал': 'black-pit', 'Трон Костей': 'bone-throne', 'Кипящее Озеро': 'boiling-lake', 'Око Бездны': 'abyss-eye',
+  'Луг Слабаков': 'meadow', 'Ручьи Закалки': 'streams', 'Мельница Массы': 'mill', 'Холм Ста Альф': 'sheep-hill', 'Мост Мужиков': 'old-bridge',
+  'Бородатая Опушка': 'forest-edge', 'Чаща Прозрений': 'mushroom-thicket', 'Волчья Тропа': 'wolf-trail', 'Дуб Мотивации': 'whisper-oak', 'Сердце Леса': 'forest-heart',
+  'Басовый Перевал': 'pass', 'Упрямые Рудники': 'mines', 'Орлиное Гнездо': 'eagle-nest', 'Ледник Скупых Слёз': 'glacier', 'Пик Грома': 'thunder-peak',
+  'Мангальный Край': 'ash-land', 'Чёрный Провал': 'black-pit', 'Трон Костей': 'bone-throne', 'Озеро-Парилка': 'boiling-lake', 'Око Бездны': 'abyss-eye',
 };
 
 export const REGION_NAMES = ['Долина', 'Лес', 'Горы', 'Бездна'];
@@ -154,7 +165,7 @@ export function d6Chance(min: number): string {
 
 export const END_REASON: Record<string, string> = {
   'lands-target': 'собрана цель по Землям', 'round-cap': 'лимит раундов', 'last-standing': 'остался последним', 'all-dead': 'никто не выжил',
-  'first-death': 'первое выбывание', 'power-target': 'цель по мощи', 'vp-target': 'цель по очкам', region: 'захвачен регион',
+  'first-death': 'первое выбывание', 'power-target': 'цель по МОЩИ', 'vp-target': 'цель по очкам', region: 'захвачен регион',
 };
 
 /** Log line for display: strips the «[р12]» round prefix and names cells instead of numbering them. */
