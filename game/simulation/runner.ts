@@ -30,6 +30,7 @@ function choiceLabel(g: GameState, d: Decision, o: Decision['options'][number]):
     case 'spell': case 'artifact': case 'discard': case 'react': return `${o.t}:${o.card}`;
     case 'token': return o.value === g.players[d.player].tokens[g.players[d.player].tokens.length - 1] ? 'token:min' : 'token:other';
     case 'pay': return `pay:${o.tokens.length}`;
+    case 'choose': return `choose:${o.key}`;
     default: return o.t;
   }
 }

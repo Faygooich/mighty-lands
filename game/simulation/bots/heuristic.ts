@@ -79,6 +79,11 @@ export class HeuristicBot {
 
   // ---- valuation helpers ----------------------------------------------------
 
+  /** Value of one own turn: 2 cards + ~35% chance to gain a Land + tempo. */
+  turnValue(p: PlayerState): number {
+    return 300 + 0.35 * 900 * this.w.land + (p.hand.length < 3 ? 100 : 0);
+  }
+
   hpVal(p: PlayerState, delta = 0): number {
     const h = Math.max(1, hp(p) + delta);
     return this.w.hp * (1 + 2 / h);
@@ -110,6 +115,7 @@ export class HeuristicBot {
       case 'trap': harm = hp(v) <= (P.trapDamage || 1) ? this.w.kill + 800 : this.hpVal(v, -1) * (P.trapDamage || 1); break;
       case 'pickpocket': harm = v.hand.length ? 150 : 0; break;
       case 'shackles': harm = 260; break;
+      case 'outpost': harm = Math.min(this.turnValue(v), this.hpVal(v, -1) * 0.7 + (v.tokens[v.tokens.length - 1] ?? 0) * this.w.power * 0.8); break;
       case 'exile': harm = 180; break;
       default: harm = 0;
     }
@@ -194,7 +200,7 @@ export class HeuristicBot {
     const pref = this.w.cardPrefs[card] ?? 0;
     const P = g.rules.params;
     const base: Record<string, number> = {
-      tribute: P.tribute * 0.6, bigTribute: P.bigTribute * 0.6, trap: 400, pickpocket: 150, shackles: 220, exile: 150, guardian: 120,
+      outpost: 250, tribute: P.tribute * 0.6, bigTribute: P.bigTribute * 0.6, trap: 400, pickpocket: 150, shackles: 220, exile: 150, guardian: 120,
       bastion: 180, toll: 300, fireball: 450, heal: 380, shatter: 250, usurp: 520, teleport: 300, fury: 260, release: 350, drain: 320,
       ward: 280, transmute: 120, aid: 250, hex: 280,
     };
@@ -254,6 +260,12 @@ export class HeuristicBot {
         for (const q of g.players) if (q.alive && q.id !== me.id) { enemyHarm += this.artHarm(g, o.card, q, me); n++; }
         enemyHarm /= Math.max(1, n);
         return (40 + enemyHarm * this.traffic(g, me, o.land) * 3 * w.artifact) * (1 + w.attack * 0.2) + pref * 0.3;
+      }
+      case 'choose': {
+        // Застава dilemma: lose a token (HP+power, and it goes to the owner) vs lose a turn
+        if (o.key === 'skip') return -this.turnValue(me);
+        const small = me.tokens[me.tokens.length - 1] ?? 0;
+        return -(me.tokens.length <= 1 ? w.kill + 1000 : this.hpVal(me, -1) * 0.7 + small * w.power * 0.8);
       }
       case 'react': {
         const fighter = g.players[d.amount ?? 0];

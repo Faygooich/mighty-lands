@@ -83,6 +83,20 @@ export const ARTIFACTS: Record<string, ArtifactDef> = {
     onVisit: () => nothing(),
   },
   // --- candidates introduced by later generations ---
+  outpost: {
+    id: 'outpost', name: 'Застава',
+    text: () => 'Гость выбирает: отдать владельцу 1 жетон ИЛИ пропустить свой следующий ход.',
+    *onVisit(g, v, o) {
+      const opts = [{ t: 'choose' as const, key: 'token' }, { t: 'choose' as const, key: 'skip' }];
+      const idx = yield { kind: 'dilemma', player: v.id, options: opts, reason: `Застава ${o.name}: отдать жетон или пропустить ход?`, amount: o.id };
+      if (opts[idx].key === 'skip') {
+        v.skip += 1;
+        logMsg(g, `${v.name} выбирает пропуск хода на Заставе`);
+      } else {
+        yield* pay(g, v, g.rules.params.tribute ?? 0, o.id, 'Застава');
+      }
+    },
+  },
   bastion: {
     id: 'bastion', name: 'Бастион',
     text: (g) => `Защита Земли от вызова +${P(g, 'bastion')}. Чужие Заклятия не могут выбрать эту Землю.`,

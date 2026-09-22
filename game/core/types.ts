@@ -89,7 +89,8 @@ export type Option =
   | { t: 'pay'; tokens: number[] }
   | { t: 'discard'; card: string }
   | { t: 'exchange'; give: number; take: number[] }
-  | { t: 'react'; card: string };
+  | { t: 'react'; card: string }
+  | { t: 'choose'; key: string };
 
 export type DecisionKind =
   | 'main'
@@ -98,7 +99,8 @@ export type DecisionKind =
   | 'lose'
   | 'pay'
   | 'discard'
-  | 'react';
+  | 'react'
+  | 'dilemma';
 
 export interface Decision {
   kind: DecisionKind;
