@@ -106,6 +106,8 @@ function otherAlive(g: GameState, p: PlayerState): number[] {
   return out;
 }
 
+const hasArtifact = (l: LandState) => l.artifact !== null;
+
 function enemyLands(g: GameState, p: PlayerState, pred: (l: LandState) => boolean = () => true): number[] {
   const out: number[] = [];
   for (const c of g.cells) {
@@ -113,6 +115,8 @@ function enemyLands(g: GameState, p: PlayerState, pred: (l: LandState) => boolea
     if (!l || l.owner < 0 || l.owner === p.id) continue;
     if (l.artifact && ARTIFACTS[l.artifact].protects) continue;
     if (g.rules.params.setProtect && inSet(g, l)) continue;
+    // params.landSpellsNeedEmpty = 1: land-taking spells (Узурпация/Освобождение) only hit Lands WITHOUT an Artifact
+    if (g.rules.params.landSpellsNeedEmpty && l.artifact && pred !== hasArtifact) continue;
     if (pred(l)) out.push(l.cell);
   }
   return out;
@@ -137,7 +141,7 @@ export const SPELLS: Record<string, SpellDef> = {
     id: 'shatter', name: 'Разрушение',
     text: () => 'Уничтожьте Артефакт на чужой Земле.',
     phases: ['pre', 'post'],
-    targets: (g, p) => enemyLands(g, p, (l) => l.artifact !== null),
+    targets: (g, p) => enemyLands(g, p, hasArtifact),
     *apply(g, _p, t) {
       const l = g.cells[t].land!;
       if (l.artifact) discard(g, l.artifact);

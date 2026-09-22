@@ -205,7 +205,7 @@ export function rulesComplexity(r: RuleSet): number {
     r.encounterChoice, r.upgradeWhenFull, r.landChallenge, r.exchange, r.artifactsSingleUse, r.firstTurnNoDraw,
     r.catchUpDraw > 0, r.seatBonusCards.some((x) => x > 0), r.seatBonusTokens.some((x) => x.length > 0),
     !!r.regionRewards, r.artifactFlee !== 'never', r.payMode === 'sum' && r.change, r.incomePerLand > 0,
-    r.captureCostFrac > 0, (r.params.crown ?? 0) > 0, r.tieWins, r.handLimit === 'hp', r.respawnTokens.length > 0, (r.params.setTribute ?? 0) > 0, (r.params.setProtect ?? 0) > 0,
+    r.captureCostFrac > 0, (r.params.crown ?? 0) > 0, r.tieWins, r.handLimit === 'hp', r.respawnTokens.length > 0, (r.params.setTribute ?? 0) > 0, (r.params.setProtect ?? 0) > 0, (r.params.landSpellsNeedEmpty ?? 0) > 0,
   ];
   n += flags.filter(Boolean).length;
   const w = r.win;
