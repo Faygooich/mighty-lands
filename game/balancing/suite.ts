@@ -34,6 +34,12 @@ export function suiteDefs(scale = 1): ExperimentDef[] {
     { key: 'lateGame', label: 'Late game (все Земли розданы с Артефактами)', lineup: { type: 'mixed', pool: ALL_STYLES, n: 4 }, games: n(1500), scenario: 'lateGame', targeted: true },
     { key: 'earlyLead', label: 'Comeback test: место 1 стартует с большим перевесом', lineup: { type: 'fixed', bots: ['tactical', 'tactical', 'tactical', 'tactical'] }, games: n(2000), scenario: 'earlyLead', noShuffle: true, targeted: true },
     { key: 'stall', label: 'Stalling test: DefensiveBot×2 + SurvivalBot×2', lineup: { type: 'fixed', bots: ['defensive', 'defensive', 'survival', 'survival'] }, games: n(1500), targeted: true },
+    // appended after the original suite so older experiments keep their seed ranges (seed = base + index·100 000)
+    { key: 'five', label: '5 игроков, смешанные', lineup: { type: 'mixed', pool: ALL_STYLES, n: 5 }, games: n(1500) },
+    { key: 'six', label: '6 игроков, смешанные', lineup: { type: 'mixed', pool: ALL_STYLES, n: 6 }, games: n(1500) },
+    { key: 'seven', label: '7 игроков, смешанные', lineup: { type: 'mixed', pool: ALL_STYLES, n: 7 }, games: n(1500) },
+    { key: 'mirror6', label: 'Зеркало TacticalBot ×6 (места фиксированы)', lineup: { type: 'fixed', bots: ['tactical', 'tactical', 'tactical', 'tactical', 'tactical', 'tactical'] }, games: n(1500), noShuffle: true },
+    { key: 'mirror7', label: 'Зеркало TacticalBot ×7 (места фиксированы)', lineup: { type: 'fixed', bots: ['tactical', 'tactical', 'tactical', 'tactical', 'tactical', 'tactical', 'tactical'] }, games: n(1500), noShuffle: true },
   ];
 }
 

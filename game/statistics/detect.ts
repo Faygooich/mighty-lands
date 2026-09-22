@@ -90,6 +90,19 @@ export function detect(e: Evaluation, denoms: number[]): Finding[] {
     add('duelDominance', 'Доминирующий стиль в дуэли', top > 0.65 ? 'MEDIUM' : top > 0.6 ? 'LOW' : 'OK', `${who} ${pct(top)}`, Object.entries(d.winRate).map(([b, w]) => `${b} ${pct(w)}`).join(', '));
   }
   if (S.three) add('threeLength', 'Партия на 3 игрока слишком короткая/длинная', S.three.tableMinutes < 25 || S.three.tableMinutes > 75 ? 'MEDIUM' : 'OK', `${S.three.tableMinutes.toFixed(0)} мин`, `медиана ${S.three.medianRounds} раундов`);
+  for (const [k, label] of [['five', '5'], ['six', '6'], ['seven', '7']] as const) {
+    const x = S[k];
+    if (!x) continue;
+    const mins = x.tableMinutes;
+    add(`len${label}p`, `Партия на ${label} игроков: реальное время`, x.timeoutRate > 0.05 || mins > 120 ? 'HIGH' : x.timeoutRate > 0.01 || mins > 90 || mins < 25 ? 'MEDIUM' : 'OK', `${mins.toFixed(0)} мин`, `медиана ${x.medianRounds} раундов, таймауты ${pct(x.timeoutRate)}`);
+    add(`chaos${label}p`, `Партия на ${label} игроков: хаос реакций`, x.feel.reactionsPerGame > 40 ? 'MEDIUM' : 'OK', `${x.feel.reactionsPerGame.toFixed(1)} карт в чужой ход`, `отнято Земель ${x.feel.landsTakenPerGame.toFixed(1)}`);
+  }
+  for (const [k, label] of [['mirror6', '6'], ['mirror7', '7']] as const) {
+    const x = S[k];
+    if (!x) continue;
+    const dev = seatDeviation(x);
+    add(`seat${label}`, `Преимущество места (${label} игроков)`, sev(dev, [[0.4, 'HIGH'], [0.25, 'MEDIUM'], [0.15, 'LOW']]), pct(dev), `win rate мест: ${x.seatWinRate.map(pct).join(' / ')}`);
+  }
   if (m.noWinnerRate > 0) add('noWinner', 'Партии без победителя', sev(m.noWinnerRate, [[0.02, 'HIGH'], [0.005, 'MEDIUM'], [0.0001, 'LOW']]), pct(m.noWinnerRate));
   return out;
 }
