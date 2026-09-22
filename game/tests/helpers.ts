@@ -30,7 +30,8 @@ export function drive(it: Engine, pick: (d: Decision) => number = () => 0): Deci
   let r = it.next();
   while (!r.done) {
     seen.push(r.value);
-    r = it.next(pick(r.value));
+    const idx = pick(r.value);
+    r = it.next(idx >= 0 ? idx : 0);
   }
   return seen;
 }

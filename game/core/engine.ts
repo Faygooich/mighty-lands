@@ -25,13 +25,13 @@ export function* playGame(g: GameState): Engine {
   }
 }
 
-/** Tie-break at the round cap: VP (if used), then power, lands, HP. */
+/** Tie-break at the round cap: VP (if used), then Lands, power, HP (final_rules). */
 export function leaderOnCap(g: GameState): number {
   let best = -1;
   let bestKey: number[] = [];
   for (const p of g.players) {
     if (!p.alive) continue;
-    const key = [g.rules.win.vpTarget ? victoryPoints(g, p) : 0, power(p), landsOf(g, p.id).length, p.tokens.length];
+    const key = [g.rules.win.vpTarget ? victoryPoints(g, p) : 0, landsOf(g, p.id).length, power(p), p.tokens.length];
     let better = best < 0;
     for (let k = 0; k < key.length && !better; k++) {
       if (key[k] > bestKey[k]) better = true;
@@ -226,6 +226,7 @@ function* monsterEncounter(g: GameState, p: PlayerState, land: LandState): Engin
       ev(g, 'capture', p.id, land.cell, 'fight');
       logMsg(g, `${p.name} бросает ${roll} и побеждает монстра ${land.name}`);
       if (land.reward) gainPower(g, p, land.reward, `Награда: ${land.name}`);
+      for (const h of helpers) gainPower(g, g.players[h], r.params.aidReward ?? 0, 'Подмога');
     } else {
       ev(g, 'fightLose', p.id, roll, land.cell);
       logMsg(g, `${p.name} бросает ${roll} и проигрывает бой`);

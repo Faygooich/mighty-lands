@@ -118,6 +118,28 @@ export function* pay(g: GameState, payer: PlayerState, amount: number, recipient
   if (payer.tokens.length === 0) kill(g, payer, recipient, source);
 }
 
+/**
+ * One rule for every token a player receives (final_rules): a free slot → put it there;
+ * no free slot → (if upgradeWhenFull) it replaces your smallest token when larger, else it goes to the bank.
+ */
+export function receiveToken(g: GameState, p: PlayerState, value: number, source: string): void {
+  if (p.tokens.length < g.rules.maxSlots) {
+    p.tokens.push(value);
+    sortDesc(p.tokens);
+    ev(g, 'hpGain', p.id, 1, source);
+    ev(g, 'receive', p.id, value, source);
+    return;
+  }
+  const small = p.tokens[p.tokens.length - 1];
+  if (g.rules.upgradeWhenFull && value > small) {
+    p.tokens[p.tokens.length - 1] = value;
+    sortDesc(p.tokens);
+    ev(g, 'upgrade', p.id, value - small, source);
+    ev(g, 'receive', p.id, value - small, source);
+    logMsg(g, `${p.name} меняет жетон ${small} на ${value} (апгрейд)`);
+  } else ev(g, 'burn', p.id, value, 'full');
+}
+
 /** Physical payment: hand over exactly one token (no change, no arithmetic). */
 function* payToken(g: GameState, payer: PlayerState, amount: number, recipient: number, source: string): Engine {
   let pool = [...new Set(payer.tokens)];
@@ -140,15 +162,8 @@ function* payToken(g: GameState, payer: PlayerState, amount: number, recipient: 
   ev(g, 'hpLoss', payer.id, value, source);
   ev(g, 'change', payer.id, -1, source);
   logMsg(g, `${payer.name} отдаёт жетон ${value} — ${source}`);
-  if (recipient >= 0 && g.players[recipient].alive) {
-    const rp = g.players[recipient];
-    if (rp.tokens.length < g.rules.maxSlots) {
-      rp.tokens.push(value);
-      sortDesc(rp.tokens);
-      ev(g, 'hpGain', rp.id, 1, source);
-      ev(g, 'receive', rp.id, value, source);
-    } else ev(g, 'burn', rp.id, value, 'full');
-  } else ev(g, 'burn', payer.id, value, 'bank');
+  if (recipient >= 0 && g.players[recipient].alive) receiveToken(g, g.players[recipient], value, source);
+  else ev(g, 'burn', payer.id, value, 'bank');
   if (payer.tokens.length === 0) kill(g, payer, recipient, source);
 }
 
