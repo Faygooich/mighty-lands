@@ -96,6 +96,7 @@ export function detect(e: Evaluation, denoms: number[]): Finding[] {
     if (!x) continue;
     const mins = x.tableMinutes;
     add(`len${label}p`, `Партия на ${label} игроков: реальное время`, x.timeoutRate > 0.05 || mins > 120 ? 'HIGH' : x.timeoutRate > 0.01 || mins > 90 || mins < 25 ? 'MEDIUM' : 'OK', `${mins.toFixed(0)} мин`, `медиана ${x.medianRounds} раундов, таймауты ${pct(x.timeoutRate)}`);
+    add(`short${label}p`, `Партия на ${label} игроков: слишком мало ходов у игрока`, x.shortGameRate > 0.05 ? 'MEDIUM' : x.shortGameRate > 0.02 ? 'LOW' : 'OK', `${pct(x.shortGameRate)} партий ≤ 4 раундов`, `медиана ${x.medianRounds} раундов = ходов на игрока`);
     add(`chaos${label}p`, `Партия на ${label} игроков: хаос реакций`, x.feel.reactionsPerGame > 40 ? 'MEDIUM' : 'OK', `${x.feel.reactionsPerGame.toFixed(1)} карт в чужой ход`, `отнято Земель ${x.feel.landsTakenPerGame.toFixed(1)}`);
   }
   for (const [k, label] of [['mirror6', '6'], ['mirror7', '7']] as const) {

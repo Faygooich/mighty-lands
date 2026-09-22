@@ -162,6 +162,8 @@ export interface Summary {
   timeoutRate: number;
   noWinnerRate: number;
   medianRounds: number;
+  /** Share of games that ended within 4 rounds (each player had ≤ 4 turns). */
+  shortGameRate: number;
   meanRounds: number;
   p10Rounds: number;
   p90Rounds: number;
@@ -278,6 +280,7 @@ export function summarize(a: Agg): Summary {
     timeoutRate: a.timeouts / G,
     noWinnerRate: a.noWinner / G,
     medianRounds: quantile(a.rounds, 0.5),
+    shortGameRate: a.rounds.slice(0, 5).reduce((x, y) => x + y, 0) / G,
     meanRounds: totalRounds / G,
     p10Rounds: quantile(a.rounds, 0.1),
     p90Rounds: quantile(a.rounds, 0.9),

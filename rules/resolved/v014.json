@@ -225,6 +225,8 @@
   "respawnTokens": [
     300
   ],
+  "respawnKeepsLands": false,
+  "respawnCards": 0,
   "roundCap": 120,
   "win": {
     "lastStanding": true,

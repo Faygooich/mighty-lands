@@ -108,6 +108,11 @@
         "gen": 21,
         "severity": "OK",
         "value": "0.0%"
+      },
+      {
+        "gen": 22,
+        "severity": "OK",
+        "value": "0.0%"
       }
     ]
   },
@@ -218,6 +223,11 @@
       },
       {
         "gen": 21,
+        "severity": "OK",
+        "value": "0.00"
+      },
+      {
+        "gen": 22,
         "severity": "OK",
         "value": "0.00"
       }
@@ -332,6 +342,11 @@
         "gen": 21,
         "severity": "OK",
         "value": "×1.47 к раунду 15"
+      },
+      {
+        "gen": 22,
+        "severity": "OK",
+        "value": "×1.47 к раунду 15"
       }
     ]
   },
@@ -442,6 +457,11 @@
       },
       {
         "gen": 21,
+        "severity": "LOW",
+        "value": "2.17 оп/ход"
+      },
+      {
+        "gen": 22,
         "severity": "LOW",
         "value": "2.17 оп/ход"
       }
@@ -556,6 +576,11 @@
         "gen": 21,
         "severity": "OK",
         "value": "1.28"
+      },
+      {
+        "gen": 22,
+        "severity": "OK",
+        "value": "1.28"
       }
     ]
   },
@@ -668,6 +693,11 @@
         "gen": 21,
         "severity": "OK",
         "value": "таймаут 0.0%, медиана 11"
+      },
+      {
+        "gen": 22,
+        "severity": "OK",
+        "value": "таймаут 0.0%, медиана 11"
       }
     ]
   },
@@ -768,6 +798,11 @@
       },
       {
         "gen": 21,
+        "severity": "OK",
+        "value": "3.8%"
+      },
+      {
+        "gen": 22,
         "severity": "OK",
         "value": "3.8%"
       }
@@ -872,6 +907,11 @@
         "gen": 21,
         "severity": "MEDIUM",
         "value": "лидер старта 76.8%"
+      },
+      {
+        "gen": 22,
+        "severity": "MEDIUM",
+        "value": "лидер старта 76.8%"
       }
     ]
   },
@@ -969,6 +1009,11 @@
         "gen": 21,
         "severity": "OK",
         "value": "5.8%"
+      },
+      {
+        "gen": 22,
+        "severity": "OK",
+        "value": "5.8%"
       }
     ]
   },
@@ -1004,6 +1049,11 @@
       },
       {
         "gen": 21,
+        "severity": "OK",
+        "value": "23 мин"
+      },
+      {
+        "gen": 22,
         "severity": "OK",
         "value": "23 мин"
       }
@@ -1043,6 +1093,11 @@
         "gen": 21,
         "severity": "MEDIUM",
         "value": "aggressive 68.7%"
+      },
+      {
+        "gen": 22,
+        "severity": "MEDIUM",
+        "value": "aggressive 68.7%"
       }
     ]
   },
@@ -1075,6 +1130,11 @@
         "gen": 21,
         "severity": "OK",
         "value": "14.1%"
+      },
+      {
+        "gen": 22,
+        "severity": "LOW",
+        "value": "16.7%"
       }
     ]
   },
@@ -1087,6 +1147,23 @@
         "gen": 21,
         "severity": "MEDIUM",
         "value": "2.3%"
+      },
+      {
+        "gen": 22,
+        "severity": "MEDIUM",
+        "value": "2.3%"
+      }
+    ]
+  },
+  "short7p": {
+    "id": "BUG-014",
+    "title": "Партия на 7 игроков: слишком мало ходов у игрока",
+    "firstGen": 22,
+    "history": [
+      {
+        "gen": 22,
+        "severity": "OK",
+        "value": "0.7% партий ≤ 4 раундов"
       }
     ]
   }
